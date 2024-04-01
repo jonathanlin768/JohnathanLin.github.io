@@ -7,69 +7,56 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
-    <lastBuildDate>Tue, 26 Dec 2023 16:06:34 +0800</lastBuildDate><atom:link href="https://windypath.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 26 Dec 2023 16:06:34 +0800</lastBuildDate>
+    <atom:link href="https://windypath.com/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>MQTT</title>
       <link>https://windypath.com/categories/mqtt/</link>
       <pubDate>Tue, 26 Dec 2023 16:06:34 +0800</pubDate>
-      
       <guid>https://windypath.com/categories/mqtt/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>技术文章</title>
       <link>https://windypath.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</link>
       <pubDate>Tue, 26 Dec 2023 16:06:34 +0800</pubDate>
-      
       <guid>https://windypath.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>笔记</title>
       <link>https://windypath.com/categories/%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Mon, 04 Dec 2023 17:27:44 +0800</pubDate>
-      
       <guid>https://windypath.com/categories/%E7%AC%94%E8%AE%B0/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>CSAPP</title>
       <link>https://windypath.com/categories/csapp/</link>
       <pubDate>Sun, 30 Apr 2023 21:08:43 +0800</pubDate>
-      
       <guid>https://windypath.com/categories/csapp/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>怀旧</title>
       <link>https://windypath.com/categories/%E6%80%80%E6%97%A7/</link>
       <pubDate>Sun, 02 Oct 2022 18:51:17 +0800</pubDate>
-      
       <guid>https://windypath.com/categories/%E6%80%80%E6%97%A7/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>算法笔记</title>
       <link>https://windypath.com/categories/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Sat, 16 Oct 2021 17:43:32 +0800</pubDate>
-      
       <guid>https://windypath.com/categories/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>日常</title>
       <link>https://windypath.com/categories/%E6%97%A5%E5%B8%B8/</link>
       <pubDate>Sat, 29 Aug 2015 13:32:03 +0800</pubDate>
-      
       <guid>https://windypath.com/categories/%E6%97%A5%E5%B8%B8/</guid>
       <description></description>
     </item>
-    
   </channel>
 </rss>

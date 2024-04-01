@@ -7,34 +7,30 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
-    <lastBuildDate>Mon, 04 Dec 2023 17:27:44 +0800</lastBuildDate><atom:link href="https://windypath.com/en/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Dec 2023 17:27:44 +0800</lastBuildDate>
+    <atom:link href="https://windypath.com/en/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Various Locking Mechanisms in Java Concurrency Programming</title>
       <link>https://windypath.com/en/posts/java_juc_briefly/</link>
       <pubDate>Mon, 04 Dec 2023 17:27:44 +0800</pubDate>
-      
       <guid>https://windypath.com/en/posts/java_juc_briefly/</guid>
       <description>Introduction: This article aims to introduce the relevant usage of synchronized, ReentrantLock, and Condition in Java.
 Locking with Synchronized Synchronized can be applied to instance methods, static methods, and code blocks. When used to modify a code block, it can either lock on a specific object or on a class (.class).
 Synchronized is a Non-Fair Lock The following code utilizes synchronized to lock on a variable accessible by multiple threads, achieving the orderly printing of numbers.</description>
     </item>
-    
     <item>
       <title>How To Split A String In C&#43;&#43;?</title>
       <link>https://windypath.com/en/posts/how_to_split_a_string_in_cpp/</link>
       <pubDate>Sun, 02 Jul 2023 11:54:44 +0800</pubDate>
-      
       <guid>https://windypath.com/en/posts/how_to_split_a_string_in_cpp/</guid>
       <description>Preface During a coding interview, I encountered a question that involved two lines of input. Each line contained an unknown number of numbers separated by spaces. The input format was as follows:
 12 34 567 888 99 100 358 74 58454 742 4469 88 They did not provide the number of digits in each line in advance. Instead, they required the user to split them themselves.
 During the coding exam, I didn&amp;rsquo;t implement this functionality using C++, but instead used the split() method available in Java to handle it.</description>
     </item>
-    
     <item>
       <title>Windows XP Virtual Machine Chinese Version Without Activation Image Download</title>
       <link>https://windypath.com/en/posts/nostalgic_winxp/</link>
       <pubDate>Sun, 02 Oct 2022 18:51:17 +0800</pubDate>
-      
       <guid>https://windypath.com/en/posts/nostalgic_winxp/</guid>
       <description>Click here to download my virtual machine image Download virtual machine image:
 Link：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l
@@ -43,35 +39,28 @@ My VirtualBox version is 6.1
 Let me talk about nostalgic For most people, Win95 is their youth, so they create UI component library React95, or create an OS serenity together. But for most Chinese people, when they got PC in 2000-2010, they used Windows XP in their PC.
 sh1zuku is from China, Taiwan, he created a Windows XP simulator on website: Project Link, Online Demo, and another programmer from Vietnam wrote a Windows 7 Simulator on website Online Demo.</description>
     </item>
-    
     <item>
       <title>Some Usage and features on Java TreeSet</title>
       <link>https://windypath.com/en/posts/about_java_treeset/</link>
       <pubDate>Sat, 18 Jun 2022 17:10:44 +0800</pubDate>
-      
       <guid>https://windypath.com/en/posts/about_java_treeset/</guid>
       <description>An Example (kotlin) import java.util.TreeSet /** * Define a data class to test TreeSet Collection * Sort by TreeSet * id: player id * score: player score */ data class PlayerScore(var id: Int, var score: Int): Comparable&amp;lt;PlayerScore&amp;gt; { override fun compareTo(other: PlayerScore): Int { return if (score &amp;gt; other.score) { 1 } else if (score &amp;lt; other.score) { -1 } else { 0 } } } fun main() { //create a TreeSet val treeSet: TreeSet&amp;lt;PlayerScore&amp;gt; = TreeSet() //create 3 PlayerScore object，and use &amp;#39;id101Obj&amp;#39; reference to the first obj //put these objects into the treeset val id101Obj = PlayerScore(101,100) //put in different order treeSet.</description>
     </item>
-    
     <item>
       <title>Linux C&#43;&#43; Socket in Action</title>
       <link>https://windypath.com/en/posts/linux_socket_programming/</link>
       <pubDate>Sat, 30 Apr 2022 23:23:49 +0800</pubDate>
-      
       <guid>https://windypath.com/en/posts/linux_socket_programming/</guid>
       <description>This article primarily introduces the basics of Linux C++ Socket network programming. Most of the knowledge is sourced from the website: https://www.geeksforgeeks.org/socket-programming-cc/
 Socket Programming State Diagram From the diagram, we can see that the server side needs to go through four steps to enter the &amp;ldquo;waiting for connection&amp;rdquo; state, while the client side only requires two.
 Brief Analysis of Socket Programming Functions This analysis is for personal understanding and may have some omissions.</description>
     </item>
-    
     <item>
       <title>Traditional Software Server vs. Game Server Architecture Differences</title>
       <link>https://windypath.com/en/posts/compare_web_with_game_server/</link>
       <pubDate>Sat, 16 Apr 2022 18:15:44 +0800</pubDate>
-      
       <guid>https://windypath.com/en/posts/compare_web_with_game_server/</guid>
       <description>Project Intelligent Customer Service Web Crawler SLG Game Language Java Python Kotlin Model Asynchronous Event Driven There may not be a discernible model Actor Model Transmission Protocol HTTP HTTP TCP + Netty Transmission Structure JSON JSON Protobuf Database Oracle, Redis MongoDB MySQL, Redis Database Framework MyBatis Python Library (similar to JDBC) Hibernate Cache Architecture Redis for Admin Login Status Possibly only caching page numbers All game data is cached, periodically written to the database Configuration Information Only application.</description>
     </item>
-    
   </channel>
 </rss>

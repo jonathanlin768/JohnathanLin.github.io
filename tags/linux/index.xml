@@ -7,12 +7,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
-    <lastBuildDate>Sat, 30 Apr 2022 23:23:49 +0800</lastBuildDate><atom:link href="https://windypath.com/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 30 Apr 2022 23:23:49 +0800</lastBuildDate>
+    <atom:link href="https://windypath.com/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux C&#43;&#43; Socket实战</title>
       <link>https://windypath.com/posts/linux_socket_programming/</link>
       <pubDate>Sat, 30 Apr 2022 23:23:49 +0800</pubDate>
-      
       <guid>https://windypath.com/posts/linux_socket_programming/</guid>
       <description>本文主要介绍Linux C++ 基础Socket网络编程。 大部分知识来自于网站：https://www.geeksforgeeks.org/socket-programming-cc/
 Socket编程状态图 从图中可以看到，服务端这边需要处理四步才能进入等待连接的状态，而客户端只要两步。
@@ -26,6 +26,5 @@ setsockopt() 这个函数用来给上面那个socket()函数返回的socket设�
 int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen); 为了重用地址和端口号，需要这么做：
 level传SOL_SOCKET，代表你这次设置的属性值是给哪个模块用的 optname传SO_REUSEADDR|SO_REUSEPORT，代表你打算同时设置这两个属性 optval传一个int*指针，指向某一个数字 optlen传sizeof()上面的optval C++ socket很多函数都需要你再传一个length长度，以确定你真正想传给这个函数的数据是多长。</description>
     </item>
-    
   </channel>
 </rss>

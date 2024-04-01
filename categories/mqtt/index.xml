@@ -7,12 +7,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
-    <lastBuildDate>Tue, 26 Dec 2023 16:06:34 +0800</lastBuildDate><atom:link href="https://windypath.com/categories/mqtt/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 26 Dec 2023 16:06:34 +0800</lastBuildDate>
+    <atom:link href="https://windypath.com/categories/mqtt/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>MQTT协议中可变长度的具体计算方式（有计算过程解析）</title>
       <link>https://windypath.com/posts/mqtt_remain_length_calculate/</link>
       <pubDate>Tue, 26 Dec 2023 16:06:34 +0800</pubDate>
-      
       <guid>https://windypath.com/posts/mqtt_remain_length_calculate/</guid>
       <description>本文介绍MQTT协议中，固定报头中的可变长度部分的计算方式。通过提供一些例子，将其他介绍MQTT协议的文章中没有仔细说明的计算部分进行解释。
 参考文章 MQTT 5.0 报文（Packets）入门指南
@@ -32,6 +32,5 @@ MQTT协议的剩余长度字段使用了一种变长编码方案，每个字节�
 那么我们会有：res = a * 1 + b * 128 + c * 128 * 128 + d * 128 * 128 * 128
 或者咱们换一种写法：res = a * 1280 + b * 1281 + c * 1282 + d * 1283</description>
     </item>
-    
   </channel>
 </rss>
