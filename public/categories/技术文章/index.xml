@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>技术文章 on 风萧古道 - 勤学苦练，年复一年</title>
+    <link>http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</link>
+    <description>Recent content in 技术文章 on 风萧古道 - 勤学苦练，年复一年</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
+    <lastBuildDate>Tue, 26 Dec 2023 16:06:34 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MQTT协议中可变长度的具体计算方式（有计算过程解析）</title>
+      <link>http://localhost:1313/posts/mqtt_remain_length_calculate/</link>
+      <pubDate>Tue, 26 Dec 2023 16:06:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/mqtt_remain_length_calculate/</guid>
+      <description>本文介绍MQTT协议中，固定报头中的可变长度部分的计算方式。通过提供一些例子，将其他介绍MQTT协议的文章中没有仔细说明的计算部分进行解释。
+参考文章 MQTT 5.0 报文（Packets）入门指南
+这篇文章简要介绍了MQTT，但是没有明确提供计算过程。
+MQTT简介之三（3） MQTT协议 报文的剩余长度如何计算和编码
+这篇文章也介绍了MQTT，且有提供计算过程，但是是用一大段文字进行表述的，理解起来有些困难。
+至于New Bing(GPT4.0)和ChatGPT 3.5，他们在做这种特殊规则下的二进制计算时，效果并不好。
+如果在读完本文后你对二进制有兴趣，可以阅读这篇文章：CSAPP第二章-信息的表示与处理
+如何计算可变长度？ 以下是各大文章的相似描述：
+MQTT协议的剩余长度字段使用了一种变长编码方案，每个字节的最高位是一个进位标志位，如果为1，表示还有后续的字节；如果为0，表示这是最后一个字节。每个字节的低七位是实际的数据位，用来表示剩余长度的一部分。因此，为了得到剩余长度的完整值，需要循环读取每个字节，并用一个乘法器来计算出总和。
+并且，提供了一张表，介绍剩余长度在不同的区间中时，需要使用多少个字节数：
+字节数 最小值 最大值 1 0(0x00) 127(0x7F) 2 128(0x80,0x01) 16383(0xFF,0x7F) 3 16384(0x80,0x80,0x01) 2097151(0xFF,0xFF,0x7F) 4 2097152(0x80,0x80,0x80,0x01) 268435455(0xFF,0xFF,0xFF,0x7F) 读取过程分析 首先，我们明确MQTT协议读取数据的过程，是一个字节一个字节依次读取的。即读取完一个字节之后，再处理下一个字节。
+那么为了可以动态控制可变长度部分的字节数，MQTT协议约定该部分的字节的第一位来标记“后续是否还有字节”。
+明确这一点之后，我们抛开第一位，读取后七位的值，可以得到一个数。
+想象一下，如果我们的可变长度res特别长，在2097152~2684354455之间，那么我们需要4个字节进行传输。此时我们将每个字节的第一位剥离，将剩余7位取出：
+用变量a表示第一个字节后7位的数，用变量b表示第二个字节后7位的数，c，d以此类推。
+那么我们会有：res = a * 1 + b * 128 + c * 128 * 128 + d * 128 * 128 * 128
+或者咱们换一种写法：res = a * 1280 + b * 1281 + c * 1282 + d * 1283</description>
+    </item>
+    <item>
+      <title>关于游戏服务器配置表功能的探讨</title>
+      <link>http://localhost:1313/posts/config_table_project/</link>
+      <pubDate>Sun, 24 Dec 2023 16:15:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/config_table_project/</guid>
+      <description>简介 在游戏开发中，配置表是策划与程序员之间针对功能模块开发而搭建的桥梁。配置表在游戏开发中扮演非常重要的角色。策划需要向配置表填入各种数据，以完成功能数值的配置；程序员需要在项目代码中读取配置表，根据配置表和需求决定的业务逻辑来开发功能模块。
+本文想探讨接触过的两个项目的配置表功能设计。在本文中，我不会泄露项目相关的具体信息，仅针对方案进行讨论。
+两种配置表方案简介 此处先以表格的形式，列举两种方案之间的异同：
+条目 大型SLG手游 小型MMO手游 策划配置方式 使用Excel配置 使用Excel配置 代码读取方式 将Excel文件中的内容转换成Csv文件 将Excel文件中的内容转换成Json文件 读取后存储位置 在项目启动前，先读取Csv的内容到内存中，转成二进制文件写入Zookeeper，在项目启动时加载Zookeeper中的配置表信息到内存 在项目加载时读取Json到内存中 热更新方案 修改Zookeeper中的二进制文件，通过Zookeeper发布订阅机制，分布式系统中各个系统从Zookeeper中读取新的配置表信息 先修改Json文件，然后读取Json文件到内存中 配置表检查 在读取Csv到内存后，编写检查代码，检查内存对象之间的相关逻辑依赖 无 大型SLG手游 这是一个比较大型的SLG手游项目，使用了分布式的系统，服务器数量众多，因此需要一个统一的中心服务器来管理所有的配置信息。这个项目使用的是Zookeeper进行配置表的存储。
+策划配置方式 策划使用Excel进行配置。每一列包含中文名、英文名、key类型(标记客户端、服务器或是客户端和服务器都用，且标记是否是key)、字段类型（数据data还是文字text）。
+一张表最多只能有两个key，一个主key，一个副key。
+比如，如果有一个可以领取宝箱的活动类型，活动可能有多个id，以满足不同的活动包装；每个活动都有多个宝箱。那么这张配置表的主key是活动id，副key是宝箱id。
+读取配置表 首先将Excel文件中的内容转换成Csv文件，这一步会将客户端的配置列移除，仅保留服务器用到的配置列。然后使用Java代码读取Csv文件，将Csv文件中的数据构造成Java对象，然后再将Java对象序列化成二进制文件，上传到Zookeeper中的某个节点之下。
+graph LRA[Excel文件]--&gt;|Python转换|B[Csv文件]--&gt;|Java代码读取|C[Zookeeper节点下]--&gt;|服务器启动读取Zookeeper|D[服务器内存对象]服务器启动时会从Zookeeper的节点中加载配置表文件。
+在后续的开发过程中，发生过因为策划失误，修改了Excel后忘记生成Csv，而导致Excel文件与Csv文件不一致的情况。在这个项目中，Csv并不是读取配置表过程中最后的输出产物，仅仅是一个中间产物，所以内部也讨论过是否可以直接从Excel文件中读取到内存中的可能。
+热更新方案 当服务器启动读取完Zookeeper中的配置表后，订阅Zookeeper中配置表节点的变化事件。
+当配置表Excel文件被修改后，依次执行读取流程到上传到Zookeeper节点，此时触发节点变化事件，Zookeeper会将变化事件发布给所有订阅此节点的服务器，服务器接收到配置表节点变化后，再次加载新的配置表文件信息。
+配置表检查 当Csv读取到内存后，会对每一场表生成一个Java表管理对象，Java表管理对象与配置表一一对应。同时，这个Java表管理对象中，还可以进行多张配置表之间的逻辑校验。比如奖励表中的道具，必须在道具表中有配置，否则就会报错。
+小型MMO手游 这是一个比较小的MMO手游，服务器进程数量比较少，配置表的数量也不多。因此它不需要使用类似Zookeeper那样的配置中心，只需要各个服务器进程读取相同内容的Json文件即可。
+策划配置方式 策划使用Excel进行配置表的编辑。表头包含中文名，英文名，类型（数字，或者any任意结构）。 一张表必须要有数字id，且必须列在第一列中。其他的部分不做强制要求。
+读取配置表 Excel文件会转换为Json文件。 在代码中，服务器会加载所有的Json文件。
+程序员一般不需要针对某一张配置表单独编写解析代码。每一张表都有一个id，其他字段都默认读取为Golang的interface{}类型，每一张表都能读取成统一的格式，即：表名-id-其余各列数据。如果这张表是一张只有一个key的表，那么可以直接通过表名+id查找对应的数据。
+但如果是不止一个key的表，那么可以在默认加载之后，再新开辟内存空间，使用自定义的结构进行存储。
+热更新方案 策划修改配置表Excel文件后，转成Json文件，然后手动上传到服务器中。 通过RPC的方式，向网关服务器发送“重新读取配置表”消息，网关通知服务器集群中的所有服务器进程，重新读取Json文件到内存中，替换之前的配置表内存数据。
+配置表检查 没有配置表提前检查，仅在使用配置的时候抛出err错误。
+优缺点 类型 大型SLG手游 小型MMO手游 优点 (1)热更新方便，一次发布到Zk上之后，所有服务器都更新
+(2)有配置表检查，在加载配置表时校验配置错误信息 (1)所有表都有默认取值的方法，方便开发
+(2)Excel转Json后，Json文件方便人类阅读 缺点 (1)Excel生成的Csv可读性差，维护性差，不如XML，Json带有自己的结构信息
+(2)开发繁琐，需要为每一张表定义类，并且预测配置表的关联，有可能会因为过度关联导致自由度下降
+(3)在这个项目中，一个Excel对应一张配置表，导致Excel表数量过多，难以分类维护 (1)没有配置表校验，配错值只能等业务运行时抛出Error</description>
+    </item>
+    <item>
+      <title>Java并发编程中上锁的几种方式</title>
+      <link>http://localhost:1313/posts/java_juc_briefly/</link>
+      <pubDate>Mon, 04 Dec 2023 17:27:44 +0800</pubDate>
+      <guid>http://localhost:1313/posts/java_juc_briefly/</guid>
+      <description>前言：本文想要介绍Synchronized，ReentrantLock和ReentrantLock的Condition的相关用法。
+Synchronized上锁 Synchronized可以修饰实例方法、静态方法和代码块。修饰代码块时，可以对具体的对象上锁，也可以对某个类(.class)上锁。
+Synchronized是非公平锁 以下代码是通过给一个多线程能访问到的变量使用synchronized进行上锁，实现有序打印数字的功能。并且在最后会统计不同线程打印数字的次数：
+package com.windypath.lockcondition; public class Syn { int count = 0; final Object sth = new Object(); void play() { int loopTimes = 1000; SynThread t1 = new SynThread(loopTimes, &amp;#34;t1&amp;#34;); SynThread t2 = new SynThread(loopTimes, &amp;#34;t2&amp;#34;); SynThread t3 = new SynThread(loopTimes, &amp;#34;t3&amp;#34;); SynThread t4 = new SynThread(loopTimes, &amp;#34;t4&amp;#34;); t1.start(); t2.start(); t3.start(); t4.start(); } public static void main(String[] args) { Syn syn = new Syn(); syn.play(); } class SynThread extends Thread { int loopTimes; public SynThread(int loopTimes, String threadName) { super(threadName); this.</description>
+    </item>
+    <item>
+      <title>如何用C&#43;&#43;分割一个字符串？</title>
+      <link>http://localhost:1313/posts/how_to_split_a_string_in_cpp/</link>
+      <pubDate>Sun, 02 Jul 2023 11:54:44 +0800</pubDate>
+      <guid>http://localhost:1313/posts/how_to_split_a_string_in_cpp/</guid>
+      <description>前言 在上机面试的时候，遇到了一道题，它的输入是两行字符串，每行字符串有未知数量的数字（两行数字数量一致），用空格分隔开，输入形如：
+12 34 567 888 99 100358 74 58454 742 4469 88 并不提前提供每行的数字数量。而是让用户自己切分。
+当时在上机考试时，我没有使用C++实现这一功能，而是使用Java里的split()进行处理。
+后来，考试结束后，我上网查询C++切分字符串的写法，发现C++并没有原生提供类似split(某个字符)的写法。
+那么有什么方法能替代呢？
+方法1：使用string的find等函数()配合substr()进行切分 根据知乎大佬的回答，他提供的第一种解决方案是：
+C++ 的 string 为什么不提供 split 函数？ - 知乎用户的回答 - 知乎 https://www.zhihu.com/question/36642771/answer/865135551
+#include &amp;lt;iostream&amp;gt; #include &amp;lt;cstring&amp;gt; #include &amp;lt;vector&amp;gt; void split(const std::string&amp;amp; s, std::vector&amp;lt;std::string&amp;gt;&amp;amp; tokens, const std::string&amp;amp; delimiters = &amp;#34; &amp;#34;) { std::string::size_type lastPos = s.find_first_not_of(delimiters, 0); std::string::size_type pos = s.find_first_of(delimiters, lastPos); while (std::string::npos != pos || std::string::npos != lastPos) { tokens.push_back(s.substr(lastPos, pos - lastPos)); lastPos = s.</description>
+    </item>
+    <item>
+      <title>CSAPP第二章-信息的表示与处理</title>
+      <link>http://localhost:1313/posts/csapp_chapter2_representing_manipulating_info/</link>
+      <pubDate>Sun, 30 Apr 2023 21:08:43 +0800</pubDate>
+      <guid>http://localhost:1313/posts/csapp_chapter2_representing_manipulating_info/</guid>
+      <description>23年3月23日，我在公司进行了一次分享会，内容是本文的内容。在分享前，我重新对文章知识点进行了梳理，补充了很多细节。现将补充的细节重新编写到本文中。
+什么是二进制数？ 我们日常使用的是十进制，数字包括0,1,2,3,4,5,6,7,8,9 再往下数，就得向前进一位，变成10，然后从个位数开始继续增加11,12,13…19 计算机最底层使用的是二进制，数字包括0和1，再往下数，也是前进一位，变成10。注意，这个10并不是十进制的十，而是十进制的二。 如何用二进制来表示一个整数？ 二进制 十进制（无符号） 0000 0 0001 1 0010 2 0011 3 0100 4 0101 5 0110 6 0111 7 1000 8 1001 9 1010 10 1011 11 1100 12 1101 13 1110 14 1111 15 二进制如何表示负数？ 原码 我们把最高位(最左边的位)作为符号位，后面剩余的位代表的数作为数值具体的大小。 比如：四位原码二进制表示数字
+— 3
+1 011
+开头的1代表负号，后面的011表示3。这样拼起来就是负3了 但是这么表示可能会有什么问题？
+原码表示负数存在的问题 0000和1000，都是表示数字0，但是一个是正0，一个是负0。这显然不符合我们对零的理解。 无法进行加减运算：观察以下式子1(0001) + (-3(1011)) = -4(1100) 0001 +1011 -&amp;mdash;&amp;mdash;- 1100 那么如何用二进制表示一个数字，才能处理加减操作呢？
+补码 以时钟为例，拨动时钟理解补码
+把红色指针从指向“8”拨动到“6”， 有几种方式？ 有两种方式，如图所示： 以此图为例，如果指针目前指向8(红色指针)，要把它拨到6（绿色指针），有两种方式：
+把8往逆时针方向旋转到6（蓝色）这种方式就是进行8-2=6 把8往顺时针方向旋转到6（黄色）这种方式是进行8+10=18，但是时钟只能显示12个数字，所以18-12=6 补码减法的逻辑是：通过加法，给数字加上一个超过表示上限的数，使其最高位“丢失”的方式来实现减法。</description>
+    </item>
+    <item>
+      <title>Windows XP虚拟机中文版无需激活下载</title>
+      <link>http://localhost:1313/posts/nostalgic_winxp/</link>
+      <pubDate>Sun, 02 Oct 2022 18:51:17 +0800</pubDate>
+      <guid>http://localhost:1313/posts/nostalgic_winxp/</guid>
+      <description>在这里直接下载我最后完成的虚拟机镜像 虚拟机镜像下载：
+链接：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l
+提取码：374l
+我本地的VirtualBox 版本：6.1
+我可以先聊聊怀旧吗 也许对于老外来说，Win95是他们的青春，所以他们做了React95这样的UI库，或者大家一起努力写了个操作系统serenity。但是对于咱们国内的用户而言，当家用PC走进千家万户时，映入眼帘的是——Windows XP。
+一位中国台湾同胞sh1zuku编写开发了一个网页版的Windows XP模拟器:项目链接，在线演示，还有另一位来自越南的老哥khang-nd写了Windows 7的网页模拟器在线演示。
+我自然没有能力和时间去编写类似系统的开发，但是有一个想法从我的脑中浮现：那么我就装一个Windows XP虚拟机到电脑上就好了。
+你可能会选择的做法 安装VirtualBox； 下载镜像：从MSDN Itellyou中找到Windows XP的镜像，下载； 在VirtualBox中安装镜像; 启动镜像，安装系统 那么你会发现，安装的Windows XP只有30天试用。在二十一世纪初期，盗版泛滥，微软采取了非常强硬的措施限制盗版。即使你安装时输入了正确的序列号，微软也会要求你使用电话等方式进行激活。
+但是我们是来怀旧的啊！
+正确的做法 不能再使用这种正版的镜像了，需要使用别人处理好的，不需要激活的镜像。
+这里我找到了github上的一位老哥提供的链接github WinXPImage，但是他的镜像是位于谷歌云盘上的。我把它下载之后放进百度网盘里了：
+链接：https://pan.baidu.com/s/1ypKeaZixJXnbqAo4ZT0YLQ?pwd=30dd 提取码：30dd
+在VirtualBox安装此镜像后，你将获得一个无限期使用的，英文版的Windows XP。
+但你不一定能启动起来，你需要在导入OVA文件后，在OVA文件的目录下，执行以下命令：
+vbox-img geometry --filename Windows_XP_Professional-disk1.vdi --format VDI --cylinders 5874 --heads 255 --sectors 56 来自于github issue streeg 老哥给出的解决方案。
+如何汉化Windows XP？ 如果只是用英文版Windows XP，那么就达不到我们“怀旧”的目的了。 Windows XP英文版默认没有中文语言包。 我翻遍互联网，终于在一个犄角旮旯里找到了语言包mui_win_xp_pro_n_cd1.iso。
+我把它下载之后放进百度网盘里了：
+链接：https://pan.baidu.com/s/18mW9OCRejMDoEpUcih-zlA?pwd=peu4 提取码：peu4
+然后,
+设置VirtualBox里Windows XP虚拟机和物理机共享文件夹，具体方法 将mui_win_xp_pro_n_cd1.iso通过共享文件夹从物理机传进虚拟机中 安装，具体方法 最后重启虚拟机即可。
+上图! </description>
+    </item>
+    <item>
+      <title>Java TreeSet的一些用法和特性</title>
+      <link>http://localhost:1313/posts/about_java_treeset/</link>
+      <pubDate>Sat, 18 Jun 2022 17:10:44 +0800</pubDate>
+      <guid>http://localhost:1313/posts/about_java_treeset/</guid>
+      <description>先看一个例子（kotlin实现） import java.util.TreeSet /** * 定义一个用于测试TreeSet集合的结构 * 用TreeSet进行排名 * id: 玩家id * score: 玩家得分 */ data class PlayerScore(var id: Int, var score: Int): Comparable&amp;lt;PlayerScore&amp;gt; { override fun compareTo(other: PlayerScore): Int { return if (score &amp;gt; other.score) { 1 } else if (score &amp;lt; other.score) { -1 } else { 0 } } } fun main() { //创建一个TreeSet val treeSet: TreeSet&amp;lt;PlayerScore&amp;gt; = TreeSet() //创建3个PlayerScore，其中对id为101的对象存一个引用 //将3个PlayerScore装入set中 val id101Obj = PlayerScore(101,100) //按不同的顺序加入TreeSet treeSet.add(PlayerScore(102,200)) treeSet.</description>
+    </item>
+    <item>
+      <title>Linux C&#43;&#43; Socket实战</title>
+      <link>http://localhost:1313/posts/linux_socket_programming/</link>
+      <pubDate>Sat, 30 Apr 2022 23:23:49 +0800</pubDate>
+      <guid>http://localhost:1313/posts/linux_socket_programming/</guid>
+      <description>本文主要介绍Linux C++ 基础Socket网络编程。 大部分知识来自于网站：https://www.geeksforgeeks.org/socket-programming-cc/
+Socket编程状态图 从图中可以看到，服务端这边需要处理四步才能进入等待连接的状态，而客户端只要两步。
+Socket编程中各函数简单解析 本解析仅为自己理解所用，可能有些纰漏，有则改之。 原文中的知识总结得比我更好，尽量参考原文，我的理解仅做辅助之用。
+服务端 先说服务端。服务端需要指定好端口并监听，所以需要bind()绑定好端口，需要listen()进入监听状态，然后通过accept()阻塞等待客户端的消息。
+引用表：
+#include &amp;lt;sys/socket&amp;gt; socket() setsockopt() bind() listen() accept() #include &amp;lt;netinet/in.h&amp;gt; struct sockaddr_in #include &amp;lt;unistd.h&amp;gt; read() #include &amp;lt;arpa/inet.h&amp;gt; inet_pton() socket() 这个函数是用来创建一个socket，3个参数中，需要特别传的就是前两个。返回一个socket编号，是个int值。
+int sockfd = socket(domain, type, protocol)
+domain: IPV4 用 AF_INET， IPV6 用 AF_INET6 type: TCP 用 SOCK_STREAM, UDP 用 SOCK_UGRAM
+setsockopt() 这个函数用来给上面那个socket()函数返回的socket设置属性，作为服务端，为了方便？ 可以设置重用地址和端口号。
+int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen); 为了重用地址和端口号，需要这么做：
+level传SOL_SOCKET，代表你这次设置的属性值是给哪个模块用的 optname传SO_REUSEADDR|SO_REUSEPORT，代表你打算同时设置这两个属性 optval传一个int*指针，指向某一个数字 optlen传sizeof()上面的optval C++ socket很多函数都需要你再传一个length长度，以确定你真正想传给这个函数的数据是多长。</description>
+    </item>
+    <item>
+      <title>传统软件服务器与游戏服务器架构区别</title>
+      <link>http://localhost:1313/posts/compare_web_with_game_server/</link>
+      <pubDate>Sat, 16 Apr 2022 18:15:44 +0800</pubDate>
+      <guid>http://localhost:1313/posts/compare_web_with_game_server/</guid>
+      <description>项目 智能客服 爬虫 SLG游戏 语言 java python kotlin 模型 异步事件驱动 可能没什么模型可言 actor模型 传输协议 http http tcp + netty 传输结构 json json protobuf 数据库 oracle，redis mongodb mysql,redis 数据库框架 mybatis python库（类似jdbc） hibernate 缓存架构 管理员登录状态用redis 可能只缓存了页码 所有游戏用的数据全部缓存，每隔一段时间写到数据库中 配置信息 只有application.properties config.ini zookeeper，启动前需要将策划表信息刷到zk 并发 无并发（所以根本没用到锁） python多线程同时爬多个网站 无并发actor模型保证一次只做一件事 热更 直接重启 无 继承某个类的某个方法，替换掉线上的类 架构一览 智能客服服务端整体架构 SLG游戏整体架构 典型案例 智能客服聊天 graph LRA[客户端]--&gt;|http聊天消息|B[智能客服系统]--&gt;|将聊天信息放入mq|C[智能问答模型]--&gt;|问答信息记录|D[Oracle数据库]SLG游戏士兵出征 graph LRA[客户端]--&gt;|tcp发送的protobuf|B[Gate的Netty解包]--&gt;|actor内部消息转发|C[WorldActor校验外城沙盘各种状态]--&gt;|actor内部消息转发|D[playerActor内城校验和获取buff]其中worldActor和playerActor都通过读取内存的方式读取到需要的数据，并不直接读取mysql数据库。 内存里的数据每隔一段时间（30秒左右）将变化的数据通过hibernate的方法更新到mysql中。
+配置信息读取 对于智能客服来说，由于并发量业务量很少（因为投放的平台比较少，且晚上凌晨基本没什么人使用，且重启速度很快），有一些需求上的配置数值（比如发送几次“转人工”才进入转人工通道）是直接硬写在业务里的；也有一些配置信息是其他系统的请求地址url，会配在application.properties里。没有使用excel统一存储各个功能模块的配置信息，也确实不需要。
+但对于游戏来说，数值这块的配置至关重要，与玩法，奖励，游戏内生态息息相关。因此在游戏服务器里，所有的数值几乎都要从配置表中读取。目前Excel应该是处理数据能力最强的软件了，策划可以通过Excel非常快速的把数值配好。 启动服务器的时候要读取配置表到内存（广义上的）里。但在有了zookeeper这样的工具出现之后，配置表数据可以放在zk中，需要的时候再取出来。
+游戏服务器优势 传输结构为protobuf 服务器接收和发送的数据都是ProtoBuf转成的二进制，从而实现客户端服务器端统一的传输结构。protobuf自己有编码解码二进制的功能，从而实现消息数据的大小达到最小，编码解码是由netty执行的，使用上只需要将protobuf生成的对象传给netty即可。这边用的protobuf是v2版本的，有required，optional和repeated三种关键字，分别对传输message里的属性作出了约束。
+Akka Actor架构 Actor架构实现单线程的业务逻辑，开发过程中不需要对一些公用的属性上锁；通过内部消息的通讯，让数据处理有序进行。Akka cluster集群有动态负载均衡的功能，可以进行平行扩展，也就是说，如果一台服务器扛不住并发，只要再配置一台或几台新服务器，加入集群就可以完成负载均衡。</description>
+    </item>
+    <item>
+      <title>独立个人项目开发心得 - 任务切分、挑战性、实用性和半途而废</title>
+      <link>http://localhost:1313/posts/individual_project_experience/</link>
+      <pubDate>Tue, 05 Apr 2022 18:37:07 +0800</pubDate>
+      <guid>http://localhost:1313/posts/individual_project_experience/</guid>
+      <description>在写文章前容许我啰嗦一下：对于软件开发，我走了不少弯路，有时觉得自己作为API侠，无所不能，有时又觉得自己很多LeetCode题写不出来，无能为力。我有一个博客，但是写满了自己的絮絮叨叨，真正有本领的东西九牛一毛。
+我甚至没有自己的“代表作”，因为我是一个急性子，想马上得到结果（事实上计算机真能马上给出结果，但开发过程不行）。我经常在“造自己的轮子”和“用别人的轮子”之间徘徊，“造自己的轮子”比较有成就感，但是难度其实很大，需要踩很多别人踩过的坑；“用别人的轮子”则没有什么成就感，做出来也不像是自己做的。而平时工作中，每天都在用别人的轮子，自己真正从比较底层开始实现的情况是非常少的，导致我在闲暇时间也不想用别人的轮子。
+啰嗦一下自己的经历： 2004年，我家买了电脑，我也接触了很多电脑上的游戏。但是也许是我心浮气躁或者没有游戏天赋，我总是在游戏里输，总是追不上邻居小伙伴；
+2008年，我萌生了“自己写一个什么东西”的想法。
+2009年夏，小学毕业的我开始摆弄魔兽地图编辑器，虽然一点脚本都没写，做出来的游戏也粗制滥造。也开始查找“如何创建一个个人网站”。
+2010年，在和初中新同学混熟之后，我们打算做一个班级网站，我找了一圈发现5566和phpwindy有免费的论坛可以注册，我们注册了一个论坛，并且想把每天的作业更新发布上去。但事实上那位同学仅发布过一次作业。
+2011年，我利用爸妈给我的打游戏的时间，将网页保存下来，咬着牙研读里面的html标签，然后给我当时加入的一个魔兽争霸群做了一个纯html的“官网”。在某免费空间上注册了一个只支持asp和基础web的免费空间，用8uFTP把网站上传上去。
+2014年，在学校的图书室，我昧着良心在寻找Dreamweaver的教程书，还真给我找到了。但是我根本没有自己的电脑，只能对着书发呆脑补。
+2015年夏，我高中毕业，填志愿的时候几乎把“软件工程”和“计算机科学与技术”都填的满满的。我查了资料发现“软件工程”比“计算机科学与技术”学费更贵，在询问了父母的意见之后，我把“软件工程”填到了第一位，然后和父母说，一定会考上。最后我考上了一个普通的本科，开始学习软件工程专业。
+2015年暑假，还有一件事情，我自己注册了（已经失效了的）域名，购买了阿里云的虚拟主机，配置了WordPress服务器，在上面写博客文章。仅仅是备份就花了一周，然后终于拿到了自己的备案号。我永远不会忘记第一次用自己的域名打开自己的网站那一刻的快乐。
+2016年春，我推开软件学院大楼某间实验室的大门，然后就我大学一年级就和学长们一起做项目，当时团队里缺人写html页面，而我正好已经算是html css入门了（完全不会js），开始仿写各大网站。然后想自己写一个象棋游戏，结果找资料就找了一个下午，最后不了了之。
+2017年夏，我跟着课程开始研究蚁群算法，最后实现了论文的内容。现在回想起来，对着论文依葫芦画瓢其实没什么技术含量，当打包运行并且在台上汇报之后，我真的觉得很快乐。不过，我并没有学到什么“真才实学”。
+2017年秋，在Java课上，我带领团队（其实开发就我一个人）用Bmob作为后端，安卓作为前端，开发了一个“今日特价” app。我对着github上的一个高仿微博的项目，拼命的抄各种代码。而最后我觉得写的太差，而把代码都删除了，真是太可惜了。
+2018年，我有了很多很多想法，但是都没有执行下去。
+我想自己从零搭建一个博客，用新学的SpringMVC，替换掉WordPress。 我想做一个网站，叫做“预言”，简单来说就是让用户发表一些对未来的猜测，并且定一个时间，然后系统到了那个时间会提醒用户确认是否预言成功 我想做一个安卓app，像三国志11一样，将所有三国的人物，历史事件，城池信息，战役，单挑，舌战都完整地汇总在里面，然后再像游戏一样，将“官渡之战”、“赤壁之战”、“夷陵之战”都像三国志11一样活灵活现地展示在地图上。 当时我觉得做网页做系统已经很没有意思了，所以我决定做机器学习，深度学习。 我想考研，因为不太满意自己的双非学历。 那时候LPL竞猜挺火的，我和朋友商量写一个统计各队伍各选手的评分的系统。当时我先用jQuery写了前端，拼命的append html标签，导致我自己写完的时候都不知道自己在写什么。 2019年春，考研没考上，但是数学二确实也让我复习了高数和线代。借助这点基础，我选了一个“手写汉字识别的研究”的题目，然后开始学习吴恩达的机器学习入门，学习深度学习Tensorflow，学习卷积神经网络等等，然后由于自己的电脑的显卡是1050ti，有点不够用，我就花钱去租专门用于训练的服务器，印象中要6块1小时。那时候为了一个好的结果，，花了不少家里的钱。
+2019年春夏之交，我的论文提交给了一个不太懂机器学习的老师，老师一看就觉得我在抄别人的论文。给我的建议是，我要么一意孤行继续这样答辩，但可能延毕；要么就把手写汉字识别改成某个系统，走需求分析，UML设计，数据库设计，开发，测试，结论的框架。当时我感到了深刻的绝望，自信心几乎被击垮，支离破碎。仗着自己之前也曾一个人咬着牙实现过不少系统，我决定把这个算法的研究都丢掉，转用百度提供的手写汉字识别api，包装成一个笔记系统，手写的笔记拍个照就转储成汉字。
+2019年秋，我入职某软件公司，我终于会写Vue了。在之前我总是写jQuery。我甚至以为jQuery是最好的解决方案。也许2015年前是，2015年后就不是了。
+2020年，我虽然是Java开发工程师，但是做了很多很多前端的内容。我被迫花很多时间去调CSS，去抄别人的js来完成移动端的h5网页的展示效果。我感到非常的厌恶，觉得自己的能力被封锁了。领导想弄区块链，想提供API接口给其他公司使用，但现在看来根本没有任何优势，仅仅是困兽之斗。另外，为了能把智能客服的问答预料快速查找，我学习了ElasticSearch数据库的用法。为了爬取一些信息，我学习了Python开发。
+2020年秋，我被“发配”北京，每天都过得很不开心，回家遥遥无期。本来说好的出差一个月，到了地方之后却要求长期驻地开发。而那套系统的代码很乱，找到机会我马上就离职了。
+2021年，我来到上海，接触了游戏服务器开发。我第一次发现服务器是如此的庞大。
+我学习了新的架构：Actor架构。 我受到网上的信息“蛊惑”，觉得hibernate已经过时，但在游戏这个场景里，hibernate比mybatis更适合。 我以前不理解Zookeeper到底用来做什么，他们总是只教我存和取，现在我知道可以配置系统信息； 我自学过netty，但是不理解为什么要用netty，现在我知道了，封包解包，NIO这些情况用netty确实快人一步。 我以前觉得mysql能力有限，但是在mysql前加一层缓存的话，速度就会成倍提高。还有索引和主键的配置也是有考究的，慢查询也是可以分析的。并不能武断的认为mysql能力不行。 还有一些完全没听过的，比如protobuf，akka，集群，ticker，在我之前的认知里只有json是唯一通信的结构。 2022年，我回过头来发现，我好像是从2021年之后，才真正打破“啥都会，啥都不会”的尴尬局面。在此之前，我好像什么都会：
+Web前端：html，css，js基础语法，jQuery的用法，简单的WebPack打包，简单的Vue Java后端：SpringMVC过渡到SpringBoot，MyBatis 移动端：基础的Android开发 数据库：使用过关系型的Oracle，mysql，也使用过非关系型的mongodb和ElasticSearch Python：爬虫相关 服务器：只会简单的java -jar部署，netstat -nlp看端口，然后给我所有的电脑都装好双系统。 又啥都不会：
+Web前端不会最有技术含量的React Java后端不会hibernate，HashMap的底层逻辑，Java虚拟机的垃圾回收机制都是用背的。 移动端：不会用kotlin写安卓，也不知道最新的安卓有什么内容 数据库：从没有仔细学习mysql背后的存储优化原理，也没有上手实操过 服务器：以为服务器只是java -jar，而没有研究过docker，zookeeper，jenkins等更优秀的工具和中间件。装双系统也就装的那一刻用一下，真要做事还是用虚拟机多开…… 没有研究过消息队列。 总的来说就是，都是浅尝辄止。当跑完hello world，把环境搭起来的时候，我就觉得自己行了，牛了，然后关掉编译器去玩了。
+不过有意思的是，2021年我在10年工作经验的主程面前点开8uFTP的时候，他惊讶地问：“woc你怎么在用这个东西？太老了这个，可以换一下Filezila”。而我会心一笑。后来团队发生了变动，换了个新主程。在闲暇时间我和他攀谈“网页三剑客”，向他展示我2015年就搭建起来的博客，和他开玩笑说，我和他是同一个软件开发时代的人，我是Young OG！
+但也仅此而已了。也许我真的是Young OG，但是我总是缺了点什么很关键的东西。以前我觉得自己不懂坚持，总是半途而废，而现在，在上海工作了一年多之后，我发现我的能力并没有任何问题，我的问题在于不知道怎么将工作切分，不知道怎么保存自己的体力，不知道自己的目标是什么。
+不管是写LeetCode，写项目，还是研究某个新框架，都需要安排时间，都需要统筹自己拥有的资源。特别是写项目，写项目有一点像写小说。只有将小说里每个章节都完成并且有所关联（长篇小说），才能是一部优秀的小说。长篇小说家也不是一朝一夕能写完一部大作，我们软件开发人员自然也不能一朝一夕写好一个系统，更何况我们还需要测试自己的代码。
+所以我们需要对任务进行切分。
+任务切分的方法和意义 最近两三个月，在工作中，我开始使用画图工具来画一些流程图或者架构图。这些图不是标准的UML图，但是是我自己能看懂的图。
+简单说一下本次系统做了什么。 我平常会看LPL比赛，尤其是季后赛或者国际赛事。这些赛事一般是BO5（五局三胜制），一局比赛一般30分钟，加上休息的10分钟，如果打满5局大概4个小时多。如果中途出了点差错，还有暂停的时间。 而最好看的比赛往往不是前两三局，而是第四局或者第五局。因为如果第三局就结束这场BO5，只有可能是3-0碾压，没什么意思。而如果打到第四局，必然是2-1，这时领先方再加把劲就赢下整场比赛，而落后方已经站到悬崖边，这时候的比赛是最好看的。 但要打完3局，至少也要两个多小时了。如果我手头上有一件其他的事情要做，那么我就需要经常点开某个APP检查比赛是否到了2-1？又或者我对两队的实力很信任，我相信他们一定能打到2-2进决胜局，那我就很可能需要在三个小时内不断的抽时间查看比赛进度。这会影响我手上的事的效率。 所以，不如写一个系统，每隔好几分钟去请求一下LPL的接口，和数据库的预定比赛信息比对，如果到达了我预定的比赛比分，或者到不了我预定的比分，就发邮件提醒我。我只需要开着QQ，等着右下角提示就好了。
+技术选型 回到上一节说的“造自己的轮子”和“用别人的轮子”的讨论，我平时的工作用Java进行开发，如果用SpringBoot，在路由，操作数据库逻辑，发送邮件那几块的内容，在数据库设计好了的情况下，我会写的很快。 在这个情况下，“用别人的轮子”就是用SpringBoot，“造自己的轮子”就是用某个自己没学过的语言或者框架，边做边学。 本次我选用的是Go语言和Gin，对标Java和SpringBoot。</description>
+    </item>
+    <item>
+      <title>使用Python实现简单UDP Ping</title>
+      <link>http://localhost:1313/posts/simple_udp_ping_with_python/</link>
+      <pubDate>Sat, 13 Nov 2021 15:31:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/simple_udp_ping_with_python/</guid>
+      <description>套接字编程作业2：UDP ping 程序 在本实验中，您将学习使用Python进行UDP套接字编程的基础知识。您将学习如何使用UDP套接字发送和接收数据报，以及如何设置适当的套接字超时。在实验中，您将熟悉Ping应用程序及其在计算统计信息（如丢包率）中的作用。
+您首先需要研究一个用Python编写的简单的ping服务器程序，并实现对应的客户端程序。这些程序提供的功能类似于现代操作系统中可用的标准ping程序功能。然而，我们的程序使用更简单的UDP协议，而不是标准互联网控制消息协议（ICMP）来进行通信。 ping协议允许客户端机器发送一个数据包到远程机器，并使远程机器将数据包返回到客户（称为回显）的操作。另外，ping协议允许主机计算它到其他机器的往返时间。
+以下是Ping服务器程序的完整代码。你的任务是写出Ping客户端程序。
+服务器代码 以下代码完整实现了一个ping服务器。您需要在运行客户端程序之前编译并运行此代码。而且您不需要修改此代码。 在这个服务器代码中，30％的客户端的数据包会被模拟丢失。你应该仔细研究这个代码，它将帮助你编写ping客户端。
+# UDPPingerServer.py # We will need the following module to generate randomized lost packets import random from socket import * import random # Create a UDP socket # Notice the use of SOCK_DGRAM for UDP packets serverSocket = socket(AF_INET, SOCK_DGRAM) # Assign IP address and port number to socket serverSocket.bind((&amp;#39;&amp;#39;, 12000)) while True: # Generate random number in the range of 0 to 10 rand = random.</description>
+    </item>
+    <item>
+      <title>使用Python开发一个简单的web服务器</title>
+      <link>http://localhost:1313/posts/simple_web_server_with_python/</link>
+      <pubDate>Sun, 07 Nov 2021 21:02:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/simple_web_server_with_python/</guid>
+      <description>来自书籍《计算机网络-自顶向下方法-第6版(课本)》第120页，第二章应用层的课后题第一题。
+基础题目 题目：在这个编程作业中，你将用Python语言开发一个简单的Web服务器，它仅能处理一个请求。具体而言，你的Web服务器将：（1）当一个客户（浏览器）联系时创建一个连接套接字；（2）从这个连接接收HTTP请求；（3）解释该请求以确定所请求的特定文件；（4）从服务器的文件系统获得请求的文件；（5）创建一个由请求的文件组成的HTTP响应报文，报文前面有首部行；（6）经TCP连接向请求的浏览器发送响应。如果浏览器请求一个在该服务器中不存在的文件，服务器应当返回一个“404 Not Found”差错报文。
+参考或者说学习了github上moranzcw的仓库：Computer-Networking-A-Top-Down-Approach-NOTES的内容，完成了这道题。
+代码https://github.com/moranzcw如下：
+# import socket module from socket import * serverSocket = socket(AF_INET, SOCK_STREAM) # Prepare a sever socket # Fill in start # 定义ip和端口号，然后bind绑定socket host = &amp;#39;&amp;#39; port = 6789 serverSocket.bind((host, port)) serverSocket.listen(1) # Fill in end while True: # Establish the connection print(&amp;#39;Ready to serve...&amp;#39;) connectionSocket, addr = serverSocket.accept() # Fill in start #Fill in end try: message = connectionSocket.recv(1024) # Fill in start #Fill in end filename = message.</description>
+    </item>
+    <item>
+      <title>搭建Spark实战环境（3台linux虚拟机集群）（一）样板机的搭建</title>
+      <link>http://localhost:1313/posts/build_spark_environment/</link>
+      <pubDate>Sat, 23 May 2020 17:42:09 +0800</pubDate>
+      <guid>http://localhost:1313/posts/build_spark_environment/</guid>
+      <description>系统及软件配置 系统配置 内存：16g 2400 cpu：i5 9400F
+软件配置 Windows 10 1903版本 VMware workstation 15.10 CentOS centos-release-7-7.1908.0.el7.centos.x86_64 Java jdk-8u241-linux-x64.tar.gz Scala scala-2.11.8.tgz 值得一提的是，win10 1903版本与VMware 15.10之前的版本不兼容，会出现卡死（虚拟机繁忙）的问题，该问题在15.10版本解决。 资源来源于网络： VMware 15.10 链接：https://pan.baidu.com/s/1bpF3M1V3qPydQgGl-hUC1g 提取码：sb8t CentOS 7.7 链接：https://pan.baidu.com/s/1xFOlCvNrmXXwciVNOL2Pew 提取码：wxdx Java jdk-8u241-linux-x64.tar.gz 链接：https://pan.baidu.com/s/1E1TyObvyO6iQUW44lTCqDQ 提取码：6xw9 Scala scala-2.11.8.tgz 链接：https://pan.baidu.com/s/1TQB-wnffHh0i2aqzzfSi6A 提取码：iowh
+安装前的准备 查看Windows下的网络配置 以Windows 10 1903为例（windows下控制台输入“winver”可以看自己windows版本），在控制面板-&amp;gt;网络和Internet-&amp;gt;网络连接中，可以看到本机上的网络配置。本次搭建这个集群，我们需要虚拟机和物理机（也就是windows）共用一个网络，所以需要使用桥接模式。 本人电脑联网时使用的是这个WLAN 2，它使用的网卡是Realtek 8821AE &amp;hellip;. 的，记住这个名字。
+配置VMware 虚拟网络编辑器 使用管理员权限打开VMware，菜单栏的编辑-&amp;gt;虚拟网络适配器：将桥接模式的“桥接到”指向刚才记下的Realtek 8821AE，点击确定保存配置。 同时还要记住我WLAN 2这张网卡的网络配置信息：（windows cmd输入ipconfig查看） 集群及网络配置 根据刚才WLAN 2网络配置信息可知，我的虚拟机的网卡只能配置为192.168.3.***。 你得根据自己网卡上的网络配置去修改虚拟机网卡配置。
+序号 IP地址 机器名 运行进程 核数/内存 用户名 1 192.168.3.30 master NN/SNN/DN/RM</description>
+    </item>
+    <item>
+      <title>Springboot操作MongoDB，包括增改查及复杂操作</title>
+      <link>http://localhost:1313/posts/spring_operate_mongodb/</link>
+      <pubDate>Tue, 19 May 2020 12:41:37 +0800</pubDate>
+      <guid>http://localhost:1313/posts/spring_operate_mongodb/</guid>
+      <description>单条件查询 使用BasicDBObject配置查询条件
+List&amp;lt;AbstractMongoEntity&amp;gt; list = Lists.newArrayList(); // 配置查询条件 BasicDBObject cond1 = new BasicDBObject(); cond1.append(&amp;#34;_id&amp;#34;, new ObjectId(&amp;#34;5de39f20684014f1d8b8fa37&amp;#34;)); FindIterable&amp;lt;Document&amp;gt; findIterable = // 执行查询 mongoTemplate.getCollection(&amp;#34;crawler_cjwt&amp;#34;).find(cond1); // 装配查询结果 MongoCursor&amp;lt;Document&amp;gt; cursor = findIterable.iterator(); Document document = null; CjwtMongoEntity question = null; while (cursor.hasNext()) { document = cursor.next(); // 使用MongoConverter可以将结果对象映射到Java Bean question = mongoConverter.read(CjwtMongoEntity.class, document); list.add(question); } System.out.println(question); cursor.close(); 返回的是一个指针，所以我们需要通过该指针遍历结果，并装进list中返回使用。 对应的mongo脚本：
+db.crawler_cjwt.find({&amp;#39;_id&amp;#39;:new ObjectId(&amp;#34;5de39f20684014f1d8b8fa37&amp;#34;)}) 查询该集合所有结果 List&amp;lt;FgcxMongoEntity&amp;gt; list = Lists.newArrayList(); // find函数没有传参，即查询所有 FindIterable&amp;lt;Document&amp;gt; findIterable = crawlMongoTemplate.getCollection(&amp;#34;fgcx&amp;#34;).find(); MongoCursor&amp;lt;Document&amp;gt; cursor = findIterable.</description>
+    </item>
+    <item>
+      <title>Unison在Linux下的安装与使用</title>
+      <link>http://localhost:1313/posts/unison_install_in_linux/</link>
+      <pubDate>Sat, 22 Feb 2020 14:19:06 +0800</pubDate>
+      <guid>http://localhost:1313/posts/unison_install_in_linux/</guid>
+      <description>这是一篇在公司写的文档，但不涉及公司隐私。几乎所有内容参考于：https://www.cnblogs.com/welcomer/p/5068287.html
+引言 编写目的 编写本文档是为了让读者快速上手使用Unison进行两台Linux服务器文件进行同步。
+前景 Unison是windows和unix平台下都可以使用的双向文件同步工具，它能使两个文件夹（本地或网络上的）保持内容的一致。 unison 拥有其它一些同步工具或文件系统的相同特性，但也有自己的特点：
+跨平台使用； 对内核和用户 权限 没有特别要求； unison 是双向的，它能自动 处理两分拷贝中更新没有冲突的部分，有冲突的部分将会显示出来让用户选择更新策略； 只要是能连通的两台主机 ，就可以运行 unison ，可以直接使用 socket 连接或安全的 ssh 连接方式，对带宽 的要求不高，使用类似 rsync 的压缩传输协议。
+Unison双向同步的一个缺点是,对于同名文件在两个同步文件夹中都被修改时,unison是不会去同步的,因为unison无法判断以那个为准。
+定义 本文档介绍如何同步两台服务器，为表述方便，将第一台服务器命名为“服务器1”，操作该服务器的用户为“system1”；将第二台服务器命名为“服务器2”，操作该服务器的用户命名为“system2”。
+参考资料 《使用Unison同步服务器目录》 https://www.cnblogs.com/welcomer/p/5068287.html
+安装与初始化 由于在目录同步时需要跨服务器通过ssh连接，因此不建议使用root用户，建议新建普通用户进行操作。
+在两台或多台服务器之间同步，只需要在第一台服务器上安装Unison，再用scp连接将可执行的unison文件复制到第二台服务器上即可。
+安装Unison 由于使用源码包安装Unison需要安装Ocaml依赖，且Unison默认将文件复制到“/用户名/bin/”目录下，会导致在make install步骤时提示错误，所以建议使用apt-get或yum安装。
+Ubuntu下安装：在配置好阿里云的apt-get源之后，使用sudo apt-get install unison安装。
+CentoOS下安装：使用yum install unison安装。
+将Unison复制到服务器2 使用apt-get或yum安装Unison后，默认放在/usr/bin/unison。
+1、使用ssh连接到远程主机：
+scp /usr/bin/unison root@服务器2的IP地址:/root/ 注意：在Ubuntu下，如果服务器没有安装openssh-server，则无法被其他服务器连接，解决方法：
+使用sudo apt-get install openssh-server安装 在/etc/ssh/sshd_config文件中，把将PermitRootLogin prohibie-password 修改为：PermitRootLogin yes 重启ssh服务即可使用。 2、登录服务器2，使用复制命令，将可执行文件unison从/root/移到/usr/bin/下。
+cp /root/unison /usr/bin/ 3、在两台服务器上都输入unison –version，查看是否安装成功。如果返回了版本号，则安装成功。
+[root@服务器名 ~]$ unison -version unison version 2.</description>
+    </item>
+    <item>
+      <title>Java实现类似WINSCP访问远程Linux服务器，执行命令、上传文件、下载文件</title>
+      <link>http://localhost:1313/posts/java_implement_winscp_like/</link>
+      <pubDate>Thu, 20 Feb 2020 10:32:24 +0800</pubDate>
+      <guid>http://localhost:1313/posts/java_implement_winscp_like/</guid>
+      <description>pom.xml添加的依赖：
+&amp;lt;!-- https://mvnrepository.com/artifact/ch.ethz.ganymed/ganymed-ssh2 --&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;ch.ethz.ganymed&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;ganymed-ssh2&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;262&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; 这里注意，不同版本的这玩意用法有差别。这里我使用的是262。
+操作类代码如下：
+import ch.ethz.ssh2.*; import java.io.*; /** * @Author: 风萧古道的博客 windypath.com * @Date: 2019/11/29 15:14 */ public class SSHUtil { // uploadFile to Linux /** * 上传文件到Linux * * @param ip ip地址 * @param username 登录用户名 * @param password 密码 * @param remoteFilePath 目标文件所在完整目录 * @param file 本地文件File对象 * @return */ public static boolean uploadFile(String ip, String username, String password, String remoteFilePath, File file) { FileInputStream input = null; BufferedOutputStream boutput = null; Connection conn = null; try { conn = new Connection(ip); conn.</description>
+    </item>
+    <item>
+      <title>一个被废弃的项目——自动爬取信息然后发给我自己邮箱上</title>
+      <link>http://localhost:1313/posts/a_bad_project_crawler_and_email/</link>
+      <pubDate>Sun, 09 Feb 2020 17:21:03 +0800</pubDate>
+      <guid>http://localhost:1313/posts/a_bad_project_crawler_and_email/</guid>
+      <description>这是一个python项目。
+使用到的技术包括爬虫和发邮件
+代码如下：
+#!/usr/bin/env python # -*- coding: utf-8 -*- # @Time : 2020/2/5 22:49 # @Author : Johnathan Lin import time import requests import random import json import re from bs4 import BeautifulSoup import smtplib from email.mime.text import MIMEText from email.header import Header from urllib.parse import urljoin from bs4.element import NavigableString # 第三方 SMTP 服务 mail_host = &amp;#34;smtp.163.com&amp;#34; # 设置服务器 mail_user = &amp;#34;你的邮箱&amp;#34; # 用户名 mail_pass = &amp;#34;你的密码&amp;#34; # 口令 # 发送人和接收人 sender = &amp;#39;你的邮箱&amp;#39; # 自己发给自己就可以了， receivers = [&amp;#39;你的邮箱&amp;#39;] # 接收邮件，可设置为你的QQ邮箱或者其他邮箱 # 爬虫请求头 headers = { &amp;#39;User-Agent&amp;#39;: &amp;#39;Mozilla/5.</description>
+    </item>
+    <item>
+      <title>Python连接MongoDB和Oracle实战</title>
+      <link>http://localhost:1313/posts/python_connect_mongodb_and_oracle/</link>
+      <pubDate>Sun, 09 Feb 2020 17:06:29 +0800</pubDate>
+      <guid>http://localhost:1313/posts/python_connect_mongodb_and_oracle/</guid>
+      <description>Python连接MongoDB 安装 首先要安装pymongo，用pip装一下就好了。
+工具类python文件 以下直接给出我写的mongodb操作类
+#!/usr/bin/env python # -*- coding: utf-8 -*- # @Time : 2019/12/23 14:02 # @Author : Johnathan Lin 林佳庆 &amp;#34;&amp;#34;&amp;#34; 数据导入Mongo模块 &amp;#34;&amp;#34;&amp;#34; import os import pymongo from utils.configReader import read_mongo_config # 设置编码 os.environ[&amp;#39;NLS_LANG&amp;#39;] = &amp;#39;SIMPLIFIED CHINESE_CHINA.UTF8&amp;#39; def get_mongodb_collection(collection): &amp;#34;&amp;#34;&amp;#34; 根据配置文件和数据库和表得到表（collection） :param database: 数据库 :param collection: 表 :return: 表的对象 &amp;#34;&amp;#34;&amp;#34; mongo_config = read_mongo_config() client = pymongo.MongoClient(mongo_config[&amp;#39;client&amp;#39;]) db = client[mongo_config[&amp;#39;database&amp;#39;]] if mongo_config[&amp;#39;auth&amp;#39;] == &amp;#39;True&amp;#39; or mongo_config[&amp;#39;auth&amp;#39;] == &amp;#39;true&amp;#39;: db.</description>
+    </item>
+    <item>
+      <title>vue和springboot项目部署到Linux服务器</title>
+      <link>http://localhost:1313/posts/vue_springboot_deploy_in_linux/</link>
+      <pubDate>Mon, 27 Jan 2020 16:53:23 +0800</pubDate>
+      <guid>http://localhost:1313/posts/vue_springboot_deploy_in_linux/</guid>
+      <description>写在前面的话 前后端分离的项目中，需要分别部署前端与后端项目。前端项目使用npm打包，将得到的dist文件夹下的内容上传到服务器后，用nginx的alias指向文件夹即可访问，而后端项目使用maven打包，需使用tomcat在后台启动，再通过nginx转发，供前端项目调用。
+打包 前端的打包 前端项目使用的是vue-element-admin的基础版本：vue-admin-template
+根据教程从github上下载后，在webstorm中运行成功。
+原项目中只有前端，但可以完成简单的数据交互，根据使用手册介绍，该项目使用了mockjs模拟数据。
+而我们需要做前后端交互，故不使用mockjs。
+修改为访问后端的路径 方法很简单，在根目录下的.env.development文件下，将VUE_APP_BASE_API改为你的本地后端地址。 .env.developmentVUE_APP_BASE_API = &amp;#39;http://localhost:8080&amp;#39; 在根目录下的.env.production文件下，将VUE_APP_BASE_API改为你的云服务器的后端地址。
+.env.production# just a flagENV = &amp;#39;production&amp;#39;# base apiVUE_APP_BASE_API = &amp;#39;http://？？？？？？？/springbootdemo&amp;#39; 这里可能会有一些小bug，主要是要与服务器的路径对应起来。
+根据该项目package.json内所设置的，使用npm run build:prod打包，生成dist文件夹 最后得到dist文件夹。 后端的打包 编写接口 首先，编写Controller，写一些接口。
+package com.windypath.demo.controller; import com.windypath.demo.response.ResponseData; import com.windypath.demo.response.ResponseDataUtil; import org.springframework.web.bind.annotation.RequestMapping; import org.springframework.web.bind.annotation.RestController; @RequestMapping(&amp;#34;/&amp;#34;) @RestController public class MainController { @RequestMapping(&amp;#34;/hello&amp;#34;) public ResponseData hello() { return ResponseDataUtil.buildSuccess(&amp;#34;hello!&amp;#34;); } @RequestMapping(&amp;#34;/&amp;#34;) public ResponseData root() { return ResponseDataUtil.buildSuccess(&amp;#34;root!&amp;#34;); } } 此处使用的ResponseData来自于https://blog.</description>
+    </item>
+    <item>
+      <title>Python的一些用法（可能不定时更新）</title>
+      <link>http://localhost:1313/posts/some_usages_of_python/</link>
+      <pubDate>Sun, 01 Dec 2019 10:45:46 +0800</pubDate>
+      <guid>http://localhost:1313/posts/some_usages_of_python/</guid>
+      <description>strip()、lstrip()、和rstrip() Python strip() 方法用于移除字符串头尾指定的字符（默认为空格或换行符）或字符序列。
+注意：该方法只能删除开头或是结尾的字符，不能删除中间部分的字符。
+lstrip()就是从左边匹配然后删除字符，rstrip()从右边匹配然后删除字符。
+表面上挺好理解的，但是用起来还是有一些陷阱。
+如：
+if __name__ == &amp;#39;__main__&amp;#39;: string = &amp;#39;abcdefghijkl&amp;#39; print(string.lstrip(&amp;#39;bac&amp;#39;)) # 输出 defghijkl 可以看到，虽然左侧开头的&amp;rsquo;abc&amp;rsquo;和&amp;rsquo;bac‘顺序不同，但lstrip()方法依旧将其匹配然后删除了。
+所以如果我只是要删除开头的某一部分，比如获取标签内的字符：
+if __name__ == &amp;#39;__main__&amp;#39;: string = &amp;#39;&amp;lt;a href=&amp;#34;http://www.windypath.com&amp;#34;&amp;gt;abcde&amp;lt;/a&amp;gt;&amp;#39; print(string.lstrip(&amp;#39;&amp;lt;a href=&amp;#34;http://www.windypath.com&amp;#34;&amp;gt;&amp;#39;).rstrip(&amp;#39;&amp;lt;/a&amp;gt;&amp;#39;)) # 输出 bcde 就会把标签内容的最左边的a给匹配到了。
+那么如何实现只根据字符顺序，匹配前面的字符呢？
+用正则表达式：re.sub()
+Python 的 re 模块提供了re.sub用于替换字符串中的匹配项。
+语法：
+re.sub(pattern, repl, string, count=0, flags=0) 参数：
+pattern : 正则中的模式字符串。 repl : 替换的字符串，也可为一个函数。 string : 要被查找替换的原始字符串。 count : 模式匹配后替换的最大次数，默认 0 表示替换所有的匹配。 使用该方法：
+import re if __name__ == &amp;#39;__main__&amp;#39;: string = &amp;#39;&amp;lt;a href=&amp;#34;http://www.</description>
+    </item>
+    <item>
+      <title>java正则表达式 - 双反斜杠（\）和Pattern的matches()与find()</title>
+      <link>http://localhost:1313/posts/regular_expression/</link>
+      <pubDate>Sun, 24 Nov 2019 19:43:31 +0800</pubDate>
+      <guid>http://localhost:1313/posts/regular_expression/</guid>
+      <description>参考文献 java正则表达式（find()和 matches()） java正则表达式，求匹配：双反斜杠（\）合法，单反斜杠不合法（\） Java 正则表达式-菜鸟教程 正则表达式-菜鸟教程
+Pattern类和Matcher类 在Java中，与正则表达式相关的类有两个：Pattern和Matcher
+菜鸟教程已经介绍的很好了。
+java.util.regex 包主要包括以下三个类：
+Pattern 类：pattern 对象是一个正则表达式的编译表示。Pattern 类没有公共构造方法。要创建一个 Pattern 对象，你必须首先调用其公共静态编译方法，它返回一个 Pattern 对象。该方法接受一个正则表达式作为它的第一个参数。 Matcher 类：Matcher 对象是对输入字符串进行解释和匹配操作的引擎。与Pattern 类一样，Matcher 也没有公共构造方法。你需要调用 Pattern 对象的 matcher 方法来获得一个 Matcher 对象。 PatternSyntaxException：PatternSyntaxException 是一个非强制异常类，它表示一个正则表达式模式中的语法错误。 然后菜鸟教程的第一个代码样例如下：
+import java.util.regex.*; class RegexExample1{ public static void main(String args[]){ String content = &amp;#34;I am noob &amp;#34; + &amp;#34;from runoob.com.&amp;#34;; String pattern = &amp;#34;.*runoob.*&amp;#34;; boolean isMatch = Pattern.matches(pattern, content); System.out.println(&amp;#34;字符串中是否包含了 &amp;#39;runoob&amp;#39; 子字符串? &amp;#34; + isMatch); } } 但我尝试把他改成自己的正则表达式，如”^I am“来匹配开头的”I am&amp;quot;字符串时，我发现程序一直返回false。</description>
+    </item>
+    <item>
+      <title>简述爬虫对两种网站的不同爬取方式</title>
+      <link>http://localhost:1313/posts/two_crawl_web_approach/</link>
+      <pubDate>Fri, 15 Nov 2019 23:05:46 +0800</pubDate>
+      <guid>http://localhost:1313/posts/two_crawl_web_approach/</guid>
+      <description>爬虫的目的是采集网站的数据。而网站渲染数据有两种方式。我个人将其称为前端渲染和后端渲染。
+前端渲染 前端渲染指的是网页并不直接展示数据，而是在读取完网页之后，再次向服务器请求数据。在得到数据之后再渲染到网页中。
+后端渲染 后端渲染指的是服务器收到请求之后，将数据在后端写入网页，然后将带有数据的网页直接展示在浏览器中。
+爬取方式 目前我并没有使用scrapy、webmagic等爬虫框架，仅使用python的requests模块，json模块和BeautifulSoup框架。
+前端渲染的爬取方式
+步骤：使用requests请求数据，再用json.loads()方法将返回的数据解析，最后操作得到的数据对象即可。
+我们这里以豆瓣为例。
+分析该网页。 爬取的url：
+https://movie.douban.com/explore#!type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0
+将url放进浏览器，先点开F12，然后访问。这里我使用谷歌浏览器 可以看到，红框内的All、XHR、JS等。这是一个筛选框，用来筛选该网页请求的数据。
+All代表所有，XHR代表异步请求，JS代表Js文件，Css……
+对于前端渲染，必然有异步的过程，所以选择XHR。
+通过观察，发现第三行是“选电影”列表的数据。 这时，我们点击Headers，查看其请求的详细信息。 可以看到，这是一个Get请求，在下面的Qurey String Parameters可以看到该请求的参数。
+数据对应的网页内容为： 测试这个请求。 浏览器可以发起这个请求得到相应，但我们的代码不一定能做到。有一部分原因是网站开发者本身不希望数据被爬取。所以我们需要测试这个接口。这里推荐Postman，先对接口进行测试，查看是否有些Headers或者参数是不需要的，以简化代码量。
+Postman的用法下回分解吧。
+编写代码。 #!/usr/bin/env python # -*- coding: utf-8 -*- # @Time : 2019/11/15 22:11 # @Author : Johnathan Lin import requests import json if __name__ == &amp;#39;__main__&amp;#39;: # 请求头，一般写上User-Agent防止爬虫，遇到有验证状态的网站要填写Cookie headers = { &amp;#39;User-Agent&amp;#39;: &amp;#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36&amp;#39; } # 请求Url url = &amp;#39;https://movie.</description>
+    </item>
+    <item>
+      <title>Vue的路由配置及手动改地址栏为啥又跳转回来？？</title>
+      <link>http://localhost:1313/posts/why_vue_router_back/</link>
+      <pubDate>Tue, 05 Mar 2019 20:22:47 +0800</pubDate>
+      <guid>http://localhost:1313/posts/why_vue_router_back/</guid>
+      <description>​ vue-cli（vue脚手架）超详细教程：vue-cli（vue脚手架）超详细教程_Yin_Xiaobo的博客-CSDN博客_vue-cli(vue脚手架)超详细教程
+这个教程里面是使用 vue init webpack app-name，但官方文档中建议的命令是 vue create app-name
+但这两个命令创建的项目是有些不一样的，vue init是版本2的方法，vue create是版本3的方法。但网上搜索了一圈，有人说两种方法都是vue.js + webpack结合的。
+当然了现在还不是很熟悉babel，所以根本看不懂。。
+这回我使用vue init webpack vue-demo，一阵操作之后，得到： 这样的一个结构。注意，src/router下有个index.js，里面装着路由：
+import Vue from &amp;#39;vue&amp;#39; import Router from &amp;#39;vue-router&amp;#39; import HelloWorld from &amp;#39;@/components/HelloWorld&amp;#39; Vue.use(Router) export default new Router({ routes: [ { path: &amp;#39;/&amp;#39;, name: &amp;#39;HelloWorld&amp;#39;, component: HelloWorld } ] }) 同时在components文件夹下有一个 HelloWorld.vue，里面装着一个模板文件。
+注意到在/src/router/index.js里，第三行引入了HelloWorld的component，然后放在路由中，根目录指向的component。
+所以在执行npm run dev之后，就可以直接打开HelloWorld了。 这个页面就是通过根目录的路由得到的。
+然后我们添加一个路由：
+import Vue from &amp;#39;vue&amp;#39; import Router from &amp;#39;vue-router&amp;#39; import HelloWorld from &amp;#39;@/components/HelloWorld&amp;#39; import About from &amp;#39;@/components/About&amp;#39; Vue.</description>
+    </item>
+    <item>
+      <title>[JavaScript]JS基础知识</title>
+      <link>http://localhost:1313/posts/javascript_basic_knowledge/</link>
+      <pubDate>Wed, 06 Jun 2018 21:32:09 +0800</pubDate>
+      <guid>http://localhost:1313/posts/javascript_basic_knowledge/</guid>
+      <description>[JavaScript]JS基础知识（上） 变量类型及计算 变量类型 值类型 vs 引用类型
+值类型：
+var a = 100 var b = a a = 200 console.log(b) //100 引用类型：
+var a = {age:20} var b = a b.age = 21 console.log(a.age) //21 引用类型：对象、数组和函数
+特点：无限扩展属性，内存占用可能过大，故共用内存空间以节省空间
+Typeof运算符详解 typeof undefined	//undefined typeof &amp;#39;abc&amp;#39;	//string typeof 123	//number typeof true	//boolean typeof {}	//object typeof []	//object typeof null	//object typeof console.log	//function 注：null也是对象
+1~4行是值类型，5~8行是引用类型，但JS只能区分函数与非函数，而不能区分数组和对象。
+变量计算 强制类型转换 字符串拼接 var a = 100 + 10 var b = 100 + &amp;#39;10&amp;#39; console.</description>
+    </item>
+    <item>
+      <title>[Mybatis]逆向工程中Select语句查询不出‘TEXT’字段</title>
+      <link>http://localhost:1313/posts/mybatis_text_not_queried/</link>
+      <pubDate>Thu, 24 May 2018 14:21:21 +0800</pubDate>
+      <guid>http://localhost:1313/posts/mybatis_text_not_queried/</guid>
+      <description>这个标题有点奇怪。不过我要说的就是，在Mybatis逆向工程自动生成的Mapper中，对TEXT字段的定义和其他的字段不一样。
+Comments表设计： 可以看到，content字段为TEXT。
+然而，直接调用selectByExample()方法，查询不到content字段的内容： 而究其原因，是因为在自动生成的CommentsMapper.xml中，对TEXT字段的定义是不一样的。
+&amp;lt;resultMap id=&amp;#34;BaseResultMap&amp;#34; type=&amp;#34;com.windypath.seer.pojo.Comments&amp;#34;&amp;gt; &amp;lt;id column=&amp;#34;id&amp;#34; jdbcType=&amp;#34;INTEGER&amp;#34; property=&amp;#34;id&amp;#34; /&amp;gt; &amp;lt;result column=&amp;#34;uid&amp;#34; jdbcType=&amp;#34;INTEGER&amp;#34; property=&amp;#34;uid&amp;#34; /&amp;gt; &amp;lt;result column=&amp;#34;aid&amp;#34; jdbcType=&amp;#34;INTEGER&amp;#34; property=&amp;#34;aid&amp;#34; /&amp;gt; &amp;lt;result column=&amp;#34;floor&amp;#34; jdbcType=&amp;#34;INTEGER&amp;#34; property=&amp;#34;floor&amp;#34; /&amp;gt; &amp;lt;result column=&amp;#34;createDate&amp;#34; jdbcType=&amp;#34;TIMESTAMP&amp;#34; property=&amp;#34;createDate&amp;#34; /&amp;gt; &amp;lt;result column=&amp;#34;isDeleted&amp;#34; jdbcType=&amp;#34;INTEGER&amp;#34; property=&amp;#34;isDeleted&amp;#34; /&amp;gt; &amp;lt;/resultMap&amp;gt; &amp;lt;resultMap extends=&amp;#34;BaseResultMap&amp;#34; id=&amp;#34;ResultMapWithBLOBs&amp;#34; type=&amp;#34;com.windypath.seer.pojo.Comments&amp;#34;&amp;gt; &amp;lt;result column=&amp;#34;content&amp;#34; jdbcType=&amp;#34;LONGVARCHAR&amp;#34; property=&amp;#34;content&amp;#34; /&amp;gt; &amp;lt;/resultMap&amp;gt; 在代码中可以清晰地看到，content字段放在了“extends”里，而没有和其他的字段放在一起。jdbcType也定义成了LONGVARCHAR，我认为这样做是担心这个字段里装的数据量过大，增加查询负担，所以把它放进extends里。
+而selectByExample()的初衷也许是查找信息列表。我发现在selectByPrimaryKey()中，只查询某一条数据的情况下，TEXT字段就会被查询出来。
+因此我将TEXT改成了varchar(1000)，问题解决。
+（逆向工程修改后要重新生成一次覆盖旧的东西！） </description>
+    </item>
+    <item>
+      <title>[编译原理]FIRST、FOLLOW和SELECT</title>
+      <link>http://localhost:1313/posts/compilation_principle_first_follow_select/</link>
+      <pubDate>Mon, 30 Apr 2018 16:23:34 +0800</pubDate>
+      <guid>http://localhost:1313/posts/compilation_principle_first_follow_select/</guid>
+      <description>FIRST集 FIRST(α)为α的开始符号集或者首符号集。
+定义 设G=(VT，VN，S，P)是上下文无关文法 ，FIRST(α)={a|α能推导出aβ,a∈VT，α,β∈V*} 。
+特别的，若α能推导出ε,则规定ε∈FIRST(α)．
+VT为终结符集，VN为非终结符集，S称作识别符或开始符，P为规则(α→β)的集合。
+根据定义求解FIRST集 （对每一文法符号X∈V 计算FIRST(X)）
+若X∈VT，则FIRST(X)={X}； 若X∈VN，且有产生式X→a&amp;hellip;，则把a加入到FIRST(X)中； 若X∈VN，X→ε也是一条产生式，则把ε也加到FIRST(X)中； 若X→Y&amp;hellip;是一个产生式且Y∈VN，则把FIRST(Y)中的所有非ε元素都加到FIRST(X)中； 若X→Y1 Y2 &amp;hellip; Yk是一个产生式，Y1，Y2，&amp;hellip;Y（i-1）都∈VN（1≤i≤K），而且，对于任何j(1≤j≤i-1)，FIRST(Yj)都含有ε （即Y1&amp;hellip;Y(i-1)=&amp;gt;*ε），则把FIRST(Yj)中的所有非ε元素和FIRST(Yi)中的所有元素都加到FIRST(X)中； 特别是，若所有的FIRST(Yj，j=1,2,..,K)均含有ε，则把ε加到FIRST(X)中。
+反复使用上述2~5步，直到每个符号的FIRST集合不再增大为止。
+FOLLOW集 FOLLOW(A)为非终结符A的后跟符号集合。
+定义 设G=(VT，VN，S，P)是上下文无关文法，A∈VN，S是开始符号， FOLLOW(A)=｛a|S能推导出μAβ,且a∈VT，a∈FIRST(β),μ∈VT* ,β∈V+｝，若S能推导出μAβ,且β能推导出ε, 则#∈FOLLOW(A)。 也可定义为：FOLLOW(A)={a|S能推导出…Aa…,a ∈VT} ，若有S能推导出…A，则规定#∈FOLLOW(A) ，这里我们用‘#’作为输入串的结束符。
+计算FOLLOW集 任何FOLLOW(S)都包含输入终止符号#,其中S是开始符号 如果存在产生式,A-&amp;gt;αBβ,则将FIRST(β)中除ε以外的符号都放入FOLLOW(B)中 如果存在产生式,A-&amp;gt;αB,或A-&amp;gt;αBβ,其中FIRST(β)中包含ε,则将FOLLOW(A)中的所有符号都放入FOLLOW(B)中.
+SELECT集 SELECT集是选择符号集。
+定义及计算过程 给定上下文无关文法的产生式A→α, A∈VN,α∈V*, 若α不能推导出ε,则SELECT(A→α)=FIRST(α) 如果α能推导出ε则：SELECT(A→α)=（FIRST(α) –{ε}）∪FOLLOW(A) 需要注意的是，SELECT集是针对产生式而言的。
+例题 《编译原理》第三版，p100页，第2题：
+对下面的文法G： E→TE‘ E‘→+E|ε T→FT&amp;rsquo; T‘→T|ε F→PF&amp;rsquo; F&amp;rsquo;→*F&amp;rsquo;|ε P→(E)|a|b|^
+问：
+计算这个文法的每个非终结符的FIRST集和FOLLOW集。 证明这个文法是LL(1)的。 构造它的预测分析表。 构造它的递归下降分析程序。 答：
+1.计算这个文法的每个非终结符的FIRST集和FOLLOW集。
+FIRST(P) = {a,b,(,^} FIRST(F) = FIRST(P) = {a,b,(,^} FIRST(T) = FIRST(F) = {a,b,(,^} FIRST(E) = FIRST(T) = {a,b,(,^} FIRST(E&amp;rsquo;) = {+,ε} FIRST(T&amp;rsquo;) = FIRST(T) ∪ {ε} = {a,b,(,^,ε} FIRST(F&amp;rsquo;) = {*,ε}</description>
+    </item>
+    <item>
+      <title>[Spring]Spring学习笔记</title>
+      <link>http://localhost:1313/posts/spring_learning_notes/</link>
+      <pubDate>Sat, 14 Apr 2018 15:17:52 +0800</pubDate>
+      <guid>http://localhost:1313/posts/spring_learning_notes/</guid>
+      <description>[Spring]Spring学习笔记（一） Spring 概念 spring是开源轻量级框架 AOP：面向切面编程，扩展功能不是修改源代码实现 IOC ：控制反转，有一个类，在类里面有方法（不是静态方法） 把对象的创建通过spring配置创建类对象 一站式框架 三层： web层 springMVC Service层 ioc Dao层 jdbcTemplate spring版本 当前最新版本：https://projects.spring.io/spring-framework/#quick-start 官网建议用Maven/Gradle安装 Spring的ioc操作 把对象的创建交给spring进行管理 ioc操作两部分： Ioc的配置文件方式 Ioc的注解方式 IOC底层原理 ioc底层原理使用技术 xml配置文件 Dom4j解决xml 工厂设计模式 反射 IOC使用方法（简单样例）： 导入jar包（用Maven/Gradle直接导入） 编写要操作的类（简单的User类） 创建Spring配置文件，通过配置创建类： 在src下创建xml文件，官方建议为applicationContext.xml 引入schema约束，来源：https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/xsd-configuration.html 要加入的代码配置对象创建 &amp;lt;bean id=&amp;#34;对象名&amp;#34; class=&amp;#34;类的路径（org.springframework.abcdef）&amp;#34;&amp;gt;&amp;lt;/bean&amp;gt; 编写测试代码 import org.junit.Test; import org.springframework.context.ApplicationContext; import org.springframework.context.support.ClassPathXmlApplicationContext; public class testIOC { @Test public void testMain() { ApplicationContext context = new ClassPathXmlApplicationContext(&amp;#34;a.xml&amp;#34;); Main m = (Main) context.getBean(&amp;#34;m&amp;#34;); System.out.println(m); m.add(); } } 注：Maven自带的Junit版本为3.</description>
+    </item>
+  </channel>
+</rss>
