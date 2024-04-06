@@ -2,6 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://windypath.com/categories/</loc>
+    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://windypath.com/en/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://windypath.com/categories/"
+                />
+  </url><url>
     <loc>https://windypath.com/posts/</loc>
     <lastmod>2024-03-10T11:59:48+08:00</lastmod>
     <xhtml:link
@@ -14,6 +27,9 @@
                 hreflang="zh"
                 href="https://windypath.com/posts/"
                 />
+  </url><url>
+    <loc>https://windypath.com/categories/software/</loc>
+    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
   </url><url>
     <loc>https://windypath.com/</loc>
     <lastmod>2024-03-10T11:59:48+08:00</lastmod>
@@ -28,18 +44,8 @@
                 href="https://windypath.com/"
                 />
   </url><url>
-    <loc>https://windypath.com/categories/</loc>
-    <lastmod>2023-12-26T16:06:34+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://windypath.com/en/categories/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://windypath.com/categories/"
-                />
+    <loc>https://windypath.com/posts/using_weiyan_strategy_to_analyze_software_possibly/</loc>
+    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
   </url><url>
     <loc>https://windypath.com/categories/mqtt/</loc>
     <lastmod>2023-12-26T16:06:34+08:00</lastmod>
@@ -267,6 +273,9 @@
   </url><url>
     <loc>https://windypath.com/posts/python_connect_mongodb_and_oracle/</loc>
     <lastmod>2020-02-09T17:06:29+08:00</lastmod>
+  </url><url>
+    <loc>https://windypath.com/posts/mongodb_search_script/</loc>
+    <lastmod>2020-02-09T16:36:27+08:00</lastmod>
   </url><url>
     <loc>https://windypath.com/posts/vue_springboot_deploy_in_linux/</loc>
     <lastmod>2020-01-27T16:53:23+08:00</lastmod>
