@@ -565,6 +565,13 @@ package eda2; import java.io.BufferedReader; import java.io.BufferedWriter; impo
 我不是为了输赢，我就是认真。</description>
     </item>
     <item>
+      <title>被讨厌的勇气</title>
+      <link>https://windypath.com/bookdigest/book_courage_to_be_hated/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://windypath.com/bookdigest/book_courage_to_be_hated/</guid>
+      <description>豆瓣链接 https://book.douban.com/subject/36150914/</description>
+    </item>
+    <item>
       <title>藏书</title>
       <link>https://windypath.com/mybooks/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -603,6 +610,41 @@ Telegram: @windypath</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://windypath.com/myfriends/</guid>
       <description> </description>
+    </item>
+    <item>
+      <title>人间值得</title>
+      <link>https://windypath.com/bookdigest/book_worth_living/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://windypath.com/bookdigest/book_worth_living/</guid>
+      <description>豆瓣链接 https://book.douban.com/subject/34797578/</description>
+    </item>
+    <item>
+      <title>深入理解计算机系统</title>
+      <link>https://windypath.com/bookdigest/book_csapp/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://windypath.com/bookdigest/book_csapp/</guid>
+      <description>豆瓣链接 https://book.douban.com/subject/26912767/</description>
+    </item>
+    <item>
+      <title>想想就开心！</title>
+      <link>https://windypath.com/bookdigest/deep_thinking/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://windypath.com/bookdigest/deep_thinking/</guid>
+      <description>豆瓣链接 https://book.douban.com/subject/35706244/</description>
+    </item>
+    <item>
+      <title>最重要的事，只有一件</title>
+      <link>https://windypath.com/bookdigest/the_one_thing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://windypath.com/bookdigest/the_one_thing/</guid>
+      <description>豆瓣链接 https://book.douban.com/subject/26656532/</description>
+    </item>
+    <item>
+      <title>尊重自己：给予与接收的心灵艺术</title>
+      <link>https://windypath.com/bookdigest/honor_yourself/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://windypath.com/bookdigest/honor_yourself/</guid>
+      <description>豆瓣链接 https://read.douban.com/ebook/132946207/</description>
     </item>
   </channel>
 </rss>
