@@ -8,7 +8,7 @@ categories: ["技术文章"]
 这是一个python项目。
 
 使用到的技术包括爬虫和发邮件
-
+<!--more-->
 代码如下：
 ``` python
 #!/usr/bin/env python

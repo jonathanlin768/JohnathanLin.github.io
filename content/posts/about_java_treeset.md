@@ -5,6 +5,9 @@ draft: false
 categories: ["技术文章"]
 ---
 
+就是一些例子啦。
+<!--more-->
+
 ## 先看一个例子（kotlin实现）
 ``` kotlin
 import java.util.TreeSet

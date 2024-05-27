@@ -20,7 +20,9 @@ db.xxx.find({'city.value':'深圳市'})
  
 }
 ```
+
 使用key.key的形式，得到对应的value。
+<!--more-->
 ### MongoDB与查询
 ```
 db.xxx.find({$and:[{'city.value':'深圳市'},{'status': 'finished'}]})

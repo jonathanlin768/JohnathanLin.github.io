@@ -10,7 +10,7 @@ categories: ["技术文章"]
 > [java正则表达式，求匹配：双反斜杠（\\）合法，单反斜杠不合法（\）](https://bbs.csdn.net/topics/390739619)
 > [Java 正则表达式-菜鸟教程](https://www.runoob.com/java/java-regular-expressions.html)
 > [正则表达式-菜鸟教程](https://www.runoob.com/regexp/regexp-syntax.html)
-
+<!--more-->
 ## Pattern类和Matcher类
 
 在Java中，与正则表达式相关的类有两个：Pattern和Matcher

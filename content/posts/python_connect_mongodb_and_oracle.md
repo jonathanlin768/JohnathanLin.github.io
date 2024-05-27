@@ -9,7 +9,7 @@ categories: ["技术文章"]
 ### 安装
 
 首先要安装pymongo，用pip装一下就好了。
-
+<!--more-->
 #### 工具类python文件
 
 以下直接给出我写的mongodb操作类

@@ -17,6 +17,7 @@ During the coding exam, I didn't implement this functionality using C++, but ins
 Later, after the exam was over, I searched online for ways to split strings in C++, and I found that C++ does not have a built-in method similar to split(character) like in Java.
 
 So, what methods can be used as alternatives?
+<!--more-->
 # Method 1: Splitting using string's find() function along with substr()
 According to the response from a Zhihu user, the first solution they suggested is:
 

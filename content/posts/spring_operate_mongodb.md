@@ -34,7 +34,7 @@ categories: ["技术文章"]
 ```bash
 db.crawler_cjwt.find({'_id':new ObjectId("5de39f20684014f1d8b8fa37")})
 ```
-
+<!--more-->
 ## 查询该集合所有结果
 ```java
         List<FgcxMongoEntity> list = Lists.newArrayList();

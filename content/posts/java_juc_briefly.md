@@ -5,7 +5,7 @@ draft: false
 categories: ["技术文章", "笔记"]
 ---
 > 前言：本文想要介绍Synchronized，ReentrantLock和ReentrantLock的Condition的相关用法。
-
+<!--more-->
 # Synchronized上锁
 Synchronized可以修饰实例方法、静态方法和代码块。修饰代码块时，可以对具体的对象上锁，也可以对某个类(.class)上锁。
 

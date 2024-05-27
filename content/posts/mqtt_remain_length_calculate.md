@@ -5,7 +5,7 @@ draft: false
 categories: ["技术文章", "MQTT"]
 ---
 > 本文介绍MQTT协议中，固定报头中的可变长度部分的计算方式。通过提供一些例子，将其他介绍MQTT协议的文章中没有仔细说明的计算部分进行解释。
-
+<!--more-->
 # 参考文章
 [MQTT 5.0 报文（Packets）入门指南](https://www.emqx.com/zh/blog/introduction-to-mqtt-control-packets)
 

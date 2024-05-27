@@ -15,7 +15,7 @@ cpu：i5 9400F
  - CentOS centos-release-7-7.1908.0.el7.centos.x86_64
 - Java jdk-8u241-linux-x64.tar.gz
 - Scala  scala-2.11.8.tgz
-
+<!--more-->
 值得一提的是，win10 1903版本与VMware 15.10之前的版本不兼容，会出现卡死（虚拟机繁忙）的问题，该问题在15.10版本解决。
 资源来源于网络：
 **VMware 15.10** 链接：https://pan.baidu.com/s/1bpF3M1V3qPydQgGl-hUC1g 提取码：sb8t 

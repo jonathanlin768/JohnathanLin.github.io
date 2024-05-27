@@ -28,7 +28,7 @@ console.log(a.age) //21
 引用类型：对象、数组和函数
 
 特点：无限扩展属性，内存占用可能过大，故共用内存空间以节省空间
-
+<!--more-->
 ### Typeof运算符详解
 ```javascript
 typeof undefined	//undefined

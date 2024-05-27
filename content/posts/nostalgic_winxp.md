@@ -13,7 +13,7 @@ tags: ["WinXp"]
 提取码：374l 
 
 我本地的VirtualBox 版本：6.1
-
+<!--more-->
 # 我可以先聊聊怀旧吗
 也许对于老外来说，Win95是他们的青春，所以他们做了[React95](https://github.com/arturbien/React95)这样的UI库，或者大家一起努力写了个操作系统[serenity](https://github.com/SerenityOS/serenity)。但是对于咱们国内的用户而言，当家用PC走进千家万户时，映入眼帘的是——Windows XP。
 

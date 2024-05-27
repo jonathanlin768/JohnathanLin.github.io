@@ -8,7 +8,7 @@ categories: ["技术文章"]
 
 > 本文主要介绍Linux C++ 基础Socket网络编程。
 > 大部分知识来自于网站：[https://www.geeksforgeeks.org/socket-programming-cc/](https://www.geeksforgeeks.org/socket-programming-cc/)
-
+<!--more-->
 ## Socket编程状态图
 ![](/images/StatediagramforserverandclientmodelofSocketdrawio2-448x660.png)
 

@@ -8,7 +8,7 @@ categories: ["Tech"]
 
 > This article primarily introduces the basics of Linux C++ Socket network programming.
 > Most of the knowledge is sourced from the website: [https://www.geeksforgeeks.org/socket-programming-cc/](https://www.geeksforgeeks.org/socket-programming-cc/)
-
+<!--more-->
 ## Socket Programming State Diagram
 ![](/images/StatediagramforserverandclientmodelofSocketdrawio2-448x660.png)
 

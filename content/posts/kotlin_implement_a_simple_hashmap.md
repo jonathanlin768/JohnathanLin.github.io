@@ -7,7 +7,7 @@ categories: ["算法笔记"]
 ---
 
 参考的是《数据结构(C语言版)》上256页左右的哈希表的介绍，用了最简单的直接寻址法 + 链地址法。
-
+<!--more-->
 用的是Kotlin。
 ```kotlin
 package main.kotlin

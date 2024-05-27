@@ -18,7 +18,7 @@ categories: ["Tech"]
 | Configuration Information | Only `application.properties` | `config.ini` | Zookeeper, pre-loading design table information into ZK |
 | Concurrency | No concurrency (so no need for locks) | Python multi-threading for simultaneous web crawling | No concurrency, Actor model ensures only one task at a time |
 | Hot Reload | Directly restart | N/A | Inherit a method from a certain class, replace the online class |
-
+<!--more-->
 ## Architecture Overview
 ### Intelligent Customer Service Server Overall Architecture
 ![Overall Architecture of Intelligent Customer Service Server](/images/智能客服服务端整体架构.png)

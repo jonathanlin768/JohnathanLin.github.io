@@ -6,7 +6,7 @@ categories: ["技术文章"]
 ---
 
 这个标题有点奇怪。不过我要说的就是，在[Mybatis逆向工程](http://how2j.cn/k/mybatis/mybatis-generator/1376.html)自动生成的Mapper中，对TEXT字段的定义和其他的字段不一样。
-
+<!--more-->
 Comments表设计：
 ![](/images/mybatis_text1.png)
 可以看到，content字段为TEXT。

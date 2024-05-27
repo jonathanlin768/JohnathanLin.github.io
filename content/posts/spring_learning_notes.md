@@ -19,6 +19,7 @@ categories: ["技术文章"]
 4. spring版本
 当前最新版本：[https://projects.spring.io/spring-framework/#quick-start](https://projects.spring.io/spring-framework/#quick-start)
 官网建议用Maven/Gradle安装
+<!--more-->
 ## Spring的ioc操作
 1. 把对象的创建交给spring进行管理
 2. ioc操作两部分：

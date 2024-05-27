@@ -14,11 +14,126 @@
       <link>http://localhost:1313/posts/simple_udp_ping_with_python/</link>
       <pubDate>Sat, 13 Nov 2021 15:31:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/simple_udp_ping_with_python/</guid>
-      <description>套接字编程作业2：UDP ping 程序 在本实验中，您将学习使用Python进行UDP套接字编程的基础知识。您将学习如何使用UDP套接字发送和接收数据报，以及如何设置适当的套接字超时。在实验中，您将熟悉Ping应用程序及其在计算统计信息（如丢包率）中的作用。
-您首先需要研究一个用Python编写的简单的ping服务器程序，并实现对应的客户端程序。这些程序提供的功能类似于现代操作系统中可用的标准ping程序功能。然而，我们的程序使用更简单的UDP协议，而不是标准互联网控制消息协议（ICMP）来进行通信。 ping协议允许客户端机器发送一个数据包到远程机器，并使远程机器将数据包返回到客户（称为回显）的操作。另外，ping协议允许主机计算它到其他机器的往返时间。
-以下是Ping服务器程序的完整代码。你的任务是写出Ping客户端程序。
-服务器代码 以下代码完整实现了一个ping服务器。您需要在运行客户端程序之前编译并运行此代码。而且您不需要修改此代码。 在这个服务器代码中，30％的客户端的数据包会被模拟丢失。你应该仔细研究这个代码，它将帮助你编写ping客户端。
-# UDPPingerServer.py # We will need the following module to generate randomized lost packets import random from socket import * import random # Create a UDP socket # Notice the use of SOCK_DGRAM for UDP packets serverSocket = socket(AF_INET, SOCK_DGRAM) # Assign IP address and port number to socket serverSocket.bind((&amp;#39;&amp;#39;, 12000)) while True: # Generate random number in the range of 0 to 10 rand = random.</description>
+      <description>&lt;h2 id=&#34;套接字编程作业2udp-ping-程序&#34;&gt;套接字编程作业2：UDP ping 程序&lt;/h2&gt;
+&lt;p&gt;在本实验中，您将学习使用Python进行UDP套接字编程的基础知识。您将学习如何使用UDP套接字发送和接收数据报，以及如何设置适当的套接字超时。在实验中，您将熟悉Ping应用程序及其在计算统计信息（如丢包率）中的作用。&lt;/p&gt;
+&lt;p&gt;您首先需要研究一个用Python编写的简单的ping服务器程序，并实现对应的客户端程序。这些程序提供的功能类似于现代操作系统中可用的标准ping程序功能。然而，我们的程序使用更简单的UDP协议，而不是标准互联网控制消息协议（ICMP）来进行通信。 ping协议允许客户端机器发送一个数据包到远程机器，并使远程机器将数据包返回到客户（称为回显）的操作。另外，ping协议允许主机计算它到其他机器的往返时间。&lt;/p&gt;
+&lt;p&gt;以下是Ping服务器程序的完整代码。你的任务是写出Ping客户端程序。&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<h2 id="套接字编程作业2udp-ping-程序">套接字编程作业2：UDP ping 程序</h2>
+<p>在本实验中，您将学习使用Python进行UDP套接字编程的基础知识。您将学习如何使用UDP套接字发送和接收数据报，以及如何设置适当的套接字超时。在实验中，您将熟悉Ping应用程序及其在计算统计信息（如丢包率）中的作用。</p>
+<p>您首先需要研究一个用Python编写的简单的ping服务器程序，并实现对应的客户端程序。这些程序提供的功能类似于现代操作系统中可用的标准ping程序功能。然而，我们的程序使用更简单的UDP协议，而不是标准互联网控制消息协议（ICMP）来进行通信。 ping协议允许客户端机器发送一个数据包到远程机器，并使远程机器将数据包返回到客户（称为回显）的操作。另外，ping协议允许主机计算它到其他机器的往返时间。</p>
+<p>以下是Ping服务器程序的完整代码。你的任务是写出Ping客户端程序。</p>
+<h3 id="服务器代码">服务器代码</h3>
+<p>以下代码完整实现了一个ping服务器。您需要在运行客户端程序之前编译并运行此代码。<em>而且您不需要修改此代码。</em>
+在这个服务器代码中，30％的客户端的数据包会被模拟丢失。你应该仔细研究这个代码，它将帮助你编写ping客户端。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># UDPPingerServer.py </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># We will need the following module to generate randomized lost packets import random </span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> socket <span style="color:#f92672">import</span> <span style="color:#f92672">*</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create a UDP socket  </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Notice the use of SOCK_DGRAM for UDP packets </span>
+</span></span><span style="display:flex;"><span>serverSocket <span style="color:#f92672">=</span> socket(AF_INET, SOCK_DGRAM) 
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Assign IP address and port number to socket </span>
+</span></span><span style="display:flex;"><span>serverSocket<span style="color:#f92672">.</span>bind((<span style="color:#e6db74">&#39;&#39;</span>, <span style="color:#ae81ff">12000</span>)) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:     
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># Generate random number in the range of 0 to 10 </span>
+</span></span><span style="display:flex;"><span>	rand <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">10</span>)     
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># Receive the client packet along with the address it is coming from  </span>
+</span></span><span style="display:flex;"><span>	message, address <span style="color:#f92672">=</span> serverSocket<span style="color:#f92672">.</span>recvfrom(<span style="color:#ae81ff">1024</span>) 
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># Capitalize the message from the client     </span>
+</span></span><span style="display:flex;"><span>	message <span style="color:#f92672">=</span> message<span style="color:#f92672">.</span>upper() 
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># If rand is less is than 4, we consider the packet lost and do not respond     </span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> rand <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">4</span>:         
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">continue</span>     
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># Otherwise, the server responds         </span>
+</span></span><span style="display:flex;"><span>	serverSocket<span style="color:#f92672">.</span>sendto(message, address)
+</span></span></code></pre></div><p>服务器程序在一个无限循环中监听到来的UDP数据包。当数据包到达时，如果生成一个随机整数大于或等于4，则服务器将数字转为大写并将其发送回客户端。</p>
+<h3 id="数据包丢失">数据包丢失</h3>
+<p>UDP为应用程序提供了不可靠的传输服务。消息可能因为路由器队列溢出，硬件错误或其他原因，而在网络中丢失。但由于在内网中很丢包甚至不丢包，所以在本实验室的服务器程序添加人为损失来模拟网络丢包的影响。服务器创建一个随机整数，由它确定传入的数据包是否丢失。</p>
+<h3 id="客户端代码">客户端代码</h3>
+<p>您需要实现以下客户端程序。</p>
+<p>客户端向服务器发送10次ping。因为UDP是不可靠的协议，所以从客户端发送到服务器的数据包可能在网络中丢失。因此，客户端不能无限期地等待ping消息的回复。客户等待服务器回答的时间至多为一秒，如果在一秒内没有收到回复，您的客户端程序应该假定数据包在网络传输期间丢失。您需要查找Python文档，以了解如何在数据报套接字上设置超时值。</p>
+<p>具体来说，您的客户端程序应该</p>
+<ol>
+<li>使用UDP发送ping消息（注意：不同于TCP，您不需要首先建立连接，因为UDP是无连接协议。）</li>
+<li>从服务器输出响应消息</li>
+<li>如果从服务器受到响应，则计算并输出每个数据包的往返时延（RTT）（以秒为单位），</li>
+<li>否则输出“请求超时”</li>
+</ol>
+<p>在开发过程中，您应该先在计算机上运行UDPPingerServer.py，并通过向localhost（或127.0.0.1）发送数据包来测试客户端。调试完成代码后，您应该能看到ping服务器和ping客户端在不同机器上通过网络进行通信。</p>
+<h3 id="消息格式">消息格式</h3>
+<p>本实验中的ping消息格式使用最简单的方式。客户端消息只有一行，由以下格式的ASCII字符组成：</p>
+<blockquote>
+<p>Ping sequence_number time</p>
+</blockquote>
+<p>其中sequence_number从1开始，一直到10，共10条消息，而time则是客户端发送消息时的时间。</p>
+<h3 id="需要上交的内容">需要上交的内容</h3>
+<p>您需要上交完整的客户端代码和屏幕截图，以验证您的ping程序是否按需求运行。</p>
+<h3 id="可选练习">可选练习</h3>
+<ol>
+<li>目前，程序计算每个数据包的往返时间（RTT），并单独打印出来。请按照标准ping程序的模式修改。您需要在客户端每次ping后显示最小，最大和平均RTT。另外，还需计算丢包率（百分比）。</li>
+<li>UDP Ping的另一个类似的应用是UDP Heartbeat。心跳可用于检查应用程序是否已启动并运行，并报告单向丢包。客户端在UDP数据包中将一个序列号和当前时间戳发送给正在监听客户端心跳的服务器。服务器收到数据包后，计算时差，报告丢包（若发生）。如果心跳数据包在指定的一段时间内丢失，我们可以假设客户端应用程序已经停止。实现UDP Heartbeat（客户端和服务器端）。您需要修改给定的UDPPingerServer.py和您自己的UDP ping客户端。</li>
+</ol>
+<p>客户端源码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> socket <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>host <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;127.0.0.1&#39;</span>
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> <span style="color:#ae81ff">12000</span>
+</span></span><span style="display:flex;"><span>clientSocket <span style="color:#f92672">=</span> socket(AF_INET, SOCK_DGRAM)
+</span></span><span style="display:flex;"><span>clientSocket<span style="color:#f92672">.</span>connect((host, port))
+</span></span><span style="display:flex;"><span>clientSocket<span style="color:#f92672">.</span>settimeout(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>num <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>sended <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>received <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>lost <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>maxRTT <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>
+</span></span><span style="display:flex;"><span>minRTT <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>
+</span></span><span style="display:flex;"><span>sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(num):
+</span></span><span style="display:flex;"><span>    sendTime <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span>    sendMsg <span style="color:#f92672">=</span> (<span style="color:#e6db74">&#39;Ping </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, sendTime))<span style="color:#f92672">.</span>encode()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        clientSocket<span style="color:#f92672">.</span>sendto(sendMsg, (host, port))
+</span></span><span style="display:flex;"><span>        sended <span style="color:#f92672">=</span> sended <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        recvMsg, addr <span style="color:#f92672">=</span> clientSocket<span style="color:#f92672">.</span>recvfrom(<span style="color:#ae81ff">1024</span>)
+</span></span><span style="display:flex;"><span>        received <span style="color:#f92672">=</span> received <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        rtt <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> sendTime
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;Sequence </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">: Reply from </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">    RTT = </span><span style="color:#e6db74">%.3f</span><span style="color:#e6db74">s&#39;</span> <span style="color:#f92672">%</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, host, rtt))
+</span></span><span style="display:flex;"><span>        sum <span style="color:#f92672">+=</span> rtt
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            maxRTT <span style="color:#f92672">=</span> rtt
+</span></span><span style="display:flex;"><span>            minRTT <span style="color:#f92672">=</span> rtt
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> rtt <span style="color:#f92672">&lt;</span> minRTT:
+</span></span><span style="display:flex;"><span>                minRTT <span style="color:#f92672">=</span> rtt
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> rtt <span style="color:#f92672">&gt;</span> maxRTT:
+</span></span><span style="display:flex;"><span>                maxRTT <span style="color:#f92672">=</span> rtt
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>        lost <span style="color:#f92672">=</span> lost <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;Sequence </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">: Request timed out&#39;</span> <span style="color:#f92672">%</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>clientSocket<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;host: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> ping statistic:&#39;</span> <span style="color:#f92672">%</span> host)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74"> package: sended = </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">, received = </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">, lost = </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">%d%%</span><span style="color:#e6db74"> lost rate)&#39;</span> <span style="color:#f92672">%</span>(sended, received, lost, int(<span style="color:#ae81ff">1.0</span> <span style="color:#f92672">*</span> lost <span style="color:#f92672">/</span> sended <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span>)))
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> received <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;rtt statistic: &#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74"> min = </span><span style="color:#e6db74">%.3f</span><span style="color:#e6db74">s, max = </span><span style="color:#e6db74">%.3f</span><span style="color:#e6db74">s, avg = </span><span style="color:#e6db74">%.3f</span><span style="color:#e6db74">s&#39;</span> <span style="color:#f92672">%</span> (minRTT, maxRTT, <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">*</span> sum <span style="color:#f92672">/</span> received))
+</span></span></code></pre></div><p>在这段源码中，我模仿Windows的ping程序，成功实现了类似的效果。</p>
+<p><img loading="lazy" src="/images/UdpResult.png" alt=""  />
+</p>
+<h2 id="关于可选练习的第二个问题">关于可选练习的第二个问题</h2>
+<p>我认为服务端这边需要在读取客户端发的消息中，提取客户端的发送时间，并将其与服务器当前时间相减而得到RTT时延，以此来判定是否超时。</p>
+<p>另外，心跳检测应规定每X秒都由客户端发送一条简短的消息到服务端，服务端存储一个客户端状态列表，更新最后状态更新时间。</p>
+<p>同时服务端应该有一个tick机制，即每隔Y秒都检查一遍客户端状态列表，如果上次状态更新时间与当前时间超过了设置的阈值，则判定该客户端已经离线。</p>
+<h1 id="学到的东西">学到的东西：</h1>
+<ol>
+<li>TCP和UDP用的都是AF_INET,但是TCP用的是SOCK_STREAM,而UDP用的是SOCK_DGRAM</li>
+<li>用sendto()函数的话就不需要在前面调用connect()方法，而用send()之前需要connect()</li>
+<li>用recvfrom()函数可以获得接收的消息和消息来源信息，而recv()只能获取消息</li>
+<li>用settimeout(1)可以设置超时时间，但超时会直接抛出异常；如果要继续下去，则需要用try excerpt接取异常信息处理。</li>
+</ol>]]></content:encoded>
     </item>
   </channel>
 </rss>

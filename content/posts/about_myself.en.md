@@ -10,7 +10,7 @@ Hello and welcome to WindyPath. I am the owner of this website. My English name 
 My Chinese nickname is "凌虚" which comes from a Chinese animated film called *The Legend of Qin*. "凌虚" is the name of a sword that belong to Zhang Liang(张良), a famous strategist in the Warring Period. The name of this website is *WindyPath*, and its Chinese name is "风萧古道".
 
 The first two characters, "风萧" come from poetry "风萧萧兮易水寒" while the last two characters, "古道" are derived from poetry "古道西风瘦马".
-
+<!--more-->
 
 # About Me
 I work as a Game Server Engineer and I have previously developed website, including both frontend and backend. However, I no longer develop websites.

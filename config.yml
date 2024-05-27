@@ -43,6 +43,7 @@ params:
   hideSummary: false
   showtoc: true
   tocopen: true
+  ShowFullTextinRSS: true   # RSS 输出全文
 
   assets:
     # disableHLJS: true # to disable highlight.js
@@ -100,10 +101,16 @@ params:
     keys: ["title", "permalink", "summary", "content"]
 
 outputs:
-    home:
-        - HTML
-        - RSS
-        - JSON # is necessary
+  home:
+      - HTML
+      - RSS
+      - JSON # is necessary
+
+outputFormats:
+  RSS:
+    mediaType: "application/rss+xml"
+    baseName: "index"
+
 languages:
   zh:
     languageName: 点击这里切换中文网站

@@ -4,7 +4,8 @@ date: 2022-06-18T17:10:44+08:00
 draft: false
 categories: ["Tech"]
 ---
-
+Just Some Usage and features on Java TreeSet. :-)
+<!--more-->
 ## An Example (kotlin)
 ``` kotlin
 import java.util.TreeSet

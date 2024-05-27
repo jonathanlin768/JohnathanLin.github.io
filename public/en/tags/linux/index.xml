@@ -14,9 +14,196 @@
       <link>http://localhost:1313/en/posts/linux_socket_programming/</link>
       <pubDate>Sat, 30 Apr 2022 23:23:49 +0800</pubDate>
       <guid>http://localhost:1313/en/posts/linux_socket_programming/</guid>
-      <description>This article primarily introduces the basics of Linux C++ Socket network programming. Most of the knowledge is sourced from the website: https://www.geeksforgeeks.org/socket-programming-cc/
-Socket Programming State Diagram From the diagram, we can see that the server side needs to go through four steps to enter the &amp;ldquo;waiting for connection&amp;rdquo; state, while the client side only requires two.
-Brief Analysis of Socket Programming Functions This analysis is for personal understanding and may have some omissions.</description>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;This article primarily introduces the basics of Linux C++ Socket network programming.
+Most of the knowledge is sourced from the website: &lt;a href=&#34;https://www.geeksforgeeks.org/socket-programming-cc/&#34;&gt;https://www.geeksforgeeks.org/socket-programming-cc/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+      <content:encoded><![CDATA[<blockquote>
+<p>This article primarily introduces the basics of Linux C++ Socket network programming.
+Most of the knowledge is sourced from the website: <a href="https://www.geeksforgeeks.org/socket-programming-cc/">https://www.geeksforgeeks.org/socket-programming-cc/</a></p>
+</blockquote>
+<h2 id="socket-programming-state-diagram">Socket Programming State Diagram</h2>
+<p><img loading="lazy" src="/images/StatediagramforserverandclientmodelofSocketdrawio2-448x660.png" alt=""  />
+</p>
+<p>From the diagram, we can see that the server side needs to go through four steps to enter the &ldquo;waiting for connection&rdquo; state, while the client side only requires two.</p>
+<h2 id="brief-analysis-of-socket-programming-functions">Brief Analysis of Socket Programming Functions</h2>
+<p>This analysis is for personal understanding and may have some omissions. If there are any, please correct them.
+The original article summarizes the knowledge better than I do. Please refer to the original article as much as possible. My understanding is only for auxiliary purposes.</p>
+<h3 id="server">Server</h3>
+<p>Let&rsquo;s start with the server. The server needs to specify a port and listen, so it needs to use bind() to bind the port, use listen() to enter the listening state, and then use accept() to block and wait for messages from the client.</p>
+<p>C++ including:</p>
+<ul>
+<li>#include &lt;sys/socket&gt;
+<ul>
+<li>socket()</li>
+<li>setsockopt()</li>
+<li>bind()</li>
+<li>listen()</li>
+<li>accept()</li>
+</ul>
+</li>
+<li>#include &lt;netinet/in.h&gt;
+<ul>
+<li>struct sockaddr_in</li>
+</ul>
+</li>
+<li>#include &lt;unistd.h&gt;
+<ul>
+<li>read()</li>
+</ul>
+</li>
+<li>#include &lt;arpa/inet.h&gt;
+<ul>
+<li>inet_pton()</li>
+</ul>
+</li>
+</ul>
+<h4 id="socket">socket()</h4>
+<p>This function is used to create a socket. Among the three parameters, the first two are particularly important. It returns a socket number, which is an integer value.</p>
+<blockquote>
+<p>int sockfd = socket(domain, type, protocol)</p>
+</blockquote>
+<p>domain: Use AF_INET for IPv4, and AF_INET6 for IPv6.
+type: Use SOCK_STREAM for TCP, and SOCK_DGRAM for UDP.</p>
+<h4 id="setsockopt">setsockopt()</h4>
+<p>This function is used to set properties for the socket returned by the socket() function above. As a server, for convenience, you can set the options for address and port reuse.</p>
+<blockquote>
+<p>int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);</p>
+</blockquote>
+<p>To reuse the address and port, you need to do the following:</p>
+<ul>
+<li>Set level to SOL_SOCKET, which represents which module the property value you are setting is for.</li>
+<li>Set optname to SO_REUSEADDR|SO_REUSEPORT, which means you intend to set both of these properties at the same time.</li>
+<li>optval should be a pointer to an int, pointing to a specific number.</li>
+<li>optlen should be sizeof() of the above optval.</li>
+</ul>
+<p>Many C++ socket functions require you to pass a length to determine how long the data you really want to pass to this function is.</p>
+<h4 id="sockaddr_in">sockaddr_in</h4>
+<p>So how is an address represented in socket programming? It&rsquo;s defined using struct sockaddr_in.</p>
+<p>When using it, you need to set three values: sin_family, sin_addr.s_addr, and sin_port.</p>
+<ul>
+<li>sin_family: Same as the domain parameter in the socket() function, it&rsquo;s AF_INET.</li>
+<li>sin_addr.s_addr: This property converts our dotted decimal IP address into a number, and it requires a dedicated function for processing, such as inet_pton().</li>
+<li>sin_port: Specifies the port number, but it&rsquo;s not directly passed as an integer. You need to use htons() to convert it into a hexadecimal number.</li>
+</ul>
+<h4 id="bind">bind()</h4>
+<p>This function is used to bind address information to a socket.</p>
+<p>In the previous section, we discussed how to set up the address. In this section, we&rsquo;ll talk about binding the socket with an address.</p>
+<blockquote>
+<p>int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);</p>
+</blockquote>
+<p>As usual, associate sockFd with the address.</p>
+<blockquote>
+<p>Note: The type of addr here is struct sockaddr *, not struct sockaddr_in *.
+The structure of struct sockaddr does not provide properties to hold the IP address and port number, so you need to use struct sockaddr_in for type casting.
+In the documentation, the author mentions that the lengths of struct sockaddr and struct sockaddr_in must be the same, so you can definitely perform the type casting without worry.
+<a href="https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html">https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html</a>
+Note that addrlen later is a value, not a pointer.</p>
+</blockquote>
+<h4 id="listen">listen()</h4>
+<blockquote>
+<p>int listen(int sockfd, int backlog);</p>
+</blockquote>
+<p>This function switches the socket to passive mode, entering the listening state. The second parameter backlog specifies the maximum length of the message waiting queue.</p>
+<h4 id="accept">accept()</h4>
+<blockquote>
+<p>int new_socket= accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+After this function is executed, the socket will wait for a client connection. Once the connection is established, it returns a new socket for communication between the client and server.</p>
+</blockquote>
+<blockquote>
+<p>Note: The third parameter socklen_t *addrlen of accept() is different from the third parameter socklen_t addrlen of bind(). accept() requires a pointer.
+Some say that the parameter of accept() is a bidirectional parameter and will update the length value of the address. However, others say that in the accept() function, it doesn&rsquo;t know if an int can hold this length. If the length is particularly large, it might not be suitable for storage. To ensure a uniform storage structure, just pass a pointer.</p>
+</blockquote>
+<h4 id="send">send()</h4>
+<p>send() is used to send messages to the other party through the socket.</p>
+<h4 id="read">read()</h4>
+<p>The read() function is included in #include &lt;unistd.h&gt;. It uses a char array to store the received message.</p>
+<h3 id="client">Client</h3>
+<p>Now let&rsquo;s talk about the client. The client needs to specify the IP address and port number, and then initiate the connection.</p>
+<h4 id="connect">connect()</h4>
+<blockquote>
+<p>int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);</p>
+</blockquote>
+<p>The client also needs to create a socket, specify sockaddr_in, and then typecast. This socket is responsible not only for initiating the connection but also for sending and receiving data.</p>
+<h3 id="sample-code-without-error-handling">Sample Code (Without Error Handling)</h3>
+<p>Currently, I only want to learn these low-level socket APIs, so I don&rsquo;t want to spend too much effort on memorizing what the return values of the APIs might indicate in terms of errors. I just want to focus on successfully implementing a very basic server and client.</p>
+<h4 id="server-side-code">Server-side Code:</h4>
+<p>server.cpp</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/in.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define PORT 8000
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sockFd, newSockFd, valread;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> opt <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> buffer[<span style="color:#ae81ff">1024</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> helloFromServer <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello from server&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sockaddr_in</span> address;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    sockFd <span style="color:#f92672">=</span> socket(AF_INET, SOCK_STREAM, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    setsockopt(sockFd, SOL_SOCKET, SO_REUSEADDR<span style="color:#f92672">|</span>SO_REUSEPORT, <span style="color:#f92672">&amp;</span>opt, <span style="color:#66d9ef">sizeof</span>(opt));
+</span></span><span style="display:flex;"><span>    address.sin_family <span style="color:#f92672">=</span> AF_INET;
+</span></span><span style="display:flex;"><span>    address.sin_addr.s_addr <span style="color:#f92672">=</span> INADDR_ANY;
+</span></span><span style="display:flex;"><span>    address.sin_port <span style="color:#f92672">=</span> htons(PORT);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> addrlen <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(address);
+</span></span><span style="display:flex;"><span>    bind(sockFd, (<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sockaddr</span><span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>address, addrlen);
+</span></span><span style="display:flex;"><span>    listen(sockFd, <span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>    newSockFd <span style="color:#f92672">=</span> accept(sockFd, (<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sockaddr</span><span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>address, (socklen_t<span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>addrlen);
+</span></span><span style="display:flex;"><span>    read(newSockFd, buffer, <span style="color:#ae81ff">1024</span>);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;receive: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, buffer);
+</span></span><span style="display:flex;"><span>    send(newSockFd, helloFromServer, strlen(helloFromServer), <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;server sent message</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="client-side-code">Client-side Code:</h4>
+<p>client.cpp</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/in.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;arpa/inet.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define PORT 8000
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sockFd <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> buffer[<span style="color:#ae81ff">1024</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> helloFromClient <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello from client&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sockaddr_in</span> address;
+</span></span><span style="display:flex;"><span>    address.sin_family <span style="color:#f92672">=</span> AF_INET;
+</span></span><span style="display:flex;"><span>    inet_pton(AF_INET, <span style="color:#e6db74">&#34;127.0.0.1&#34;</span>, <span style="color:#f92672">&amp;</span>address.sin_addr.s_addr);
+</span></span><span style="display:flex;"><span>    address.sin_port <span style="color:#f92672">=</span> htons(PORT);
+</span></span><span style="display:flex;"><span>    sockFd <span style="color:#f92672">=</span> socket(AF_INET, SOCK_STREAM, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    connect(sockFd, (<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sockaddr</span><span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>address, <span style="color:#66d9ef">sizeof</span>(address));
+</span></span><span style="display:flex;"><span>    send(sockFd, helloFromClient, strlen(helloFromClient), <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;client sent</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    read(sockFd, buffer, <span style="color:#ae81ff">1024</span>);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;read message:%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, buffer);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="compilation-execution-and-targeted-output">Compilation, Execution, and Targeted Output</h4>
+<p>In the Linux command line, input the following separately:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>g++ -o server server.cpp
+</span></span><span style="display:flex;"><span>g++ -o client client.cpp
+</span></span></code></pre></div><p>Then open two terminals, and input the following respectively:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>./server
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>./client
+</span></span></code></pre></div><p>The expected outputs are:</p>
+<p>For the server:</p>
+<pre tabindex="0"><code>receive: hello from client
+server sent message
+</code></pre><p>client输出：</p>
+<pre tabindex="0"><code>client sent message
+receive: hello from server
+</code></pre>]]></content:encoded>
     </item>
   </channel>
 </rss>

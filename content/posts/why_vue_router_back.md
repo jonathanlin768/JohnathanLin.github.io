@@ -6,7 +6,7 @@ categories: ["技术文章"]
 ---
 ​
 vue-cli（vue脚手架）超详细教程：[vue-cli（vue脚手架）超详细教程_Yin_Xiaobo的博客-CSDN博客_vue-cli(vue脚手架)超详细教程](https://blog.csdn.net/wulala_hei/article/details/85000530)
-
+<!--more-->
 这个教程里面是使用 vue init webpack app-name，但官方文档中建议的命令是 vue create app-name
 
 但这两个命令创建的项目是有些不一样的，vue init是版本2的方法，vue create是版本3的方法。但网上搜索了一圈，有人说两种方法都是vue.js + webpack结合的。

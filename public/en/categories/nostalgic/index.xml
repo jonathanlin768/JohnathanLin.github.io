@@ -14,12 +14,54 @@
       <link>http://localhost:1313/en/posts/nostalgic_winxp/</link>
       <pubDate>Sun, 02 Oct 2022 18:51:17 +0800</pubDate>
       <guid>http://localhost:1313/en/posts/nostalgic_winxp/</guid>
-      <description>Click here to download my virtual machine image Download virtual machine image:
-Link：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l
-Fetch Code：374l
-My VirtualBox version is 6.1
-Let me talk about nostalgic For most people, Win95 is their youth, so they create UI component library React95, or create an OS serenity together. But for most Chinese people, when they got PC in 2000-2010, they used Windows XP in their PC.
-sh1zuku is from China, Taiwan, he created a Windows XP simulator on website: Project Link, Online Demo, and another programmer from Vietnam wrote a Windows 7 Simulator on website Online Demo.</description>
+      <description>&lt;h1 id=&#34;click-here-to-download-my-virtual-machine-image&#34;&gt;Click here to download my virtual machine image&lt;/h1&gt;
+&lt;p&gt;Download virtual machine image:&lt;/p&gt;
+&lt;p&gt;Link：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l&lt;/p&gt;
+&lt;p&gt;Fetch Code：374l&lt;/p&gt;
+&lt;p&gt;My VirtualBox version is 6.1&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<h1 id="click-here-to-download-my-virtual-machine-image">Click here to download my virtual machine image</h1>
+<p>Download virtual machine image:</p>
+<p>Link：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l</p>
+<p>Fetch Code：374l</p>
+<p>My VirtualBox version is 6.1</p>
+<h1 id="let-me-talk-about-nostalgic">Let me talk about nostalgic</h1>
+<p>For most people, Win95 is their youth, so they create UI component library <a href="https://github.com/arturbien/React95">React95</a>, or create an OS <a href="https://github.com/SerenityOS/serenity">serenity</a> together. But for most Chinese people, when they got PC in 2000-2010, they used Windows XP in their PC.</p>
+<p><a href="https://sh1zuku.csie.io/#/">sh1zuku</a> is from China, Taiwan, he created a Windows XP simulator on website: <a href="https://github.com/ShizukuIchi/winXP">Project Link</a>, <a href="https://winxp.vercel.app/">Online Demo</a>, and another programmer from Vietnam wrote a Windows 7 Simulator on website <a href="https://win7simu.visnalize.com/">Online Demo</a>.</p>
+<p>Honestly, I don&rsquo;t have enough ability to develop simulator program like them, but I have an idea that I can install a Windows XP virtual machine on my PC.</p>
+<h1 id="the-steps-you-might-choose">The steps you might choose</h1>
+<ol>
+<li>Install VirtualBox.</li>
+<li>Download Image: Find Windows XP Image in <a href="https://msdn.itellyou.cn/">MSDN Itellyou</a> and then download it.</li>
+<li>Install the Image in VirtualBox.</li>
+<li>Run the installed image, and install the OS.</li>
+</ol>
+<p>Then, you will discover that the Windows XP only has 30-day trail. In the early 2000s, piracy was rampant, and Microsoft took strong measures to limit it. Even if you enter the correct serial number when you install, Microsoft will ask you to activate using a phone, etc.</p>
+<p>But I just want to experienct the old OS in my PC! (It&rsquo;s too hard for me to activate a copyrighted WinXP!)</p>
+<h1 id="the-right-solution">The Right Solution</h1>
+<p>So I don&rsquo;t use this copyrighted WinXP image anymore, I should search some WinXP image without activation.</p>
+<p>Here, I found <a href="https://github.com/lucianoferrari/winxpimage">github WinXPImage</a> from Github, but his Image file saved on Google Drive. I have downloaded that and uploaded to Baidu Cloud:</p>
+<p>Link：https://pan.baidu.com/s/1ypKeaZixJXnbqAo4ZT0YLQ?pwd=30dd
+Fetch Code：30dd</p>
+<p>When you install this image on VirtualBox, you will get a WinXP(<strong>English Edition</strong>) that you can use indefinitely.</p>
+<p>But you may not be able to start this Image successfully, you should execute this after importing the OVA File:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmd" data-lang="cmd"><span style="display:flex;"><span>vbox-img geometry --filename Windows_XP_Professional-disk1.vdi --format VDI --cylinders 5874 --heads 255 --sectors 56
+</span></span></code></pre></div><p>From <a href="https://github.com/lucianoferrari/winxpimage/issues/1">github issue</a> streeg&rsquo;s solution.</p>
+<h1 id="how-to-chinesize-windows-xp">How to Chinesize Windows XP?</h1>
+<p>I want to use Chinese Windows XP to reminisce about the past, but this image doesn&rsquo;t have Chinese language support.</p>
+<p>After searching many source, I finally found a language package mui_win_xp_pro_n_cd1 in <a href="https://msdn.alicesworld.tech/Windows%20XP">here</a>.</p>
+<p>I downloaded it and uploaded to Baidu Cloud:</p>
+<p>Link：https://pan.baidu.com/s/18mW9OCRejMDoEpUcih-zlA?pwd=peu4</p>
+<p>Fetch Code：peu4</p>
+<p>Then,</p>
+<ol>
+<li>Configure share folder in Windows XP virtual machine. <a href="https://www.jianshu.com/p/060103d48244">Source</a></li>
+<li>Transfer mui_win_xp_pro_n_cd1.iso to Windows XP virtual machine by share folder.</li>
+<li>Install it, <a href="https://www.docin.com/p-2998336055.html">Source</a></li>
+</ol>
+<p>Finally, reboot Windows XP virtual machine.</p>
+<p>Screenshot:
+<img loading="lazy" src="/images/nostalgic_xp.png" alt=""  />
+</p>]]></content:encoded>
     </item>
   </channel>
 </rss>

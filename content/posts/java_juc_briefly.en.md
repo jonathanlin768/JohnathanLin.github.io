@@ -5,7 +5,7 @@ draft: false
 categories: ["Tech", "Note"]
 ---
 > Introduction: This article aims to introduce the relevant usage of synchronized, ReentrantLock, and Condition in Java.
-
+<!--more-->
 # Locking with Synchronized
 Synchronized can be applied to instance methods, static methods, and code blocks. When used to modify a code block, it can either lock on a specific object or on a class (.class).
 

@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Python on 风萧古道 - 勤学苦练，年复一年</title>
+    <link>http://localhost:1313/tags/python/</link>
+    <description>Recent content in Python on 风萧古道 - 勤学苦练，年复一年</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
+    <lastBuildDate>Sat, 13 Nov 2021 15:31:00 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/python/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用Python实现简单UDP Ping</title>
+      <link>http://localhost:1313/posts/simple_udp_ping_with_python/</link>
+      <pubDate>Sat, 13 Nov 2021 15:31:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/simple_udp_ping_with_python/</guid>
+      <description>&lt;h2 id=&#34;套接字编程作业2udp-ping-程序&#34;&gt;套接字编程作业2：UDP ping 程序&lt;/h2&gt;
+&lt;p&gt;在本实验中，您将学习使用Python进行UDP套接字编程的基础知识。您将学习如何使用UDP套接字发送和接收数据报，以及如何设置适当的套接字超时。在实验中，您将熟悉Ping应用程序及其在计算统计信息（如丢包率）中的作用。&lt;/p&gt;
+&lt;p&gt;您首先需要研究一个用Python编写的简单的ping服务器程序，并实现对应的客户端程序。这些程序提供的功能类似于现代操作系统中可用的标准ping程序功能。然而，我们的程序使用更简单的UDP协议，而不是标准互联网控制消息协议（ICMP）来进行通信。 ping协议允许客户端机器发送一个数据包到远程机器，并使远程机器将数据包返回到客户（称为回显）的操作。另外，ping协议允许主机计算它到其他机器的往返时间。&lt;/p&gt;
+&lt;p&gt;以下是Ping服务器程序的完整代码。你的任务是写出Ping客户端程序。&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<h2 id="套接字编程作业2udp-ping-程序">套接字编程作业2：UDP ping 程序</h2>
+<p>在本实验中，您将学习使用Python进行UDP套接字编程的基础知识。您将学习如何使用UDP套接字发送和接收数据报，以及如何设置适当的套接字超时。在实验中，您将熟悉Ping应用程序及其在计算统计信息（如丢包率）中的作用。</p>
+<p>您首先需要研究一个用Python编写的简单的ping服务器程序，并实现对应的客户端程序。这些程序提供的功能类似于现代操作系统中可用的标准ping程序功能。然而，我们的程序使用更简单的UDP协议，而不是标准互联网控制消息协议（ICMP）来进行通信。 ping协议允许客户端机器发送一个数据包到远程机器，并使远程机器将数据包返回到客户（称为回显）的操作。另外，ping协议允许主机计算它到其他机器的往返时间。</p>
+<p>以下是Ping服务器程序的完整代码。你的任务是写出Ping客户端程序。</p>
+<h3 id="服务器代码">服务器代码</h3>
+<p>以下代码完整实现了一个ping服务器。您需要在运行客户端程序之前编译并运行此代码。<em>而且您不需要修改此代码。</em>
+在这个服务器代码中，30％的客户端的数据包会被模拟丢失。你应该仔细研究这个代码，它将帮助你编写ping客户端。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># UDPPingerServer.py </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># We will need the following module to generate randomized lost packets import random </span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> socket <span style="color:#f92672">import</span> <span style="color:#f92672">*</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create a UDP socket  </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Notice the use of SOCK_DGRAM for UDP packets </span>
+</span></span><span style="display:flex;"><span>serverSocket <span style="color:#f92672">=</span> socket(AF_INET, SOCK_DGRAM) 
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Assign IP address and port number to socket </span>
+</span></span><span style="display:flex;"><span>serverSocket<span style="color:#f92672">.</span>bind((<span style="color:#e6db74">&#39;&#39;</span>, <span style="color:#ae81ff">12000</span>)) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:     
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># Generate random number in the range of 0 to 10 </span>
+</span></span><span style="display:flex;"><span>	rand <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">10</span>)     
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># Receive the client packet along with the address it is coming from  </span>
+</span></span><span style="display:flex;"><span>	message, address <span style="color:#f92672">=</span> serverSocket<span style="color:#f92672">.</span>recvfrom(<span style="color:#ae81ff">1024</span>) 
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># Capitalize the message from the client     </span>
+</span></span><span style="display:flex;"><span>	message <span style="color:#f92672">=</span> message<span style="color:#f92672">.</span>upper() 
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># If rand is less is than 4, we consider the packet lost and do not respond     </span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> rand <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">4</span>:         
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">continue</span>     
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e"># Otherwise, the server responds         </span>
+</span></span><span style="display:flex;"><span>	serverSocket<span style="color:#f92672">.</span>sendto(message, address)
+</span></span></code></pre></div><p>服务器程序在一个无限循环中监听到来的UDP数据包。当数据包到达时，如果生成一个随机整数大于或等于4，则服务器将数字转为大写并将其发送回客户端。</p>
+<h3 id="数据包丢失">数据包丢失</h3>
+<p>UDP为应用程序提供了不可靠的传输服务。消息可能因为路由器队列溢出，硬件错误或其他原因，而在网络中丢失。但由于在内网中很丢包甚至不丢包，所以在本实验室的服务器程序添加人为损失来模拟网络丢包的影响。服务器创建一个随机整数，由它确定传入的数据包是否丢失。</p>
+<h3 id="客户端代码">客户端代码</h3>
+<p>您需要实现以下客户端程序。</p>
+<p>客户端向服务器发送10次ping。因为UDP是不可靠的协议，所以从客户端发送到服务器的数据包可能在网络中丢失。因此，客户端不能无限期地等待ping消息的回复。客户等待服务器回答的时间至多为一秒，如果在一秒内没有收到回复，您的客户端程序应该假定数据包在网络传输期间丢失。您需要查找Python文档，以了解如何在数据报套接字上设置超时值。</p>
+<p>具体来说，您的客户端程序应该</p>
+<ol>
+<li>使用UDP发送ping消息（注意：不同于TCP，您不需要首先建立连接，因为UDP是无连接协议。）</li>
+<li>从服务器输出响应消息</li>
+<li>如果从服务器受到响应，则计算并输出每个数据包的往返时延（RTT）（以秒为单位），</li>
+<li>否则输出“请求超时”</li>
+</ol>
+<p>在开发过程中，您应该先在计算机上运行UDPPingerServer.py，并通过向localhost（或127.0.0.1）发送数据包来测试客户端。调试完成代码后，您应该能看到ping服务器和ping客户端在不同机器上通过网络进行通信。</p>
+<h3 id="消息格式">消息格式</h3>
+<p>本实验中的ping消息格式使用最简单的方式。客户端消息只有一行，由以下格式的ASCII字符组成：</p>
+<blockquote>
+<p>Ping sequence_number time</p>
+</blockquote>
+<p>其中sequence_number从1开始，一直到10，共10条消息，而time则是客户端发送消息时的时间。</p>
+<h3 id="需要上交的内容">需要上交的内容</h3>
+<p>您需要上交完整的客户端代码和屏幕截图，以验证您的ping程序是否按需求运行。</p>
+<h3 id="可选练习">可选练习</h3>
+<ol>
+<li>目前，程序计算每个数据包的往返时间（RTT），并单独打印出来。请按照标准ping程序的模式修改。您需要在客户端每次ping后显示最小，最大和平均RTT。另外，还需计算丢包率（百分比）。</li>
+<li>UDP Ping的另一个类似的应用是UDP Heartbeat。心跳可用于检查应用程序是否已启动并运行，并报告单向丢包。客户端在UDP数据包中将一个序列号和当前时间戳发送给正在监听客户端心跳的服务器。服务器收到数据包后，计算时差，报告丢包（若发生）。如果心跳数据包在指定的一段时间内丢失，我们可以假设客户端应用程序已经停止。实现UDP Heartbeat（客户端和服务器端）。您需要修改给定的UDPPingerServer.py和您自己的UDP ping客户端。</li>
+</ol>
+<p>客户端源码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> socket <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>host <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;127.0.0.1&#39;</span>
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> <span style="color:#ae81ff">12000</span>
+</span></span><span style="display:flex;"><span>clientSocket <span style="color:#f92672">=</span> socket(AF_INET, SOCK_DGRAM)
+</span></span><span style="display:flex;"><span>clientSocket<span style="color:#f92672">.</span>connect((host, port))
+</span></span><span style="display:flex;"><span>clientSocket<span style="color:#f92672">.</span>settimeout(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>num <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>sended <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>received <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>lost <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>maxRTT <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>
+</span></span><span style="display:flex;"><span>minRTT <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>
+</span></span><span style="display:flex;"><span>sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(num):
+</span></span><span style="display:flex;"><span>    sendTime <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span>    sendMsg <span style="color:#f92672">=</span> (<span style="color:#e6db74">&#39;Ping </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, sendTime))<span style="color:#f92672">.</span>encode()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        clientSocket<span style="color:#f92672">.</span>sendto(sendMsg, (host, port))
+</span></span><span style="display:flex;"><span>        sended <span style="color:#f92672">=</span> sended <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        recvMsg, addr <span style="color:#f92672">=</span> clientSocket<span style="color:#f92672">.</span>recvfrom(<span style="color:#ae81ff">1024</span>)
+</span></span><span style="display:flex;"><span>        received <span style="color:#f92672">=</span> received <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        rtt <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> sendTime
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;Sequence </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">: Reply from </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">    RTT = </span><span style="color:#e6db74">%.3f</span><span style="color:#e6db74">s&#39;</span> <span style="color:#f92672">%</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, host, rtt))
+</span></span><span style="display:flex;"><span>        sum <span style="color:#f92672">+=</span> rtt
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            maxRTT <span style="color:#f92672">=</span> rtt
+</span></span><span style="display:flex;"><span>            minRTT <span style="color:#f92672">=</span> rtt
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> rtt <span style="color:#f92672">&lt;</span> minRTT:
+</span></span><span style="display:flex;"><span>                minRTT <span style="color:#f92672">=</span> rtt
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> rtt <span style="color:#f92672">&gt;</span> maxRTT:
+</span></span><span style="display:flex;"><span>                maxRTT <span style="color:#f92672">=</span> rtt
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>        lost <span style="color:#f92672">=</span> lost <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;Sequence </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">: Request timed out&#39;</span> <span style="color:#f92672">%</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>clientSocket<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;host: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> ping statistic:&#39;</span> <span style="color:#f92672">%</span> host)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74"> package: sended = </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">, received = </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">, lost = </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">%d%%</span><span style="color:#e6db74"> lost rate)&#39;</span> <span style="color:#f92672">%</span>(sended, received, lost, int(<span style="color:#ae81ff">1.0</span> <span style="color:#f92672">*</span> lost <span style="color:#f92672">/</span> sended <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span>)))
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> received <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;rtt statistic: &#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74"> min = </span><span style="color:#e6db74">%.3f</span><span style="color:#e6db74">s, max = </span><span style="color:#e6db74">%.3f</span><span style="color:#e6db74">s, avg = </span><span style="color:#e6db74">%.3f</span><span style="color:#e6db74">s&#39;</span> <span style="color:#f92672">%</span> (minRTT, maxRTT, <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">*</span> sum <span style="color:#f92672">/</span> received))
+</span></span></code></pre></div><p>在这段源码中，我模仿Windows的ping程序，成功实现了类似的效果。</p>
+<p><img loading="lazy" src="/images/UdpResult.png" alt=""  />
+</p>
+<h2 id="关于可选练习的第二个问题">关于可选练习的第二个问题</h2>
+<p>我认为服务端这边需要在读取客户端发的消息中，提取客户端的发送时间，并将其与服务器当前时间相减而得到RTT时延，以此来判定是否超时。</p>
+<p>另外，心跳检测应规定每X秒都由客户端发送一条简短的消息到服务端，服务端存储一个客户端状态列表，更新最后状态更新时间。</p>
+<p>同时服务端应该有一个tick机制，即每隔Y秒都检查一遍客户端状态列表，如果上次状态更新时间与当前时间超过了设置的阈值，则判定该客户端已经离线。</p>
+<h1 id="学到的东西">学到的东西：</h1>
+<ol>
+<li>TCP和UDP用的都是AF_INET,但是TCP用的是SOCK_STREAM,而UDP用的是SOCK_DGRAM</li>
+<li>用sendto()函数的话就不需要在前面调用connect()方法，而用send()之前需要connect()</li>
+<li>用recvfrom()函数可以获得接收的消息和消息来源信息，而recv()只能获取消息</li>
+<li>用settimeout(1)可以设置超时时间，但超时会直接抛出异常；如果要继续下去，则需要用try excerpt接取异常信息处理。</li>
+</ol>]]></content:encoded>
+    </item>
+    <item>
+      <title>使用Python开发一个简单的web服务器</title>
+      <link>http://localhost:1313/posts/simple_web_server_with_python/</link>
+      <pubDate>Sun, 07 Nov 2021 21:02:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/simple_web_server_with_python/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;来自书籍《计算机网络-自顶向下方法-第6版(课本)》第120页，第二章应用层的课后题第一题。&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+      <content:encoded><![CDATA[<blockquote>
+<p>来自书籍《计算机网络-自顶向下方法-第6版(课本)》第120页，第二章应用层的课后题第一题。</p>
+</blockquote>
+<h2 id="基础题目">基础题目</h2>
+<p><strong>题目</strong>：在这个编程作业中，你将用Python语言开发一个简单的Web服务器，它仅能处理一个请求。具体而言，你的Web服务器将：（1）当一个客户（浏览器）联系时创建一个连接套接字；（2）从这个连接接收HTTP请求；（3）解释该请求以确定所请求的特定文件；（4）从服务器的文件系统获得请求的文件；（5）创建一个由请求的文件组成的HTTP响应报文，报文前面有首部行；（6）经TCP连接向请求的浏览器发送响应。如果浏览器请求一个在该服务器中不存在的文件，服务器应当返回一个“404 Not Found”差错报文。</p>
+<p>参考或者说学习了github上<a href="https://github.com/moranzcw">moranzcw</a>的仓库：<a href="https://github.com/moranzcw/Computer-Networking-A-Top-Down-Approach-NOTES">Computer-Networking-A-Top-Down-Approach-NOTES</a>的内容，完成了这道题。</p>
+<p>代码https://github.com/moranzcw如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># import socket module</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> socket <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>serverSocket <span style="color:#f92672">=</span> socket(AF_INET, SOCK_STREAM)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prepare a sever socket</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Fill in start</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 定义ip和端口号，然后bind绑定socket</span>
+</span></span><span style="display:flex;"><span>host <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> <span style="color:#ae81ff">6789</span>
+</span></span><span style="display:flex;"><span>serverSocket<span style="color:#f92672">.</span>bind((host, port))
+</span></span><span style="display:flex;"><span>serverSocket<span style="color:#f92672">.</span>listen(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Fill in end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Establish the connection</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Ready to serve...&#39;</span>)
+</span></span><span style="display:flex;"><span>    connectionSocket, addr <span style="color:#f92672">=</span> serverSocket<span style="color:#f92672">.</span>accept()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Fill in start  #Fill in end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        message <span style="color:#f92672">=</span> connectionSocket<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1024</span>)  <span style="color:#75715e"># Fill in start  #Fill in end</span>
+</span></span><span style="display:flex;"><span>        filename <span style="color:#f92672">=</span> message<span style="color:#f92672">.</span>split()[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        f <span style="color:#f92672">=</span> open(filename[<span style="color:#ae81ff">1</span>:])
+</span></span><span style="display:flex;"><span>        outputdata <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()  <span style="color:#75715e"># Fill in start  #Fill in end</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Send one HTTP header line into socket</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in start</span>
+</span></span><span style="display:flex;"><span>        header <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39; HTTP/1.1 200 OK</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Connection: close</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Content-Type: text/html</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Content-Length: </span><span style="color:#e6db74">%d</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (
+</span></span><span style="display:flex;"><span>            len(outputdata))
+</span></span><span style="display:flex;"><span>        connectionSocket<span style="color:#f92672">.</span>send(header<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Send the content of the requested file to the client</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(outputdata)):
+</span></span><span style="display:flex;"><span>            connectionSocket<span style="color:#f92672">.</span>send(outputdata[i]<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>        connectionSocket<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">IOError</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Send response message for file not found</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in start</span>
+</span></span><span style="display:flex;"><span>        header <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39; HTTP/1.1 404 Found&#39;</span>
+</span></span><span style="display:flex;"><span>        connectionSocket<span style="color:#f92672">.</span>send(header<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>        connectionSocket<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Close client socket</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in start</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in end</span>
+</span></span><span style="display:flex;"><span>serverSocket<span style="color:#f92672">.</span>close()
+</span></span></code></pre></div><p>同时在这个文件的同级目录下，有一个html文件：helloWorld.html</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">head</span>&gt;Hello world!&lt;/<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">body</span>&gt;abcdefg&lt;/<span style="color:#f92672">body</span>&gt;
+</span></span></code></pre></div><p>在Python中启动项目：</p>
+<p><img loading="lazy" src="/images/server1.png" alt=""  />
+</p>
+<p>然后打开浏览器，在地址栏内输入：http://localhost:6789/helloWorld.html
+<img loading="lazy" src="/images/server2.png" alt=""  />
+</p>
+<p>可以看到浏览器正常收到HTTP响应报文，显示正常。</p>
+<p>如果输入的地址不是helloWorld.html，则会报404。
+<img loading="lazy" src="/images/server3.png" alt=""  />
+</p>
+<h2 id="进阶题目">进阶题目</h2>
+<h3 id="进阶题目1">进阶题目1</h3>
+<blockquote>
+<p>题目也是翻译自github老哥之手，感谢。</p>
+</blockquote>
+<p><strong>题目</strong>：目前，这个Web服务器一次只处理一个HTTP请求。请实现一个能够同时处理多个请求的多线程服务器。使用线程，首先创建一个主线程，在固定端口监听客户端请求。当从客户端收到TCP连接请求时，它将通过另一个端口建立TCP连接，并在另外的单独线程中为客户端请求提供服务。这样在每个请求/响应对的独立线程中将有一个独立的TCP连接。</p>
+<p>不难得知，只要用线程包装一下处理socket的方法即可。</p>
+<p>代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># import socket module</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> socket <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sonTcpConnect</span>(connectionSocket):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Fill in start  #Fill in end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;thread:  &#34;</span> <span style="color:#f92672">+</span> threading<span style="color:#f92672">.</span>currentThread()<span style="color:#f92672">.</span>name <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is working...&#34;</span>)
+</span></span><span style="display:flex;"><span>        message <span style="color:#f92672">=</span> connectionSocket<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1024</span>)  <span style="color:#75715e"># Fill in start  #Fill in end</span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;msg&#34;</span>, message)
+</span></span><span style="display:flex;"><span>        filename <span style="color:#f92672">=</span> message<span style="color:#f92672">.</span>split()[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        f <span style="color:#f92672">=</span> open(filename[<span style="color:#ae81ff">1</span>:])
+</span></span><span style="display:flex;"><span>        outputdata <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()  <span style="color:#75715e"># Fill in start  #Fill in end</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Send one HTTP header line into socket</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in start</span>
+</span></span><span style="display:flex;"><span>        header <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39; HTTP/1.1 200 OK</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Connection: close</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Content-Type: text/html</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Content-Length: </span><span style="color:#e6db74">%d</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (
+</span></span><span style="display:flex;"><span>            len(outputdata))
+</span></span><span style="display:flex;"><span>        connectionSocket<span style="color:#f92672">.</span>send(header<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Send the content of the requested file to the client</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(outputdata)):
+</span></span><span style="display:flex;"><span>            connectionSocket<span style="color:#f92672">.</span>send(outputdata[i]<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>        connectionSocket<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">IOError</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Send response message for file not found</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in start</span>
+</span></span><span style="display:flex;"><span>        header <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39; HTTP/1.1 404 Found&#39;</span>
+</span></span><span style="display:flex;"><span>        connectionSocket<span style="color:#f92672">.</span>send(header<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>        connectionSocket<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Close client socket</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in start</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill in end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>serverSocket <span style="color:#f92672">=</span> socket(AF_INET, SOCK_STREAM)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prepare a sever socket</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Fill in start</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 定义ip和端口号，然后bind绑定socket</span>
+</span></span><span style="display:flex;"><span>host <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> <span style="color:#ae81ff">6789</span>
+</span></span><span style="display:flex;"><span>serverSocket<span style="color:#f92672">.</span>bind((host, port))
+</span></span><span style="display:flex;"><span>serverSocket<span style="color:#f92672">.</span>listen(<span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Fill in end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Establish the connection</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Ready to serve...&#39;</span>)
+</span></span><span style="display:flex;"><span>    connectionSocket, addr <span style="color:#f92672">=</span> serverSocket<span style="color:#f92672">.</span>accept()
+</span></span><span style="display:flex;"><span>    t <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(target<span style="color:#f92672">=</span>sonTcpConnect, args<span style="color:#f92672">=</span>(connectionSocket,))
+</span></span><span style="display:flex;"><span>    t<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>serverSocket<span style="color:#f92672">.</span>close()
+</span></span></code></pre></div><p>有一个要注意的地方是，在53行，args这个参数的括号内必须要加上逗号，原因是因为args是一个元组，需要在元素后面增加逗号。（资料来源：<a href="https://blog.csdn.net/chpllp/article/details/54381141">https://blog.csdn.net/chpllp/article/details/54381141</a>）</p>
+<p>多次在浏览器请求之后，控制台输出如下：
+<img loading="lazy" src="/images/serverMultiThread1.png" alt=""  />
+</p>
+<blockquote>
+<p>说实话感觉可能有些bug ,// TODO记得修</p>
+</blockquote>
+<h3 id="进阶题目2">进阶题目2：</h3>
+<p>题目：</p>
+<p>不使用浏览器，编写自己的HTTP客户端来测试你的服务器。您的客户端将使用一个TCP连接用于连接到服务器，向服务器发送HTTP请求，并将服务器响应显示出来。您可以假定发送的HTTP请求将使用GET方法。
+客户端应使用命令行参数指定服务器IP地址或主机名，服务器正在监听的端口，以及被请求对象在服务器上的路径。以下是运行客户端的输入命令格式。</p>
+<blockquote>
+<p>client.py server_host server_port filename</p>
+</blockquote>
+<p>意思就是用python发送HTTP请求到服务器就可以了。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> socket <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span>clientSocket <span style="color:#f92672">=</span> socket(AF_INET, SOCK_STREAM)
+</span></span><span style="display:flex;"><span>host <span style="color:#f92672">=</span> str(sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>clientSocket<span style="color:#f92672">.</span>connect((host, port))
+</span></span><span style="display:flex;"><span>msg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;GET &#39;</span> <span style="color:#f92672">+</span> str(sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>clientSocket<span style="color:#f92672">.</span>send(msg<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>result <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    recv_data <span style="color:#f92672">=</span> clientSocket<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1024</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> recv_data:
+</span></span><span style="display:flex;"><span>        result <span style="color:#f92672">+=</span> recv_data
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> result<span style="color:#f92672">.</span>rfind(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#34;</span>) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Received&#39;</span>, repr(result))
+</span></span></code></pre></div><p>这里要注意的是，如果没有用While True循环接收，可能只会接收到HTTP响应报文的请求头了。</p>
+<p>结果如下：
+<img loading="lazy" src="/images/client.png" alt=""  />
+</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Kotlin实现二叉堆、大顶堆、优先级队列</title>
+      <link>http://localhost:1313/posts/kotlin_implement_heap/</link>
+      <pubDate>Thu, 14 Oct 2021 23:30:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/kotlin_implement_heap/</guid>
+      <description>&lt;p&gt;参考了&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.bilibili.com/video/BV11t4y1r79L&#34;&gt;https://www.bilibili.com/video/BV11t4y1r79L&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/qq_19782019/article/details/78301832&#34;&gt;https://blog.csdn.net/qq_19782019/article/details/78301832&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;他们已经写的足够好了。我最近都在用Kotlin编程开发，我尝试用Kotlin实现了大顶堆，并且作为手动实现的优先级队列，通过了&lt;a href=&#34;https://leetcode-cn.com/problems/top-k-frequent-elements/&#34;&gt;Leetcode 347&lt;/a&gt;。&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>参考了</p>
+<p><a href="https://www.bilibili.com/video/BV11t4y1r79L">https://www.bilibili.com/video/BV11t4y1r79L</a></p>
+<p><a href="https://blog.csdn.net/qq_19782019/article/details/78301832">https://blog.csdn.net/qq_19782019/article/details/78301832</a></p>
+<p>他们已经写的足够好了。我最近都在用Kotlin编程开发，我尝试用Kotlin实现了大顶堆，并且作为手动实现的优先级队列，通过了<a href="https://leetcode-cn.com/problems/top-k-frequent-elements/">Leetcode 347</a>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#66d9ef">package</span> main.kotlin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 二叉堆（大顶堆、优先级队列）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @Date 2021-10-14.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @author Johnathan Lin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MaxHeap</span>&lt;T : Comparable&lt;T&gt;&gt;(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> arr: Array&lt;T&gt;,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> size: Int
+</span></span><span style="display:flex;"><span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//将无序的数组构建一个二叉堆
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">makeHeap</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> (size - <span style="color:#ae81ff">1</span>) downTo <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>      heapDown(i)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//向二叉堆中加入元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">addItem</span>(<span style="color:#66d9ef">value</span>: T) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//TODO 添加的边界还未考虑
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> newIndex = size<span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>    arr[newIndex] = <span style="color:#66d9ef">value</span>
+</span></span><span style="display:flex;"><span>    heapUp(newIndex)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//移除堆顶元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">removeItem</span>(): T {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//TODO 删除的边界还未考虑
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> removeValue = arr[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> lastValue = arr[size - <span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//    println(&#34;lastValue:$lastValue&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    arr[<span style="color:#ae81ff">0</span>] = lastValue
+</span></span><span style="display:flex;"><span>    size<span style="color:#f92672">--</span>
+</span></span><span style="display:flex;"><span>    heapDown(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> removeValue
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">printHeap</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">0.</span>.(size - <span style="color:#ae81ff">1</span>)) {
+</span></span><span style="display:flex;"><span>      print(arr[i].toString() + <span style="color:#e6db74">&#34; &#34;</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    println()
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">heapDown</span>(p: Int) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> i = p
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (i &lt; size) {
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">//和左右子节点（如果存在）比大小，如果自己是最大则结束，如果不是，则将自己这个位置换成最大的，然后再从被换的位置继续比
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">val</span> left = <span style="color:#ae81ff">2</span> * i + <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> right = <span style="color:#ae81ff">2</span> * i + <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">var</span> maxinum = i
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (left &lt; size <span style="color:#f92672">&amp;&amp;</span> arr[maxinum] &lt; arr[left]) {
+</span></span><span style="display:flex;"><span>        maxinum = left
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (right &lt; size <span style="color:#f92672">&amp;&amp;</span> arr[maxinum] &lt; arr[right]) {
+</span></span><span style="display:flex;"><span>        maxinum = right
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (maxinum <span style="color:#f92672">==</span> i) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//      println(&#34;交换i: $i ${arr[i]}, maxinum:$maxinum ${arr[maxinum]}&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">val</span> tmp = arr[i]
+</span></span><span style="display:flex;"><span>      arr[i] = arr[maxinum]
+</span></span><span style="display:flex;"><span>      arr[maxinum] = tmp
+</span></span><span style="display:flex;"><span>      i = maxinum
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">heapUp</span>(p: Int) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//从下往上不停地比较其父节点，比父节点大则交换
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">var</span> i = p
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> arr[i] &gt; arr[(i - <span style="color:#ae81ff">1</span>) / <span style="color:#ae81ff">2</span>]) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> parentIndex = (i - <span style="color:#ae81ff">1</span>) / <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> tmp = arr[i]
+</span></span><span style="display:flex;"><span>      arr[i] = arr[parentIndex]
+</span></span><span style="display:flex;"><span>      arr[parentIndex] = tmp
+</span></span><span style="display:flex;"><span>      i = parentIndex
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//自己定义的类型，实现Comparable接口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Data</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> name: String, <span style="color:#75715e">//名字
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">val</span> weight: Int <span style="color:#75715e">//权重
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>) : Comparable&lt;Data&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">compareTo</span>(other: Data): Int {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">if</span> (weight &gt; other.weight) {
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (weight &lt; other.weight) {
+</span></span><span style="display:flex;"><span>      -<span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">toString</span>(): String {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${name}</span><span style="color:#e6db74">-</span><span style="color:#e6db74">${weight}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//TODO 这里由于Kotlin指定泛型Data为非空，所以要求对每个元素初始化，这步很浪费空间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#75715e">//TODO 如果改为Array&lt;Data?&gt; 则很多地方都要判断是否为空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">val</span> arr: Array&lt;Data&gt; = Array(<span style="color:#ae81ff">100</span>) { i <span style="color:#f92672">-&gt;</span> Data(<span style="color:#e6db74">&#34;null&#34;</span>, i) }
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//测试数据
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  arr[<span style="color:#ae81ff">0</span>] = Data(<span style="color:#e6db74">&#34;Kobe&#34;</span>, <span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">1</span>] = Data(<span style="color:#e6db74">&#34;James&#34;</span>, <span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">2</span>] = Data(<span style="color:#e6db74">&#34;Duncan&#34;</span>, <span style="color:#ae81ff">6</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">3</span>] = Data(<span style="color:#e6db74">&#34;Garnett&#34;</span>, <span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">4</span>] = Data(<span style="color:#e6db74">&#34;Wall&#34;</span>, <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">5</span>] = Data(<span style="color:#e6db74">&#34;Nash&#34;</span>, <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">6</span>] = Data(<span style="color:#e6db74">&#34;Howard&#34;</span>, <span style="color:#ae81ff">12</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">7</span>] = Data(<span style="color:#e6db74">&#34;Paul&#34;</span>, <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">8</span>] = Data(<span style="color:#e6db74">&#34;Anthony&#34;</span>, <span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">9</span>] = Data(<span style="color:#e6db74">&#34;Yi&#34;</span>, <span style="color:#ae81ff">11</span>)
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;构建二叉堆&#34;</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> heap: MaxHeap&lt;Data&gt; = MaxHeap(arr, <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//将无序的数组构建一个二叉堆
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  heap.makeHeap()
+</span></span><span style="display:flex;"><span>  heap.printHeap()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//加入一个元素，预计这个元素会到堆顶
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">val</span> added = Data(<span style="color:#e6db74">&#34;Gasol&#34;</span>, <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;添加一个元素</span><span style="color:#e6db74">${added.toString()}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>  heap.addItem(added)
+</span></span><span style="display:flex;"><span>  heap.printHeap()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> removed = heap.removeItem()
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;移除了顶部元素</span><span style="color:#e6db74">${removed.toString()}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>  heap.printHeap()
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;finish&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>输出结果如下：</p>
+<pre tabindex="0"><code>构建二叉堆
+Howard-12 Yi-11 Nash-10 Garnett-8 James-4 Kobe-5 Duncan-6 Paul-3 Anthony-7 Wall-2 
+添加一个元素Gasol-16
+Gasol-16 Howard-12 Nash-10 Garnett-8 Yi-11 Kobe-5 Duncan-6 Paul-3 Anthony-7 Wall-2 James-4 
+移除了顶部元素Gasol-16
+Howard-12 Yi-11 Nash-10 Garnett-8 James-4 Kobe-5 Duncan-6 Paul-3 Anthony-7 Wall-2 
+finish
+
+Process finished with exit code 0
+</code></pre><p>然后我将其进行修改，提交到LeetCode，通过，代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MaxHeap</span>&lt;T:Comparable&lt;T&gt;&gt;(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> arr:Array&lt;T&gt;,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> size: Int
+</span></span><span style="display:flex;"><span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">makeHeap</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(i <span style="color:#66d9ef">in</span> (size - <span style="color:#ae81ff">1</span>) downTo <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>      heapDown( i)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">heapDown</span>(p: Int) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> i = p
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(i &lt; size) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//   if(i == 0) {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//     println(&#34;i: $i, arr[i] = ${arr[i]}&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//   }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">val</span> left = <span style="color:#ae81ff">2</span> * i + <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> right = <span style="color:#ae81ff">2</span> * i + <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">var</span> maxinum = i
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (left &lt; size <span style="color:#f92672">&amp;&amp;</span> arr[maxinum] &lt; arr[left]) {
+</span></span><span style="display:flex;"><span>        maxinum = left
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (right &lt; size <span style="color:#f92672">&amp;&amp;</span> arr[maxinum] &lt; arr[right]) {
+</span></span><span style="display:flex;"><span>        maxinum = right
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (maxinum <span style="color:#f92672">==</span> i) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//   println(&#34;交换i: $i ${arr[i]}, maxinum:$maxinum ${arr[maxinum]}&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">val</span> tmp = arr[i]
+</span></span><span style="display:flex;"><span>      arr[i] = arr[maxinum]
+</span></span><span style="display:flex;"><span>      arr[maxinum] = tmp
+</span></span><span style="display:flex;"><span>      i = maxinum
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">heapUp</span>(p: Int) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> i = p
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> arr[i] &gt; arr[(i-<span style="color:#ae81ff">1</span>)/<span style="color:#ae81ff">2</span>]) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> parentIndex = (i-<span style="color:#ae81ff">1</span>)/<span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> tmp = arr[i]
+</span></span><span style="display:flex;"><span>      arr[i] = arr[parentIndex]
+</span></span><span style="display:flex;"><span>      arr[parentIndex] = tmp
+</span></span><span style="display:flex;"><span>      i = parentIndex
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">addItem</span>(<span style="color:#66d9ef">value</span>: T) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> newIndex = size<span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>    arr[newIndex] = <span style="color:#66d9ef">value</span>
+</span></span><span style="display:flex;"><span>    heapUp(newIndex)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">removeItem</span>():T {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> removeValue = arr[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> lastValue = arr[size-<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//    println(&#34;lastValue:$lastValue&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    arr[<span style="color:#ae81ff">0</span>] = lastValue
+</span></span><span style="display:flex;"><span>    size<span style="color:#f92672">--</span>
+</span></span><span style="display:flex;"><span>    heapDown(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> removeValue
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Data</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> value: Int,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> num: Int
+</span></span><span style="display:flex;"><span>): Comparable&lt;Data&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">compareTo</span>(other: Data): Int {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">if</span> (num &gt; other.num) {
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (num &lt; other.num) {
+</span></span><span style="display:flex;"><span>      -<span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">toString</span>(): String {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${value}</span><span style="color:#e6db74">-</span><span style="color:#e6db74">${num}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">topKFrequent</span>(nums: IntArray, k: Int): IntArray {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> res = IntArray(k);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> arr:Array&lt;Data&gt; = Array(nums.size)  {i <span style="color:#f92672">-&gt;</span> Data(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)}
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//  val arr: Array&lt;Data&gt; = Array(nums.size) { i -&gt; Data(0, 0) }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">val</span> maxHeap = MaxHeap(arr, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> map: HashMap&lt;Int, Int&gt; = hashMapOf()
+</span></span><span style="display:flex;"><span>        nums.forEach { <span style="color:#66d9ef">it</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>            map[<span style="color:#66d9ef">it</span>] = map.getOrDefault(<span style="color:#66d9ef">it</span>, <span style="color:#ae81ff">0</span>) + <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        map.forEach { key, <span style="color:#66d9ef">value</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>            maxHeap.addItem(Data(key, <span style="color:#66d9ef">value</span>))
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1.</span>.k) {
+</span></span><span style="display:flex;"><span>            res[i-<span style="color:#ae81ff">1</span>] = maxHeap.removeItem().<span style="color:#66d9ef">value</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>]]></content:encoded>
+    </item>
+  </channel>
+</rss>

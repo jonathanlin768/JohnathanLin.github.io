@@ -13,7 +13,7 @@ Link：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l
 Fetch Code：374l
 
 My VirtualBox version is 6.1
-
+<!--more-->
 # Let me talk about nostalgic
 For most people, Win95 is their youth, so they create UI component library [React95](https://github.com/arturbien/React95), or create an OS [serenity](https://github.com/SerenityOS/serenity) together. But for most Chinese people, when they got PC in 2000-2010, they used Windows XP in their PC.
 

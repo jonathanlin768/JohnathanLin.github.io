@@ -14,7 +14,7 @@ pom.xml添加的依赖：
 </dependency>
 ```
 这里注意，不同版本的这玩意用法有差别。这里我使用的是262。
-
+<!--more-->
 操作类代码如下：
 ```java
 import ch.ethz.ssh2.*;
