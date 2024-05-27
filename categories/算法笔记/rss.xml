@@ -1,0 +1,851 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>算法笔记 on 风萧古道 - 勤学苦练，年复一年</title>
+    <link>http://localhost:1313/categories/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</link>
+    <description>Recent content in 算法笔记 on 风萧古道 - 勤学苦练，年复一年</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
+    <lastBuildDate>Sat, 16 Oct 2021 17:43:32 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kotlin手动实现一个最简单的哈希表</title>
+      <link>http://localhost:1313/posts/kotlin_implement_a_simple_hashmap/</link>
+      <pubDate>Sat, 16 Oct 2021 17:43:32 +0800</pubDate>
+      <guid>http://localhost:1313/posts/kotlin_implement_a_simple_hashmap/</guid>
+      <description>&lt;p&gt;参考的是《数据结构(C语言版)》上256页左右的哈希表的介绍，用了最简单的直接寻址法 + 链地址法。&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>参考的是《数据结构(C语言版)》上256页左右的哈希表的介绍，用了最简单的直接寻址法 + 链地址法。</p>
+<p>用的是Kotlin。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#66d9ef">package</span> main.kotlin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 手动实现简单的hash表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 简单的数组 +链表 （无红黑树）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 要求哈希函数可配置（被自我否决，太复杂了啦），这次就先做比较简单的 直接定址法 + 链地址法
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @Date 2021-10-16.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @author Johnathan Lin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> key: Int, <span style="color:#75715e">//key
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">var</span> value: Int, <span style="color:#75715e">//value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">var</span> next: Node? <span style="color:#75715e">//如果hash值重复了，则用头插法放进去
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// hash表，这次可为空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">val</span> size = <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> hashArr: Array&lt;Node?&gt; = Array(size) { <span style="color:#66d9ef">null</span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//插入 假设插入key 8 value 24
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  println(<span style="color:#e6db74">&#34;插入key 8 value 24&#34;</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">set</span>(hashArr, size, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">24</span>) { k, s <span style="color:#f92672">-&gt;</span> k % s }
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;插入key 108 value 32&#34;</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">set</span>(hashArr, size, <span style="color:#ae81ff">108</span>, <span style="color:#ae81ff">32</span>) { k, s <span style="color:#f92672">-&gt;</span> k % s }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> v = <span style="color:#66d9ef">get</span>(hashArr, size, <span style="color:#ae81ff">108</span>) { k, s <span style="color:#f92672">-&gt;</span> k % s }
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;读取key为108: </span><span style="color:#e6db74">$v</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;删除key 108&#34;</span>)
+</span></span><span style="display:flex;"><span>  remove(hashArr, size, <span style="color:#ae81ff">108</span>) { k, s <span style="color:#f92672">-&gt;</span> k % s }
+</span></span><span style="display:flex;"><span>  v = <span style="color:#66d9ef">get</span>(hashArr, size, <span style="color:#ae81ff">108</span>) { k, s <span style="color:#f92672">-&gt;</span> k % s }
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;读取key为108: </span><span style="color:#e6db74">$v</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>  v = <span style="color:#66d9ef">get</span>(hashArr, size, <span style="color:#ae81ff">8</span>) { k, s <span style="color:#f92672">-&gt;</span> k % s }
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;读取key为8: </span><span style="color:#e6db74">$v</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param hashFunc 哈希函数 param1：key param2：size
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">get</span>(hashArr: Array&lt;Node?&gt;, size: Int, key: Int, hashFunc: (Int, Int) <span style="color:#f92672">-&gt;</span> Int): Node? {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> pos = hashFunc.invoke(key, size)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> queueHead = hashArr[pos]
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (queueHead <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (queueHead.key <span style="color:#f92672">==</span> key) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> queueHead
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> p = queueHead
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(p<span style="color:#f92672">?.</span>next <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (p.next<span style="color:#f92672">?.</span>key <span style="color:#f92672">==</span> key) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> p.next
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      p = p.next
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">set</span>(hashArr: Array&lt;Node?&gt;, size: Int, key: Int, <span style="color:#66d9ef">value</span>: Int, hashFunc: (Int, Int) <span style="color:#f92672">-&gt;</span> (Int)) {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//get 不到的时候才会set
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">val</span> node = <span style="color:#66d9ef">get</span>(hashArr, size, key, hashFunc)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (node <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>    node.<span style="color:#66d9ef">value</span> = <span style="color:#66d9ef">value</span>
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> pos = hashFunc.invoke(key, size)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> newNode = Node(key, <span style="color:#66d9ef">value</span>, <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hashArr[pos] <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>      hashArr[pos] = newNode
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> next = hashArr[pos]<span style="color:#f92672">?.</span>next
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (next <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>        hashArr[pos]<span style="color:#f92672">?.</span>next = newNode
+</span></span><span style="display:flex;"><span>      } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        newNode.next = next
+</span></span><span style="display:flex;"><span>        hashArr[pos]<span style="color:#f92672">?.</span>next = newNode
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">remove</span>(hashArr: Array&lt;Node?&gt;, size: Int, key: Int, hashFunc: (Int, Int) <span style="color:#f92672">-&gt;</span> (Int)) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> pos = hashFunc.invoke(key, size)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> queueHead = hashArr[pos]
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (queueHead <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (queueHead.key <span style="color:#f92672">==</span> key) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (queueHead.next <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) { <span style="color:#75715e">//好像jdk7有一个hashMap的bug？
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        hashArr[pos] = queueHead.next
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>      } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        hashArr[pos] = <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">var</span> p = queueHead
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">while</span>(p<span style="color:#f92672">?.</span>next <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (p.next<span style="color:#f92672">?.</span>key <span style="color:#f92672">==</span> key) {
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> (p.next<span style="color:#f92672">?.</span>next <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            p.next = p.next<span style="color:#f92672">?.</span>next
+</span></span><span style="display:flex;"><span>          } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            p.next = <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        p = p.next
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>然后是输出：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plain" data-lang="plain"><span style="display:flex;"><span>插入key 8 value 24
+</span></span><span style="display:flex;"><span>插入key 108 value 32
+</span></span><span style="display:flex;"><span>读取key为108: Node(key=108, value=32, next=null)
+</span></span><span style="display:flex;"><span>删除key 108
+</span></span><span style="display:flex;"><span>读取key为108: null
+</span></span><span style="display:flex;"><span>读取key为8: Node(key=8, value=24, next=null)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Process finished with exit code 0
+</span></span></code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>Kotlin实现二叉堆、大顶堆、优先级队列</title>
+      <link>http://localhost:1313/posts/kotlin_implement_heap/</link>
+      <pubDate>Thu, 14 Oct 2021 23:30:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/kotlin_implement_heap/</guid>
+      <description>&lt;p&gt;参考了&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.bilibili.com/video/BV11t4y1r79L&#34;&gt;https://www.bilibili.com/video/BV11t4y1r79L&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/qq_19782019/article/details/78301832&#34;&gt;https://blog.csdn.net/qq_19782019/article/details/78301832&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;他们已经写的足够好了。我最近都在用Kotlin编程开发，我尝试用Kotlin实现了大顶堆，并且作为手动实现的优先级队列，通过了&lt;a href=&#34;https://leetcode-cn.com/problems/top-k-frequent-elements/&#34;&gt;Leetcode 347&lt;/a&gt;。&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>参考了</p>
+<p><a href="https://www.bilibili.com/video/BV11t4y1r79L">https://www.bilibili.com/video/BV11t4y1r79L</a></p>
+<p><a href="https://blog.csdn.net/qq_19782019/article/details/78301832">https://blog.csdn.net/qq_19782019/article/details/78301832</a></p>
+<p>他们已经写的足够好了。我最近都在用Kotlin编程开发，我尝试用Kotlin实现了大顶堆，并且作为手动实现的优先级队列，通过了<a href="https://leetcode-cn.com/problems/top-k-frequent-elements/">Leetcode 347</a>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#66d9ef">package</span> main.kotlin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 二叉堆（大顶堆、优先级队列）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @Date 2021-10-14.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @author Johnathan Lin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MaxHeap</span>&lt;T : Comparable&lt;T&gt;&gt;(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> arr: Array&lt;T&gt;,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> size: Int
+</span></span><span style="display:flex;"><span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//将无序的数组构建一个二叉堆
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">makeHeap</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> (size - <span style="color:#ae81ff">1</span>) downTo <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>      heapDown(i)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//向二叉堆中加入元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">addItem</span>(<span style="color:#66d9ef">value</span>: T) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//TODO 添加的边界还未考虑
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> newIndex = size<span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>    arr[newIndex] = <span style="color:#66d9ef">value</span>
+</span></span><span style="display:flex;"><span>    heapUp(newIndex)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//移除堆顶元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">removeItem</span>(): T {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//TODO 删除的边界还未考虑
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> removeValue = arr[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> lastValue = arr[size - <span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//    println(&#34;lastValue:$lastValue&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    arr[<span style="color:#ae81ff">0</span>] = lastValue
+</span></span><span style="display:flex;"><span>    size<span style="color:#f92672">--</span>
+</span></span><span style="display:flex;"><span>    heapDown(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> removeValue
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">printHeap</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">0.</span>.(size - <span style="color:#ae81ff">1</span>)) {
+</span></span><span style="display:flex;"><span>      print(arr[i].toString() + <span style="color:#e6db74">&#34; &#34;</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    println()
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">heapDown</span>(p: Int) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> i = p
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (i &lt; size) {
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">//和左右子节点（如果存在）比大小，如果自己是最大则结束，如果不是，则将自己这个位置换成最大的，然后再从被换的位置继续比
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">val</span> left = <span style="color:#ae81ff">2</span> * i + <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> right = <span style="color:#ae81ff">2</span> * i + <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">var</span> maxinum = i
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (left &lt; size <span style="color:#f92672">&amp;&amp;</span> arr[maxinum] &lt; arr[left]) {
+</span></span><span style="display:flex;"><span>        maxinum = left
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (right &lt; size <span style="color:#f92672">&amp;&amp;</span> arr[maxinum] &lt; arr[right]) {
+</span></span><span style="display:flex;"><span>        maxinum = right
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (maxinum <span style="color:#f92672">==</span> i) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//      println(&#34;交换i: $i ${arr[i]}, maxinum:$maxinum ${arr[maxinum]}&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">val</span> tmp = arr[i]
+</span></span><span style="display:flex;"><span>      arr[i] = arr[maxinum]
+</span></span><span style="display:flex;"><span>      arr[maxinum] = tmp
+</span></span><span style="display:flex;"><span>      i = maxinum
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">heapUp</span>(p: Int) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//从下往上不停地比较其父节点，比父节点大则交换
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">var</span> i = p
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> arr[i] &gt; arr[(i - <span style="color:#ae81ff">1</span>) / <span style="color:#ae81ff">2</span>]) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> parentIndex = (i - <span style="color:#ae81ff">1</span>) / <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> tmp = arr[i]
+</span></span><span style="display:flex;"><span>      arr[i] = arr[parentIndex]
+</span></span><span style="display:flex;"><span>      arr[parentIndex] = tmp
+</span></span><span style="display:flex;"><span>      i = parentIndex
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//自己定义的类型，实现Comparable接口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Data</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> name: String, <span style="color:#75715e">//名字
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">val</span> weight: Int <span style="color:#75715e">//权重
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>) : Comparable&lt;Data&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">compareTo</span>(other: Data): Int {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">if</span> (weight &gt; other.weight) {
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (weight &lt; other.weight) {
+</span></span><span style="display:flex;"><span>      -<span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">toString</span>(): String {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${name}</span><span style="color:#e6db74">-</span><span style="color:#e6db74">${weight}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//TODO 这里由于Kotlin指定泛型Data为非空，所以要求对每个元素初始化，这步很浪费空间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#75715e">//TODO 如果改为Array&lt;Data?&gt; 则很多地方都要判断是否为空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">val</span> arr: Array&lt;Data&gt; = Array(<span style="color:#ae81ff">100</span>) { i <span style="color:#f92672">-&gt;</span> Data(<span style="color:#e6db74">&#34;null&#34;</span>, i) }
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//测试数据
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  arr[<span style="color:#ae81ff">0</span>] = Data(<span style="color:#e6db74">&#34;Kobe&#34;</span>, <span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">1</span>] = Data(<span style="color:#e6db74">&#34;James&#34;</span>, <span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">2</span>] = Data(<span style="color:#e6db74">&#34;Duncan&#34;</span>, <span style="color:#ae81ff">6</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">3</span>] = Data(<span style="color:#e6db74">&#34;Garnett&#34;</span>, <span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">4</span>] = Data(<span style="color:#e6db74">&#34;Wall&#34;</span>, <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">5</span>] = Data(<span style="color:#e6db74">&#34;Nash&#34;</span>, <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">6</span>] = Data(<span style="color:#e6db74">&#34;Howard&#34;</span>, <span style="color:#ae81ff">12</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">7</span>] = Data(<span style="color:#e6db74">&#34;Paul&#34;</span>, <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">8</span>] = Data(<span style="color:#e6db74">&#34;Anthony&#34;</span>, <span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>  arr[<span style="color:#ae81ff">9</span>] = Data(<span style="color:#e6db74">&#34;Yi&#34;</span>, <span style="color:#ae81ff">11</span>)
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;构建二叉堆&#34;</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> heap: MaxHeap&lt;Data&gt; = MaxHeap(arr, <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//将无序的数组构建一个二叉堆
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  heap.makeHeap()
+</span></span><span style="display:flex;"><span>  heap.printHeap()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">//加入一个元素，预计这个元素会到堆顶
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">val</span> added = Data(<span style="color:#e6db74">&#34;Gasol&#34;</span>, <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;添加一个元素</span><span style="color:#e6db74">${added.toString()}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>  heap.addItem(added)
+</span></span><span style="display:flex;"><span>  heap.printHeap()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> removed = heap.removeItem()
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;移除了顶部元素</span><span style="color:#e6db74">${removed.toString()}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>  heap.printHeap()
+</span></span><span style="display:flex;"><span>  println(<span style="color:#e6db74">&#34;finish&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>输出结果如下：</p>
+<pre tabindex="0"><code>构建二叉堆
+Howard-12 Yi-11 Nash-10 Garnett-8 James-4 Kobe-5 Duncan-6 Paul-3 Anthony-7 Wall-2 
+添加一个元素Gasol-16
+Gasol-16 Howard-12 Nash-10 Garnett-8 Yi-11 Kobe-5 Duncan-6 Paul-3 Anthony-7 Wall-2 James-4 
+移除了顶部元素Gasol-16
+Howard-12 Yi-11 Nash-10 Garnett-8 James-4 Kobe-5 Duncan-6 Paul-3 Anthony-7 Wall-2 
+finish
+
+Process finished with exit code 0
+</code></pre><p>然后我将其进行修改，提交到LeetCode，通过，代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MaxHeap</span>&lt;T:Comparable&lt;T&gt;&gt;(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> arr:Array&lt;T&gt;,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> size: Int
+</span></span><span style="display:flex;"><span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">makeHeap</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(i <span style="color:#66d9ef">in</span> (size - <span style="color:#ae81ff">1</span>) downTo <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>      heapDown( i)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">heapDown</span>(p: Int) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> i = p
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(i &lt; size) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//   if(i == 0) {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//     println(&#34;i: $i, arr[i] = ${arr[i]}&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//   }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">val</span> left = <span style="color:#ae81ff">2</span> * i + <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> right = <span style="color:#ae81ff">2</span> * i + <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">var</span> maxinum = i
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (left &lt; size <span style="color:#f92672">&amp;&amp;</span> arr[maxinum] &lt; arr[left]) {
+</span></span><span style="display:flex;"><span>        maxinum = left
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (right &lt; size <span style="color:#f92672">&amp;&amp;</span> arr[maxinum] &lt; arr[right]) {
+</span></span><span style="display:flex;"><span>        maxinum = right
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (maxinum <span style="color:#f92672">==</span> i) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//   println(&#34;交换i: $i ${arr[i]}, maxinum:$maxinum ${arr[maxinum]}&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">val</span> tmp = arr[i]
+</span></span><span style="display:flex;"><span>      arr[i] = arr[maxinum]
+</span></span><span style="display:flex;"><span>      arr[maxinum] = tmp
+</span></span><span style="display:flex;"><span>      i = maxinum
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">heapUp</span>(p: Int) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> i = p
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> arr[i] &gt; arr[(i-<span style="color:#ae81ff">1</span>)/<span style="color:#ae81ff">2</span>]) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> parentIndex = (i-<span style="color:#ae81ff">1</span>)/<span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">val</span> tmp = arr[i]
+</span></span><span style="display:flex;"><span>      arr[i] = arr[parentIndex]
+</span></span><span style="display:flex;"><span>      arr[parentIndex] = tmp
+</span></span><span style="display:flex;"><span>      i = parentIndex
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">addItem</span>(<span style="color:#66d9ef">value</span>: T) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> newIndex = size<span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>    arr[newIndex] = <span style="color:#66d9ef">value</span>
+</span></span><span style="display:flex;"><span>    heapUp(newIndex)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">removeItem</span>():T {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> removeValue = arr[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> lastValue = arr[size-<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//    println(&#34;lastValue:$lastValue&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    arr[<span style="color:#ae81ff">0</span>] = lastValue
+</span></span><span style="display:flex;"><span>    size<span style="color:#f92672">--</span>
+</span></span><span style="display:flex;"><span>    heapDown(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> removeValue
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Data</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> value: Int,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">val</span> num: Int
+</span></span><span style="display:flex;"><span>): Comparable&lt;Data&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">compareTo</span>(other: Data): Int {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">if</span> (num &gt; other.num) {
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (num &lt; other.num) {
+</span></span><span style="display:flex;"><span>      -<span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">toString</span>(): String {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${value}</span><span style="color:#e6db74">-</span><span style="color:#e6db74">${num}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">topKFrequent</span>(nums: IntArray, k: Int): IntArray {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> res = IntArray(k);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> arr:Array&lt;Data&gt; = Array(nums.size)  {i <span style="color:#f92672">-&gt;</span> Data(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)}
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//  val arr: Array&lt;Data&gt; = Array(nums.size) { i -&gt; Data(0, 0) }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">val</span> maxHeap = MaxHeap(arr, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> map: HashMap&lt;Int, Int&gt; = hashMapOf()
+</span></span><span style="display:flex;"><span>        nums.forEach { <span style="color:#66d9ef">it</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>            map[<span style="color:#66d9ef">it</span>] = map.getOrDefault(<span style="color:#66d9ef">it</span>, <span style="color:#ae81ff">0</span>) + <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        map.forEach { key, <span style="color:#66d9ef">value</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>            maxHeap.addItem(Data(key, <span style="color:#66d9ef">value</span>))
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1.</span>.k) {
+</span></span><span style="display:flex;"><span>            res[i-<span style="color:#ae81ff">1</span>] = maxHeap.removeItem().<span style="color:#66d9ef">value</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>[算法]分布估计算法 - 一种求解多维背包问题的混合分布估计算法_王凌</title>
+      <link>http://localhost:1313/posts/distribution_estimation_algorithm/</link>
+      <pubDate>Mon, 18 Dec 2017 22:36:13 +0800</pubDate>
+      <guid>http://localhost:1313/posts/distribution_estimation_algorithm/</guid>
+      <description>&lt;p&gt;作业要求实现《一种求解多维背包问题的混合分布估计算法_王凌》&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://xueshu.baidu.com/s?wd=paperuri:(43e8c4d78e8a6d2f44bc6cf5f5724c68)&amp;filter=sc_long_sign&amp;sc_ks_para=q%3D%E4%B8%80%E7%A7%8D%E6%B1%82%E8%A7%A3%E5%A4%9A%E7%BB%B4%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E6%B7%B7%E5%90%88%E5%88%86%E5%B8%83%E4%BC%B0%E8%AE%A1%E7%AE%97%E6%B3%95&amp;tn=SE_baiduxueshu_c1gjeupa&amp;ie=utf-8&amp;sc_us=17828901901562222937&#34;&gt;百度学术路径&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;写这篇文章主要是因为，这论文的数据集实在是找不到，但最后我还是找到了。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://download.csdn.net/download/sinat_35989435/10163694&#34;&gt;CSDN下载地址&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;然后我还是实现了该论文的算法，虽然感觉还是有错，而且结果并不是很好看，但我就是要厚脸皮发出来给大家嘲笑。&lt;/p&gt;
+&lt;p&gt;我实现的是SENTO2.DAT，最佳值为8722。&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>作业要求实现《一种求解多维背包问题的混合分布估计算法_王凌》</p>
+<p><a href="http://xueshu.baidu.com/s?wd=paperuri:(43e8c4d78e8a6d2f44bc6cf5f5724c68)&filter=sc_long_sign&sc_ks_para=q%3D%E4%B8%80%E7%A7%8D%E6%B1%82%E8%A7%A3%E5%A4%9A%E7%BB%B4%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E6%B7%B7%E5%90%88%E5%88%86%E5%B8%83%E4%BC%B0%E8%AE%A1%E7%AE%97%E6%B3%95&tn=SE_baiduxueshu_c1gjeupa&ie=utf-8&sc_us=17828901901562222937">百度学术路径</a></p>
+<p>写这篇文章主要是因为，这论文的数据集实在是找不到，但最后我还是找到了。</p>
+<p><a href="http://download.csdn.net/download/sinat_35989435/10163694">CSDN下载地址</a></p>
+<p>然后我还是实现了该论文的算法，虽然感觉还是有错，而且结果并不是很好看，但我就是要厚脸皮发出来给大家嘲笑。</p>
+<p>我实现的是SENTO2.DAT，最佳值为8722。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">package</span> eda2;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.BufferedReader;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.BufferedWriter;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.File;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.FileInputStream;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.FileWriter;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.InputStreamReader;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.ArrayList;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Collections;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Comparator;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.HashMap;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.HashSet;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.List;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Map;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Random;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Set;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Map.Entry;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">eda</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> N;<span style="color:#75715e">//最佳个体数</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> s;<span style="color:#75715e">//搜索时的</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> Y;<span style="color:#75715e">//初始步长</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> M;<span style="color:#75715e">//种群规模</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> alpha;<span style="color:#75715e">//学习因子</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> n;<span style="color:#75715e">//物体个数</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> <span style="color:#f92672">[]</span>p;<span style="color:#75715e">//概率向量</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> population;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> popValue;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> bagNum;<span style="color:#75715e">//维度(背包数)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#f92672">[]</span>bagCapacity; <span style="color:#75715e">//核重</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#f92672">[][]</span>r;<span style="color:#75715e">//物体在不同维度上的价值   第一个  维度    第二个    维度值</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#f92672">[]</span>weigh;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#f92672">[]</span>popWeigh;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Map<span style="color:#f92672">&lt;</span>Integer,Integer<span style="color:#f92672">&gt;</span> collection;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//10 2 50 40 0.1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">eda</span>(<span style="color:#66d9ef">int</span> N,<span style="color:#66d9ef">int</span> s,<span style="color:#66d9ef">int</span> Y,<span style="color:#66d9ef">int</span> M,<span style="color:#66d9ef">double</span> alpha){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">N</span> <span style="color:#f92672">=</span> N;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">s</span> <span style="color:#f92672">=</span> s;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">Y</span> <span style="color:#f92672">=</span> Y;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">M</span> <span style="color:#f92672">=</span> M;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">alpha</span> <span style="color:#f92672">=</span> alpha;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//初始化读取数据</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">init</span>(String filename)<span style="color:#66d9ef">throws</span> IOException{
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//这里用来存放用于排序的Map，键为下标，值为权重和</span>
+</span></span><span style="display:flex;"><span>        collection <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span>Integer,Integer<span style="color:#f92672">&gt;</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//读取文件内容所需要的两个参数，strbuff读取一行的内容，</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e">//strcol数组存储被空格键切割后的字符串</span>
+</span></span><span style="display:flex;"><span>        String strbuff;
+</span></span><span style="display:flex;"><span>        String <span style="color:#f92672">[]</span>strcol;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//将要读取的行数</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> line;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//读取数据的工具data初始化</span>
+</span></span><span style="display:flex;"><span>        BufferedReader data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedReader(<span style="color:#66d9ef">new</span> InputStreamReader(
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">new</span> FileInputStream(filename)));
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//读取第一行，背包数bagNum 和物体个数n</span>
+</span></span><span style="display:flex;"><span>        strbuff <span style="color:#f92672">=</span> data.<span style="color:#a6e22e">readLine</span>();
+</span></span><span style="display:flex;"><span>        strcol <span style="color:#f92672">=</span> strbuff.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>        bagNum <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">valueOf</span>(strcol<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        n <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">valueOf</span>(strcol<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//利用这两个数字初始化将要用到的数组</span>
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        population <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>M<span style="color:#f92672">][</span>n<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>bagNum<span style="color:#f92672">][</span>n<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        bagCapacity <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>bagNum<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        popValue <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>M<span style="color:#f92672">][</span>bagNum<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        weigh <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        popWeigh <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>M<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//文件中的第二部分为物体对应权重表</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//找到行数有多少行</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(n <span style="color:#f92672">%</span> 10 <span style="color:#f92672">==</span> 0){
+</span></span><span style="display:flex;"><span>            line <span style="color:#f92672">=</span> n <span style="color:#f92672">/</span> 10;
+</span></span><span style="display:flex;"><span>        }<span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>            line <span style="color:#f92672">=</span> n <span style="color:#f92672">/</span> 10 <span style="color:#f92672">+</span> 1;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> weighIndex <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> l <span style="color:#f92672">=</span> 0;l <span style="color:#f92672">&lt;</span> line;l<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            strbuff <span style="color:#f92672">=</span> data.<span style="color:#a6e22e">readLine</span>();
+</span></span><span style="display:flex;"><span>            strcol <span style="color:#f92672">=</span> strbuff.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> 0;index <span style="color:#f92672">&lt;</span> strcol.<span style="color:#a6e22e">length</span>;index<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                weigh<span style="color:#f92672">[</span>weighIndex<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 
+</span></span><span style="display:flex;"><span>                        Integer.<span style="color:#a6e22e">valueOf</span>(strcol<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>                weighIndex<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//文件第三部分为背包容量大小表</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(bagNum <span style="color:#f92672">%</span> 10 <span style="color:#f92672">==</span> 0){
+</span></span><span style="display:flex;"><span>            line <span style="color:#f92672">=</span> bagNum <span style="color:#f92672">/</span> 10;
+</span></span><span style="display:flex;"><span>        }<span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>            line <span style="color:#f92672">=</span> bagNum <span style="color:#f92672">/</span> 10 <span style="color:#f92672">+</span> 1;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> bagIndex <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> l <span style="color:#f92672">=</span> 0;l <span style="color:#f92672">&lt;</span> line;l<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            strbuff <span style="color:#f92672">=</span> data.<span style="color:#a6e22e">readLine</span>();
+</span></span><span style="display:flex;"><span>            strcol <span style="color:#f92672">=</span> strbuff.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> 0;index <span style="color:#f92672">&lt;</span> strcol.<span style="color:#a6e22e">length</span>;index<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                bagCapacity<span style="color:#f92672">[</span>bagIndex<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">valueOf</span>(strcol<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>                bagIndex<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//文件的第四部分为，各背包的维度值（有很多，两层循环呢）</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(n <span style="color:#f92672">%</span> 10 <span style="color:#f92672">==</span> 0){
+</span></span><span style="display:flex;"><span>            line <span style="color:#f92672">=</span> n <span style="color:#f92672">/</span> 10;
+</span></span><span style="display:flex;"><span>        }<span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>            line <span style="color:#f92672">=</span> n <span style="color:#f92672">/</span> 10 <span style="color:#f92672">+</span> 1;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> 0;b <span style="color:#f92672">&lt;</span> bagNum;b<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> thingIndex <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> l <span style="color:#f92672">=</span> 0;l <span style="color:#f92672">&lt;</span> line;l<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                strbuff <span style="color:#f92672">=</span> data.<span style="color:#a6e22e">readLine</span>();
+</span></span><span style="display:flex;"><span>                strcol <span style="color:#f92672">=</span> strbuff.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> 0;index <span style="color:#f92672">&lt;</span> strcol.<span style="color:#a6e22e">length</span>;index<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                    r<span style="color:#f92672">[</span>b<span style="color:#f92672">][</span>thingIndex<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Integer.<span style="color:#a6e22e">valueOf</span>(strcol<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>                    thingIndex<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        data.<span style="color:#a6e22e">close</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//Step1.初始化概率向量p(x)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">initP</span>(){
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//    System.out.println(&#34;Step1.初始化概率向量p(x)&#34;);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;i <span style="color:#f92672">&lt;</span> n;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            p<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0.<span style="color:#a6e22e">5</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//Step2.对p(x)进行随机采样，产生M个个体</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sampling</span>(){
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//    System.out.println(&#34;Step2.对p(x)进行随机采样，产生M个个体&#34;);</span>
+</span></span><span style="display:flex;"><span>        Random R <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Random();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;i <span style="color:#f92672">&lt;</span> M;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0;j <span style="color:#f92672">&lt;</span> n;j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(R.<span style="color:#a6e22e">nextDouble</span>() <span style="color:#f92672">&lt;</span> p<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span>){
+</span></span><span style="display:flex;"><span>                    population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>                }<span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>                    population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//修复不可行解，计算适应值</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">repairAndCalculate</span>(){
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//    System.out.println(&#34;修复不可行解，计算适应值&#34;);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//对每个个体实施遍历</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;i <span style="color:#f92672">&lt;</span> M;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//每个个体对应bagNum个维度</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> 0;b <span style="color:#f92672">&lt;</span> bagNum;b<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">//每个维度的值求和</span>
+</span></span><span style="display:flex;"><span>                popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0;j <span style="color:#f92672">&lt;</span> n;j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">//x * r</span>
+</span></span><span style="display:flex;"><span>                    popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">+=</span> population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> r<span style="color:#f92672">[</span>b<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">//如果在某个维度上非法，则将某些物体扔掉</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">while</span>(popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> bagCapacity<span style="color:#f92672">[</span>b<span style="color:#f92672">]</span>){
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span>(population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>index<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 1){
+</span></span><span style="display:flex;"><span>                        population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>index<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>                        popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">-=</span> r<span style="color:#f92672">[</span>b<span style="color:#f92672">][</span>index<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    index<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//补维度值，趋近最优</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//从后往前遍历物体</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 1;j <span style="color:#f92672">&gt;=</span> 0;j<span style="color:#f92672">--</span>){
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">//如果没被选上，则尝试选上它，观察是否会超过某个维度，</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">//如果通过，则加上去。</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0){
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">boolean</span> ok <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> 0;b <span style="color:#f92672">&lt;</span> bagNum;b<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e">//非法</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">if</span>(bagCapacity<span style="color:#f92672">[</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> r<span style="color:#f92672">[</span>b<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span>){
+</span></span><span style="display:flex;"><span>                            ok <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                        }
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span>(ok <span style="color:#f92672">==</span> <span style="color:#66d9ef">true</span>){
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> 0;b <span style="color:#f92672">&lt;</span> bagNum;b<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                            popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">+=</span> r<span style="color:#f92672">[</span>b<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                        }
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//权重求和</span>
+</span></span><span style="display:flex;"><span>            popWeigh<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0;j <span style="color:#f92672">&lt;</span> n;j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 1){
+</span></span><span style="display:flex;"><span>                    popWeigh<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">+=</span> weigh<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            collection.<span style="color:#a6e22e">put</span>(<span style="color:#66d9ef">new</span> Integer(i),<span style="color:#66d9ef">new</span> Integer(popWeigh<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">repair</span>(<span style="color:#66d9ef">int</span> i){
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//System.out.println(&#34;修复第&#34;+i+&#34;行&#34;);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> 0;b <span style="color:#f92672">&lt;</span> bagNum;b<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//每个维度的值求和</span>
+</span></span><span style="display:flex;"><span>            popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0;j <span style="color:#f92672">&lt;</span> n;j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">//x * r</span>
+</span></span><span style="display:flex;"><span>                popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">+=</span> population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> r<span style="color:#f92672">[</span>b<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//如果在某个维度上非法，则将某些物体扔掉</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span>(popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> bagCapacity<span style="color:#f92672">[</span>b<span style="color:#f92672">]</span>){
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>index<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 1){
+</span></span><span style="display:flex;"><span>                    population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>index<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>                    popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">-=</span> r<span style="color:#f92672">[</span>b<span style="color:#f92672">][</span>index<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                index<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//补维度值，趋近最优</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//从后往前遍历物体</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 1;j <span style="color:#f92672">&gt;=</span> 0;j<span style="color:#f92672">--</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//如果没被选上，则尝试选上它，观察是否会超过某个维度，</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//如果通过，则加上去。</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0){
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">boolean</span> ok <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> 0;b <span style="color:#f92672">&lt;</span> bagNum;b<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">//非法</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span>(bagCapacity<span style="color:#f92672">[</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> r<span style="color:#f92672">[</span>b<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span>){
+</span></span><span style="display:flex;"><span>                        ok <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(ok <span style="color:#f92672">==</span> <span style="color:#66d9ef">true</span>){
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> 0;b <span style="color:#f92672">&lt;</span> bagNum;b<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                        popValue<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">+=</span> r<span style="color:#f92672">[</span>b<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">choose</span>(){
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//    System.out.println(&#34;选择新解&#34;);</span>
+</span></span><span style="display:flex;"><span>        List<span style="color:#f92672">&lt;</span>Map.<span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer,Integer<span style="color:#f92672">&gt;&gt;</span> list <span style="color:#f92672">=</span> 
+</span></span><span style="display:flex;"><span>                 <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Map.<span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer,Integer<span style="color:#f92672">&gt;&gt;</span>(collection.<span style="color:#a6e22e">entrySet</span>());
+</span></span><span style="display:flex;"><span>        collection.<span style="color:#a6e22e">clear</span>();
+</span></span><span style="display:flex;"><span>        Collections.<span style="color:#a6e22e">sort</span>(list,<span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Map.<span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer,Integer<span style="color:#f92672">&gt;&gt;</span>() {
+</span></span><span style="display:flex;"><span>             <span style="color:#75715e">//降序排序</span>
+</span></span><span style="display:flex;"><span>             <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>             <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span>(Entry<span style="color:#f92672">&lt;</span>Integer, Integer<span style="color:#f92672">&gt;</span> o1,
+</span></span><span style="display:flex;"><span>                                   Entry<span style="color:#f92672">&lt;</span>Integer, Integer<span style="color:#f92672">&gt;</span> o2) {
+</span></span><span style="display:flex;"><span>                 <span style="color:#66d9ef">return</span> o2.<span style="color:#a6e22e">getValue</span>().<span style="color:#a6e22e">compareTo</span>(o1.<span style="color:#a6e22e">getValue</span>());
+</span></span><span style="display:flex;"><span>             }       
+</span></span><span style="display:flex;"><span>         });
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">int</span> <span style="color:#f92672">[][]</span>tempPop <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>N<span style="color:#f92672">][</span>n<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">for</span>(Map.<span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer, Integer<span style="color:#f92672">&gt;</span> mapping    : list){
+</span></span><span style="display:flex;"><span>             <span style="color:#66d9ef">if</span>(index <span style="color:#f92672">&lt;</span> N){
+</span></span><span style="display:flex;"><span>                 <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;i <span style="color:#f92672">&lt;</span> n;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                     tempPop<span style="color:#f92672">[</span>index<span style="color:#f92672">][</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> population<span style="color:#f92672">[</span>mapping.<span style="color:#a6e22e">getKey</span>().<span style="color:#a6e22e">intValue</span>()<span style="color:#f92672">][</span>i<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                 }
+</span></span><span style="display:flex;"><span>                 index<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>             }<span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>                 <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>             }
+</span></span><span style="display:flex;"><span>         }
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;i <span style="color:#f92672">&lt;</span> N;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>             <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0;j <span style="color:#f92672">&lt;</span> n;j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                 population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> tempPop<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>             }
+</span></span><span style="display:flex;"><span>         }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">updateProbability</span>(){
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0;j <span style="color:#f92672">&lt;</span> n;j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> bags <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;i <span style="color:#f92672">&lt;</span> N;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(population<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 1){
+</span></span><span style="display:flex;"><span>                    bags<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            p<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> ((1 <span style="color:#f92672">-</span> alpha)<span style="color:#f92672">*</span>p<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span>)<span style="color:#f92672">+</span>(alpha <span style="color:#f92672">*</span> ((<span style="color:#66d9ef">double</span>)bags <span style="color:#f92672">/</span> N));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">bestSelect</span>(){
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//    System.out.println(&#34;查找第一行&#34;);</span>
+</span></span><span style="display:flex;"><span>        Random R <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Random();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> one <span style="color:#f92672">=</span> 0,zero <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        Set<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> integers <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span>(<span style="color:#66d9ef">true</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> id <span style="color:#f92672">=</span> R.<span style="color:#a6e22e">nextInt</span>(n);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>integers.<span style="color:#a6e22e">contains</span>(<span style="color:#66d9ef">new</span> Integer(id))){
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//    System.out.println(&#34;未存在&#34;+id);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(population<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>id<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0){
+</span></span><span style="display:flex;"><span>                    population<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>id<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span>(zero <span style="color:#f92672">&lt;</span> (s<span style="color:#f92672">+</span>1))
+</span></span><span style="display:flex;"><span>                        zero<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>                    integers.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> Integer(id));
+</span></span><span style="display:flex;"><span>                }<span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>                    population<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>id<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span>(one <span style="color:#f92672">&lt;</span> s){
+</span></span><span style="display:flex;"><span>                        one<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    
+</span></span><span style="display:flex;"><span>                    integers.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> Integer(id));
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//s个从1到0  s+1个从0到1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(one <span style="color:#f92672">==</span> s <span style="color:#f92672">&amp;&amp;</span> zero <span style="color:#f92672">==</span> (s<span style="color:#f92672">+</span>1)){
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        repair(0);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getWeigh</span>(<span style="color:#66d9ef">int</span> i){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> theWeigh <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0;j <span style="color:#f92672">&lt;</span> n;j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(population<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 1){
+</span></span><span style="display:flex;"><span>                theWeigh <span style="color:#f92672">+=</span> weigh<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> theWeigh;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print</span>(){
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(bagNum <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">+</span>n);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;i <span style="color:#f92672">&lt;</span> n;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(weigh<span style="color:#f92672">[</span>i<span style="color:#f92672">]+</span><span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>((i<span style="color:#f92672">+</span>1) <span style="color:#f92672">%</span> 10 <span style="color:#f92672">==</span> 0){
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;i <span style="color:#f92672">&lt;</span> bagNum;i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(bagCapacity<span style="color:#f92672">[</span>i<span style="color:#f92672">]+</span><span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>((i<span style="color:#f92672">+</span>1) <span style="color:#f92672">%</span> 10 <span style="color:#f92672">==</span> 0){
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> b <span style="color:#f92672">=</span> 0;b <span style="color:#f92672">&lt;</span> bagNum;b<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0;j <span style="color:#f92672">&lt;</span> n;j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(r<span style="color:#f92672">[</span>b<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>((j<span style="color:#f92672">+</span>1) <span style="color:#f92672">%</span> 10 <span style="color:#f92672">==</span> 0){
+</span></span><span style="display:flex;"><span>                    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>();
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(n <span style="color:#f92672">%</span> 10 <span style="color:#f92672">!=</span> 0){
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">start</span>(String filename,<span style="color:#66d9ef">int</span> endTimes) <span style="color:#66d9ef">throws</span> IOException{
+</span></span><span style="display:flex;"><span>        BufferedWriter writer <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedWriter(
+</span></span><span style="display:flex;"><span>                              <span style="color:#66d9ef">new</span> FileWriter(<span style="color:#66d9ef">new</span> File(filename)));
+</span></span><span style="display:flex;"><span>        initP();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> maxWeigh <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> time <span style="color:#f92672">=</span> 0;time <span style="color:#f92672">&lt;</span> endTimes;time<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            sampling();
+</span></span><span style="display:flex;"><span>            repairAndCalculate();
+</span></span><span style="display:flex;"><span>            choose();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> nowWeigh <span style="color:#f92672">=</span> getWeigh(0);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(maxWeigh <span style="color:#f92672">&lt;</span> nowWeigh){
+</span></span><span style="display:flex;"><span>                maxWeigh <span style="color:#f92672">=</span> nowWeigh;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            writer.<span style="color:#a6e22e">write</span>(<span style="color:#e6db74">&#34;第&#34;</span><span style="color:#f92672">+</span>(time<span style="color:#f92672">+</span>1)<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;次时最佳&#34;</span><span style="color:#f92672">+</span>maxWeigh);
+</span></span><span style="display:flex;"><span>            writer.<span style="color:#a6e22e">newLine</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0;i <span style="color:#f92672">&lt;</span> 50<span style="color:#f92672">+</span>(time<span style="color:#f92672">/</span>20);i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                bestSelect();
+</span></span><span style="display:flex;"><span>            }    
+</span></span><span style="display:flex;"><span>            updateProbability();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        writer.<span style="color:#a6e22e">close</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) <span style="color:#66d9ef">throws</span> IOException {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//10 2 50 40 0.1</span>
+</span></span><span style="display:flex;"><span>        eda e <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> eda(10,2,50,40,0.<span style="color:#a6e22e">1</span>);
+</span></span><span style="display:flex;"><span>        e.<span style="color:#a6e22e">init</span>(<span style="color:#e6db74">&#34;d://SENTO2.DAT&#34;</span>);
+</span></span><span style="display:flex;"><span>        e.<span style="color:#a6e22e">start</span>(<span style="color:#e6db74">&#34;d://result.txt&#34;</span>,20000);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最后我实现的结果大概在8400到8600之间。</p>
+<p>实验结果截图：
+<img loading="lazy" src="/images/algorithm_estimate1.png" alt=""  />
+
+<img loading="lazy" src="/images/algorithm_estimate2.png" alt=""  />
+
+结果一般，但还是收获良多。本次主要是提供数据集的下载。谢谢大家。</p>
+<p>如对代码有疑惑可以前往 联系我们 和我交流，评论已经关闭，首页置顶的帖子不要理。</p>]]></content:encoded>
+    </item>
+  </channel>
+</rss>

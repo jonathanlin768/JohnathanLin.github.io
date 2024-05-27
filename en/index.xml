@@ -14,62 +14,1326 @@
       <link>https://windypath.com/en/posts/java_juc_briefly/</link>
       <pubDate>Mon, 04 Dec 2023 17:27:44 +0800</pubDate>
       <guid>https://windypath.com/en/posts/java_juc_briefly/</guid>
-      <description>Introduction: This article aims to introduce the relevant usage of synchronized, ReentrantLock, and Condition in Java.
-Locking with Synchronized Synchronized can be applied to instance methods, static methods, and code blocks. When used to modify a code block, it can either lock on a specific object or on a class (.class).
-Synchronized is a Non-Fair Lock The following code utilizes synchronized to lock on a variable accessible by multiple threads, achieving the orderly printing of numbers.</description>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Introduction: This article aims to introduce the relevant usage of synchronized, ReentrantLock, and Condition in Java.&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+      <content:encoded><![CDATA[<blockquote>
+<p>Introduction: This article aims to introduce the relevant usage of synchronized, ReentrantLock, and Condition in Java.</p>
+</blockquote>
+<h1 id="locking-with-synchronized">Locking with Synchronized</h1>
+<p>Synchronized can be applied to instance methods, static methods, and code blocks. When used to modify a code block, it can either lock on a specific object or on a class (.class).</p>
+<h2 id="synchronized-is-a-non-fair-lock">Synchronized is a Non-Fair Lock</h2>
+<p>The following code utilizes synchronized to lock on a variable accessible by multiple threads, achieving the orderly printing of numbers. Additionally, it calculates the frequency of number printing for different threads:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.windypath.lockcondition;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Syn</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">final</span> Object sth <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Object();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">play</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> loopTimes <span style="color:#f92672">=</span> 1000;
+</span></span><span style="display:flex;"><span>        SynThread t1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SynThread(loopTimes, <span style="color:#e6db74">&#34;t1&#34;</span>);
+</span></span><span style="display:flex;"><span>        SynThread t2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SynThread(loopTimes, <span style="color:#e6db74">&#34;t2&#34;</span>);
+</span></span><span style="display:flex;"><span>        SynThread t3 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SynThread(loopTimes, <span style="color:#e6db74">&#34;t3&#34;</span>);
+</span></span><span style="display:flex;"><span>        SynThread t4 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SynThread(loopTimes, <span style="color:#e6db74">&#34;t4&#34;</span>);
+</span></span><span style="display:flex;"><span>        t1.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        t2.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        t3.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        t4.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Syn syn <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Syn();
+</span></span><span style="display:flex;"><span>        syn.<span style="color:#a6e22e">play</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SynThread</span> <span style="color:#66d9ef">extends</span> Thread {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> loopTimes;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">SynThread</span>(<span style="color:#66d9ef">int</span> loopTimes, String threadName) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span>(threadName);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">loopTimes</span> <span style="color:#f92672">=</span> loopTimes;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span>() {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> times <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> (count <span style="color:#f92672">&lt;=</span> 200000) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">synchronized</span> (sth) {
+</span></span><span style="display:flex;"><span>                    count<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//                    System.out.println(getName() + &#34; 输出 &#34; + count);</span>
+</span></span><span style="display:flex;"><span>                    times<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(getName() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;一共输出了 &#34;</span> <span style="color:#f92672">+</span> times <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; 次&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Output：</p>
+<pre tabindex="0"><code>t2一共输出了 103061 次
+t1一共输出了 37174 次
+t4一共输出了 33751 次
+t3一共输出了 26018 次
+</code></pre><p>It can be observed that the number of times thread t2 outputs is more than the sum of the other three threads. This is because synchronized is a non-fair lock.</p>
+<h2 id="synchronizeds-waiting-queue">Synchronized&rsquo;s Waiting Queue</h2>
+<p>The waiting queue for an object locked with synchronized is located in the _waitSet of the ObjectMonitor. This ObjectMonitor is a low-level native (C/C++) component.</p>
+<h2 id="synchronized-lock-upgrade">Synchronized Lock Upgrade</h2>
+<p>However, heavyweight locks are not acquired right from the start. Instead, the optimization begins with biased locking. It only upgrades to lightweight locks in the presence of contention, and only when numerous threads are involved in lock contention does it escalate from a lightweight lock to a heavyweight lock.</p>
+<p>The locked object uses the MarkWord in its object header to store lock information.</p>
+<p>The storage structure of a Java object in memory consists of three parts:</p>
+<ul>
+<li>Object header</li>
+<li>Instance variables</li>
+<li>Padding bytes</li>
+</ul>
+<p>Among them, the object header mainly stores some runtime data:</p>
+<ul>
+<li>MarkWord</li>
+<li>Class Metadata Address (points to the object type data)</li>
+<li>Array Length (if it&rsquo;s an array, it records the length)</li>
+</ul>
+<p>The lock information is recorded in the MarkWord of the object header. The following diagram illustrates the different bits of information in the MarkWord for different locks:
+<img loading="lazy" src="/images/java_lock_bit_detail.jpg" alt=""  />
+</p>
+<ul>
+<li>Biased Lock
+Biased locking is designed to avoid the resource consumption associated with higher-level locks, such as lightweight locks, when a lock is acquired in a non-multithreaded environment.</li>
+</ul>
+<p>The term &ldquo;biased&rdquo; means that the locked object is biased toward a specific thread. Its object header stores the ID of the biased thread.</p>
+<ul>
+<li>Lightweight Lock
+The lightweight lock is not intended to replace heavyweight locks. Its purpose is to reduce the performance overhead incurred by traditional heavyweight locks in the absence of multithreaded competition. Before explaining the execution process of the lightweight lock, it&rsquo;s essential to understand that the lightweight lock is suitable for scenarios where threads alternately execute synchronized blocks.</li>
+</ul>
+<h2 id="differences-between-lightweight-lock-and-biased-lock">Differences Between Lightweight Lock and Biased Lock</h2>
+<p>The process of acquiring a lightweight lock involves multiple CAS (Compare-And-Swap) operations, whereas a biased lock requires only one CAS operation.
+Lightweight locks are suitable for scenarios where threads alternately execute synchronized blocks. In contrast, biased locks are designed to further improve performance when only one thread executes the synchronized block.</p>
+<h2 id="observation-of-synchronized-lock-escalation">Observation of Synchronized Lock Escalation</h2>
+<p>Attempt to use an object, and have multiple threads acquire and release a synchronized lock on it at different time intervals to observe its lock state.</p>
+<p>thread1: Acquires and releases immediately.</p>
+<p>thread2: Waits 500ms to acquire, then holds for 1500ms before releasing.</p>
+<p>thread3: Waits 1000ms to acquire, then releases immediately.</p>
+<p>At this point, there will be lock contention between thread2 and thread3.</p>
+<p>Source Code：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.windypath;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.logging.log4j.LogManager;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.logging.log4j.Logger;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.openjdk.jol.info.ClassLayout;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Observing the process of synchronized transitioning from biased lock to lightweight lock to heavyweight lock.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Using log4j2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BiasdLock</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> Logger log <span style="color:#f92672">=</span> LogManager.<span style="color:#a6e22e">getLogger</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) <span style="color:#66d9ef">throws</span> InterruptedException {
+</span></span><span style="display:flex;"><span>        log.<span style="color:#a6e22e">debug</span>(Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;最开始的状态:\n&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(<span style="color:#66d9ef">new</span> Object()).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// After starting, the HotSpot Virtual Machine has a 4-second delay before enabling biased locking mode for each newly created object.</span>
+</span></span><span style="display:flex;"><span>        Thread.<span style="color:#a6e22e">sleep</span>(4000);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 创建一个对象，用于多个不同的线程上锁用</span>
+</span></span><span style="display:flex;"><span>        Object obj <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Object();
+</span></span><span style="display:flex;"><span>        log.<span style="color:#a6e22e">debug</span>(Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;等待4秒后的状态（新对象）:\n&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//线程1，马上上锁马上释放</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">new</span> Thread(() <span style="color:#f92672">-&gt;</span> {
+</span></span><span style="display:flex;"><span>            log.<span style="color:#a6e22e">debug</span>(
+</span></span><span style="display:flex;"><span>                    Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;开始执行准备获取锁:\n&#34;</span> <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">synchronized</span> (obj) {
+</span></span><span style="display:flex;"><span>                log.<span style="color:#a6e22e">debug</span>(Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;获取锁执行中:\n&#34;</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            log.<span style="color:#a6e22e">debug</span>(Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;释放锁:\n&#34;</span> <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>        }, <span style="color:#e6db74">&#34;thread1&#34;</span>).<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 线程2，等线程1释放锁后再上锁</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">new</span> Thread(() <span style="color:#f92672">-&gt;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                Thread.<span style="color:#a6e22e">sleep</span>(500);
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (InterruptedException e) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException(e);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            log.<span style="color:#a6e22e">debug</span>(
+</span></span><span style="display:flex;"><span>                    Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;开始执行准备获取锁:\n&#34;</span> <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">synchronized</span> (obj) {
+</span></span><span style="display:flex;"><span>                log.<span style="color:#a6e22e">debug</span>(Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;获取锁执行中:\n&#34;</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                    Thread.<span style="color:#a6e22e">sleep</span>(1500);
+</span></span><span style="display:flex;"><span>                } <span style="color:#66d9ef">catch</span> (InterruptedException e) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException(e);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            log.<span style="color:#a6e22e">debug</span>(Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;释放锁:\n&#34;</span> <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>        }, <span style="color:#e6db74">&#34;thread2&#34;</span>).<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 线程3，在线程2拥有锁的时候尝试上锁</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">new</span> Thread(() <span style="color:#f92672">-&gt;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                Thread.<span style="color:#a6e22e">sleep</span>(1000);
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (InterruptedException e) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException(e);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            log.<span style="color:#a6e22e">debug</span>(
+</span></span><span style="display:flex;"><span>                    Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;开始执行准备获取锁:\n&#34;</span> <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">synchronized</span> (obj) {
+</span></span><span style="display:flex;"><span>                log.<span style="color:#a6e22e">debug</span>(Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;获取锁执行中:\n&#34;</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            log.<span style="color:#a6e22e">debug</span>(Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;释放锁:\n&#34;</span> <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>        }, <span style="color:#e6db74">&#34;thread3&#34;</span>).<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//主线程等待所有线程运行结束，查看状态</span>
+</span></span><span style="display:flex;"><span>        Thread.<span style="color:#a6e22e">sleep</span>(5000);
+</span></span><span style="display:flex;"><span>        log.<span style="color:#a6e22e">debug</span>(Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;结束状态:\n&#34;</span> <span style="color:#f92672">+</span> ClassLayout.<span style="color:#a6e22e">parseInstance</span>(obj).<span style="color:#a6e22e">toPrintable</span>());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Output(Briefly):</p>
+<pre tabindex="0"><code>15:53:58.436 [main] main最开始的状态:non-biasable
+15:54:02.854 [main] 等待4秒后的状态（新对象）:biasable
+15:54:02.858 [thread1] thread1开始执行准备获取锁:biasable
+15:54:02.858 [thread1] thread1获取锁执行中:biased
+15:54:02.859 [thread1] thread1释放锁:biased
+15:54:03.367 [thread2] thread2开始执行准备获取锁:biased
+15:54:03.368 [thread2] thread2获取锁执行中:thin lock
+15:54:03.869 [thread3] thread3开始执行准备获取锁:thin lock
+15:54:04.872 [thread3] thread3获取锁执行中:fat lock
+15:54:04.872 [thread2] thread2释放锁:fat lock
+15:54:04.873 [thread3] thread3释放锁:fat lock
+15:54:07.868 [main] main结束状态:non-biasable
+</code></pre><p>The following conclusions can be drawn from the analysis:</p>
+<ul>
+<li>For the HotSpot Virtual Machine, objects created immediately after startup are non-biasable.</li>
+<li>Objects created after 4 seconds are biasable.</li>
+<li>When thread1 acquires the lock, as there is only one thread holding the synchronized lock for this object, it transitions to the biased lock state.</li>
+<li>When thread1 releases the lock, the lock object remains in the biased lock state and does not revert to biasable.</li>
+<li>After 500ms, when thread2 acquires the lock, the lock object&rsquo;s state is upgraded to a lightweight lock.</li>
+<li>Another 500ms later, when thread3 also attempts to acquire the lock, its state is lightweight lock (thin lock) until it executes the synchronized block. It then blocks until thread2 releases the lock, at which point it immediately acquires the lock (the timestamps in the third and fourth lines are exactly the same, both 15:54:04.872).</li>
+<li>Thread3 releases the lock immediately, at this moment, it is still a heavyweight lock.</li>
+<li>After the main thread waits for 5 seconds, the lock state is restored but becomes non-biasable.</li>
+<li>You can try commenting out the earlier 4-second delay; in this case, the object would immediately acquire a lightweight lock.</li>
+</ul>
+<h2 id="locking-with-reentrantlock">Locking with ReentrantLock</h2>
+<p>ReentrantLock is a lightweight, reentrant lock. It can be specified as a fair lock during creation. ReentrantLock can be used in conjunction with Condition. It provides several functions related to concurrent programming, offering higher flexibility compared to synchronized.</p>
+<ul>
+<li>ReentrantLock supports whether the lock is fair.</li>
+<li>In addition to the regular lock() function, ReentrantLock also provides tryLock() for polling and lockInterruptibly() for interruptible locking.</li>
+<li>After acquiring a lock with ReentrantLock, you can wait on different conditions based on your business logic.</li>
+</ul>
+<h2 id="reentrantlock-can-be-used-as-a-fair-lock">ReentrantLock can be used as a fair lock.</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.windypath.lockcondition;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.concurrent.locks.ReentrantLock;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Reen</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">final</span> ReentrantLock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReentrantLock(<span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">play</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> loopTimes <span style="color:#f92672">=</span> 1000;
+</span></span><span style="display:flex;"><span>        ReenThread t1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReenThread(loopTimes, <span style="color:#e6db74">&#34;t1&#34;</span>);
+</span></span><span style="display:flex;"><span>        ReenThread t2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReenThread(loopTimes, <span style="color:#e6db74">&#34;t2&#34;</span>);
+</span></span><span style="display:flex;"><span>        ReenThread t3 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReenThread(loopTimes, <span style="color:#e6db74">&#34;t3&#34;</span>);
+</span></span><span style="display:flex;"><span>        ReenThread t4 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReenThread(loopTimes, <span style="color:#e6db74">&#34;t4&#34;</span>);
+</span></span><span style="display:flex;"><span>        t1.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        t2.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        t3.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        t4.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        Reen reen <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Reen();
+</span></span><span style="display:flex;"><span>        reen.<span style="color:#a6e22e">play</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ReenThread</span> <span style="color:#66d9ef">extends</span> Thread {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> loopTimes;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ReenThread</span>(<span style="color:#66d9ef">int</span> loopTimes, String threadName) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span>(threadName);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">loopTimes</span> <span style="color:#f92672">=</span> loopTimes;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span>() {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> times <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> (count <span style="color:#f92672">&lt;=</span> 200000) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                    lock.<span style="color:#a6e22e">lock</span>();
+</span></span><span style="display:flex;"><span>                    count<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//                    System.out.println(getName() + &#34; 输出 &#34; + count);</span>
+</span></span><span style="display:flex;"><span>                    times<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>                } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>                    lock.<span style="color:#a6e22e">unlock</span>();
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(getName() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;一共输出了 &#34;</span> <span style="color:#f92672">+</span> times <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; 次&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Output:</p>
+<pre tabindex="0"><code>t3一共输出了 49953 次
+t4一共输出了 49988 次
+t1一共输出了 50077 次
+t2一共输出了 49986 次
+</code></pre><p>It can be observed that the output of the four threads is generally around 50,000.</p>
+<h2 id="reentrantlock-simulating-the-dining-philosophers-problem-without-using-condition">ReentrantLock Simulating the Dining Philosophers Problem Without Using Condition</h2>
+<p>The dining philosophers problem involves five philosophers sitting around a circular table with only five chopsticks. After a philosopher finishes contemplating, they need to simultaneously acquire the chopsticks on their left and right sides to eat.</p>
+<p>Here, we use threads to simulate philosophers and use ReentrantLock to simulate chopsticks.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.windypath;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.concurrent.locks.Condition;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.concurrent.locks.Lock;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.concurrent.locks.ReentrantLock;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DiningPhilosopher</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> numPhilosophers <span style="color:#f92672">=</span> 5;
+</span></span><span style="display:flex;"><span>        Philosopher<span style="color:#f92672">[]</span> philosophers <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Philosopher<span style="color:#f92672">[</span>numPhilosophers<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        Chopstick<span style="color:#f92672">[]</span> chopsticks <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Chopstick<span style="color:#f92672">[</span>numPhilosophers<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> numPhilosophers; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            chopsticks<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Chopstick();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> numPhilosophers; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            Chopstick leftChopstick <span style="color:#f92672">=</span> chopsticks<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>            Chopstick rightChopstick <span style="color:#f92672">=</span> chopsticks<span style="color:#f92672">[</span>(i <span style="color:#f92672">+</span> 1) <span style="color:#f92672">%</span> numPhilosophers<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//            philosophers[i] = new Philosopher(i, leftChopstick, rightChopstick);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                philosophers<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Philosopher(i, leftChopstick, rightChopstick);
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                philosophers<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Philosopher(i, rightChopstick, leftChopstick);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            Thread thread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Thread(philosophers<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>            thread.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Philosopher</span> <span style="color:#66d9ef">implements</span> Runnable {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> id;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Chopstick leftChopstick;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Chopstick rightChopstick;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> eatTimes <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Philosopher</span>(<span style="color:#66d9ef">int</span> id, Chopstick leftChopstick, Chopstick rightChopstick) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> id;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">leftChopstick</span> <span style="color:#f92672">=</span> leftChopstick;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">rightChopstick</span> <span style="color:#f92672">=</span> rightChopstick;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">think</span>() <span style="color:#66d9ef">throws</span> InterruptedException {
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Philosopher &#34;</span> <span style="color:#f92672">+</span> id <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is thinking.&#34;</span>);
+</span></span><span style="display:flex;"><span>            Thread.<span style="color:#a6e22e">sleep</span>((<span style="color:#66d9ef">long</span>) ( 1000));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">eat</span>() <span style="color:#66d9ef">throws</span> InterruptedException {
+</span></span><span style="display:flex;"><span>            leftChopstick.<span style="color:#a6e22e">pickUp</span>();
+</span></span><span style="display:flex;"><span>            rightChopstick.<span style="color:#a6e22e">pickUp</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Philosopher &#34;</span> <span style="color:#f92672">+</span> id <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; picks up both chopsticks and eats.&#34;</span>);
+</span></span><span style="display:flex;"><span>            Thread.<span style="color:#a6e22e">sleep</span>((<span style="color:#66d9ef">long</span>) ( 1000));
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Philosopher &#34;</span> <span style="color:#f92672">+</span> id <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; puts down both chopsticks.&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            rightChopstick.<span style="color:#a6e22e">putDown</span>();
+</span></span><span style="display:flex;"><span>            leftChopstick.<span style="color:#a6e22e">putDown</span>();
+</span></span><span style="display:flex;"><span>            eatTimes<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (eatTimes <span style="color:#f92672">%</span> 10 <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Philosopher &#34;</span> <span style="color:#f92672">+</span> id <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; 目前吃了&#34;</span> <span style="color:#f92672">+</span> eatTimes <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;次&#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span>() {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">true</span>) {
+</span></span><span style="display:flex;"><span>                    think();
+</span></span><span style="display:flex;"><span>                    eat();
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (InterruptedException e) {
+</span></span><span style="display:flex;"><span>                Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">interrupt</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Chopstick</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Lock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReentrantLock();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">pickUp</span>() {
+</span></span><span style="display:flex;"><span>            lock.<span style="color:#a6e22e">lock</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">putDown</span>() {
+</span></span><span style="display:flex;"><span>            lock.<span style="color:#a6e22e">unlock</span>();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>In the above code, the chopsticks only need to be locked by philosophers when picked up using the lock() function and unlocked when put down using the unlock() function to achieve the goal of &ldquo;simultaneously having the chopsticks on the left and right sides.&rdquo;</p>
+<h3 id="code-using-condition">Code Using Condition:</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.windypath;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.concurrent.locks.Condition;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.concurrent.locks.Lock;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.concurrent.locks.ReentrantLock;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DiningPhilosophers</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> numPhilosophers <span style="color:#f92672">=</span> 5;
+</span></span><span style="display:flex;"><span>        Philosopher<span style="color:#f92672">[]</span> philosophers <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Philosopher<span style="color:#f92672">[</span>numPhilosophers<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        Chopstick<span style="color:#f92672">[]</span> chopsticks <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Chopstick<span style="color:#f92672">[</span>numPhilosophers<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> numPhilosophers; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            chopsticks<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Chopstick();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> numPhilosophers; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            Chopstick leftChopstick <span style="color:#f92672">=</span> chopsticks<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>            Chopstick rightChopstick <span style="color:#f92672">=</span> chopsticks<span style="color:#f92672">[</span>(i <span style="color:#f92672">+</span> 1) <span style="color:#f92672">%</span> numPhilosophers<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//            philosophers[i] = new Philosopher(i, leftChopstick, rightChopstick);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                philosophers<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Philosopher(i, leftChopstick, rightChopstick);
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                philosophers<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Philosopher(i, rightChopstick, leftChopstick);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            Thread thread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Thread(philosophers<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>            thread.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Philosopher</span> <span style="color:#66d9ef">implements</span> Runnable {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> id;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Chopstick leftChopstick;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Chopstick rightChopstick;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> eatTimes <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Philosopher</span>(<span style="color:#66d9ef">int</span> id, Chopstick leftChopstick, Chopstick rightChopstick) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> id;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">leftChopstick</span> <span style="color:#f92672">=</span> leftChopstick;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">rightChopstick</span> <span style="color:#f92672">=</span> rightChopstick;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">think</span>() <span style="color:#66d9ef">throws</span> InterruptedException {
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Philosopher &#34;</span> <span style="color:#f92672">+</span> id <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is thinking.&#34;</span>);
+</span></span><span style="display:flex;"><span>            Thread.<span style="color:#a6e22e">sleep</span>((<span style="color:#66d9ef">long</span>) ( 1000));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">eat</span>() <span style="color:#66d9ef">throws</span> InterruptedException {
+</span></span><span style="display:flex;"><span>            leftChopstick.<span style="color:#a6e22e">pickUp</span>();
+</span></span><span style="display:flex;"><span>            rightChopstick.<span style="color:#a6e22e">pickUp</span>();
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Philosopher &#34;</span> <span style="color:#f92672">+</span> id <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; picks up both chopsticks and eats.&#34;</span>);
+</span></span><span style="display:flex;"><span>            Thread.<span style="color:#a6e22e">sleep</span>((<span style="color:#66d9ef">long</span>) ( 1000));
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Philosopher &#34;</span> <span style="color:#f92672">+</span> id <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; puts down both chopsticks.&#34;</span>);
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            rightChopstick.<span style="color:#a6e22e">putDown</span>();
+</span></span><span style="display:flex;"><span>            leftChopstick.<span style="color:#a6e22e">putDown</span>();
+</span></span><span style="display:flex;"><span>            eatTimes<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (eatTimes <span style="color:#f92672">%</span> 10 <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;Philosopher &#34;</span> <span style="color:#f92672">+</span> id <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; 目前吃了&#34;</span> <span style="color:#f92672">+</span> eatTimes <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;次&#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span>() {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">true</span>) {
+</span></span><span style="display:flex;"><span>                    think();
+</span></span><span style="display:flex;"><span>                    eat();
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (InterruptedException e) {
+</span></span><span style="display:flex;"><span>                Thread.<span style="color:#a6e22e">currentThread</span>().<span style="color:#a6e22e">interrupt</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Chopstick</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Lock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReentrantLock(<span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Condition condition <span style="color:#f92672">=</span> lock.<span style="color:#a6e22e">newCondition</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> taken <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">pickUp</span>() <span style="color:#66d9ef">throws</span> InterruptedException {
+</span></span><span style="display:flex;"><span>            lock.<span style="color:#a6e22e">lock</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">while</span> (taken) {
+</span></span><span style="display:flex;"><span>                    condition.<span style="color:#a6e22e">await</span>();
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                taken <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>                lock.<span style="color:#a6e22e">unlock</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">putDown</span>() {
+</span></span><span style="display:flex;"><span>            lock.<span style="color:#a6e22e">lock</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                taken <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>                condition.<span style="color:#a6e22e">signal</span>();
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>                lock.<span style="color:#a6e22e">unlock</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>You can see that the Chopstick class has an added taken status to determine whether the chopstick is currently possessed by a philosopher. When the first philosopher picks up a chopstick, taken becomes true, and the lock is released. When the second philosopher picks up the same chopstick, they still acquire the same lock but enter a waiting state with condition.await() due to taken being true. At this point, the lock is also released, allowing other philosophers to pick up this chopstick.</p>
+<p>When the chopstick is put down, the signal() method is called, and the thread waiting at the previous await() function is awakened, allowing it to execute its subsequent logic.</p>
+<blockquote>
+<p>If a fair lock is not used, you might see that two philosophers eat very late in their 10 cycles. With a fair lock, almost all five philosophers synchronize and complete their 10 cycles.</p>
+</blockquote>
+<blockquote>
+<p>Note that when initializing philosophers, chopsticks for philosophers with odd numbers are swapped. This is because in the subsequent logic for picking up chopsticks, we always pick up the left chopstick first and then the right one. If we don&rsquo;t reverse the hands for some philosophers, there would be a situation where all five philosophers pick up the left chopstick simultaneously and then wait for the right one, leading to a deadlock. (Of course, we could also use random numbers to let philosophers decide whether to pick up the left or right chopstick first.)</p>
+</blockquote>]]></content:encoded>
     </item>
     <item>
       <title>How To Split A String In C&#43;&#43;?</title>
       <link>https://windypath.com/en/posts/how_to_split_a_string_in_cpp/</link>
       <pubDate>Sun, 02 Jul 2023 11:54:44 +0800</pubDate>
       <guid>https://windypath.com/en/posts/how_to_split_a_string_in_cpp/</guid>
-      <description>Preface During a coding interview, I encountered a question that involved two lines of input. Each line contained an unknown number of numbers separated by spaces. The input format was as follows:
-12 34 567 888 99 100 358 74 58454 742 4469 88 They did not provide the number of digits in each line in advance. Instead, they required the user to split them themselves.
-During the coding exam, I didn&amp;rsquo;t implement this functionality using C++, but instead used the split() method available in Java to handle it.</description>
+      <description>&lt;h1 id=&#34;preface&#34;&gt;Preface&lt;/h1&gt;
+&lt;p&gt;During a coding interview, I encountered a question that involved two lines of input. Each line contained an unknown number of numbers separated by spaces. The input format was as follows:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;12 34 567 888 99 100
+358 74 58454 742 4469 88
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;They did not provide the number of digits in each line in advance. Instead, they required the user to split them themselves.&lt;/p&gt;
+&lt;p&gt;During the coding exam, I didn&amp;rsquo;t implement this functionality using C++, but instead used the split() method available in Java to handle it.&lt;/p&gt;
+&lt;p&gt;Later, after the exam was over, I searched online for ways to split strings in C++, and I found that C++ does not have a built-in method similar to split(character) like in Java.&lt;/p&gt;
+&lt;p&gt;So, what methods can be used as alternatives?&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<h1 id="preface">Preface</h1>
+<p>During a coding interview, I encountered a question that involved two lines of input. Each line contained an unknown number of numbers separated by spaces. The input format was as follows:</p>
+<pre tabindex="0"><code>12 34 567 888 99 100
+358 74 58454 742 4469 88
+</code></pre><p>They did not provide the number of digits in each line in advance. Instead, they required the user to split them themselves.</p>
+<p>During the coding exam, I didn&rsquo;t implement this functionality using C++, but instead used the split() method available in Java to handle it.</p>
+<p>Later, after the exam was over, I searched online for ways to split strings in C++, and I found that C++ does not have a built-in method similar to split(character) like in Java.</p>
+<p>So, what methods can be used as alternatives?</p>
+<h1 id="method-1-splitting-using-strings-find-function-along-with-substr">Method 1: Splitting using string&rsquo;s find() function along with substr()</h1>
+<p>According to the response from a Zhihu user, the first solution they suggested is:</p>
+<p>C++ 的 string 为什么不提供 split 函数？ - 知乎用户的回答 - 知乎
+<a href="https://www.zhihu.com/question/36642771/answer/865135551">https://www.zhihu.com/question/36642771/answer/865135551</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstring&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">split</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> s, std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;&amp;</span> tokens, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> delimiters <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34; &#34;</span>) {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>size_type lastPos <span style="color:#f92672">=</span> s.find_first_not_of(delimiters, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>size_type pos <span style="color:#f92672">=</span> s.find_first_of(delimiters, lastPos);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>npos <span style="color:#f92672">!=</span> pos <span style="color:#f92672">||</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>npos <span style="color:#f92672">!=</span> lastPos) {
+</span></span><span style="display:flex;"><span>        tokens.push_back(s.substr(lastPos, pos <span style="color:#f92672">-</span> lastPos));
+</span></span><span style="display:flex;"><span>        lastPos <span style="color:#f92672">=</span> s.find_first_not_of(delimiters, pos);
+</span></span><span style="display:flex;"><span>        pos <span style="color:#f92672">=</span> s.find_first_of(delimiters, lastPos);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;12 34 567 888 99 100&#34;</span>;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> res;
+</span></span><span style="display:flex;"><span>    split(str, res, <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> r: res) {
+</span></span><span style="display:flex;"><span>        printf(<span style="color:#e6db74">&#34;%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, r.c_str());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The output is：</p>
+<pre tabindex="0"><code>12
+34
+567
+888
+99
+100
+</code></pre><p>The split() function works by keeping track of two indices to determine the substrings to be extracted:</p>
+<p>The first index, lastPos, finds the index of the first character after the start of the string that is not a delimiter.
+The second index, pos, finds the index of the first character after lastPos that is a delimiter.
+By doing this, the substring between lastPos and pos is the portion of the string that needs to be extracted.
+After extracting the first substring, both indices are moved forward according to the previous logic, until both indices cannot find suitable values (returning string::npos). This marks the end of the process.</p>
+<h2 id="function-introduction">Function Introduction:</h2>
+<h3 id="find_first_of">find_first_of()</h3>
+<p>The find_first_of() function of string takes two parameters. The first parameter is the character to search for, which can be a string, char*, or char. The second parameter is the index to start searching from (it is optional and defaults to 0). It searches from the specified index onward until it finds the character being searched for, and then returns the index where the character is found.</p>
+<h3 id="find_first_not_of">find_first_not_of()</h3>
+<p>The find_first_not_of() function of string accepts the same parameters as find_first_of(). However, it searches until it encounters a character that is not in the search characters. It returns the index of the first character that is not part of the search characters.</p>
+<h3 id="substr">substr()</h3>
+<p>The substr() function is used to extract a substring from a string. It takes two parameters, pos and len, indicating the starting position and the length of the substring to be extracted. The original string is not modified.</p>
+<p>C++ document location：</p>
+<p>find_first_of()：<a href="https://cplusplus.com/reference/string/string/find_first_of/">https://cplusplus.com/reference/string/string/find_first_of/</a></p>
+<p>find_first_not_of()：<a href="https://cplusplus.com/reference/string/string/find_first_not_of/">https://cplusplus.com/reference/string/string/find_first_not_of/</a></p>
+<p>substr()：<a href="https://cplusplus.com/reference/string/string/substr/">https://cplusplus.com/reference/string/string/substr/</a></p>
+<h1 id="method-2c11-regular-expression">Method 2：C++11 regular expression</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;regex&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;12 34 567 888 99 100&#34;</span>;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>regex ws_re(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">s+&#34;</span>);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> res(
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>sregex_token_iterator(
+</span></span><span style="display:flex;"><span>            str.begin(), str.end(), ws_re, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>sregex_token_iterator()
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> r: res) {
+</span></span><span style="display:flex;"><span>        printf(<span style="color:#e6db74">&#34;%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, r.c_str());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This example comes from the introduction to regex token iterator.</p>
+<p><a href="https://en.cppreference.com/w/cpp/regex/regex_token_iterator">https://en.cppreference.com/w/cpp/regex/regex_token_iterator</a></p>
+<p>Using the sregex_token_iterator() iterator for splitting operations (where s refers to a string type). In this example, in lines 9-11, a sregex_token_iterator iterator is constructed with four parameters: the iterator to the beginning of the string, the iterator to the end of the string, a regular expression object, and whether to use the matched parts (0 for using, -1 for not using).</p>
+<p>By constructing the sregex_token_iterator(), it is determined to start searching from the beginning of the string and continue until the end of the string, using regular expression matching, and finding the unmatched parts.</p>
+<p>The end of this iterator is represented by a default-constructed sregex_token_iterator() object.</p>
+<p>In the constructor of vector, by passing in two iterators, the elements between the iterators can be obtained.</p>
+<h1 id="method-3-splitting-strings-using-stringstream-supports-only-space-newline-tab">Method 3: Splitting strings using stringstream (supports only space, newline, tab)</h1>
+<p>Source：<a href="https://www.cnblogs.com/narjaja/p/10044157.html">https://www.cnblogs.com/narjaja/p/10044157.html</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sstream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;12 34 567 888 99 100&#34;</span>;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> res;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>istringstream ss(str);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string word;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(ss<span style="color:#f92672">&gt;&gt;</span>word) {
+</span></span><span style="display:flex;"><span>        res.push_back(word);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> r: res) {
+</span></span><span style="display:flex;"><span>        printf(<span style="color:#e6db74">&#34;%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, r.c_str());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>By using the &raquo; operator in C++, similar to how cin works for user input, we can &ldquo;input&rdquo; a string and achieve the splitting effect.</p>
+<p>If you want to support custom delimiters, you can use getline() for handling.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sstream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string data <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;1_2_3_4_5_6&#34;</span>;
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>stringstream ss(data);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string item;
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> data <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (std<span style="color:#f92672">::</span>getline(ss, item, <span style="color:#e6db74">&#39;_&#39;</span>)) 
+</span></span><span style="display:flex;"><span>        cout <span style="color:#f92672">&lt;&lt;</span> item <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#39; &#39;</span>;  
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="method-4-implementing-with-the-c-function-strtok">Method 4: Implementing with the C function strtok()</h1>
+<h2 id="the-first-incorrect-approach">The first incorrect approach</h2>
+<p>Another approach is to use the strtok() function from C language for handling the string splitting.</p>
+<p>On the internet, you may come across code structures similar to the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstring&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> str[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;A B C D&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> p <span style="color:#f92672">=</span> strtok(str, <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> p <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (p <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> strtok(NULL, <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> p <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The output is：</p>
+<pre tabindex="0"><code>A
+B
+C
+D
+</code></pre><p>However, when I attempted to perform a cout output on line 11, I found that the result was not displayed correctly:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstring&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> str[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;A B C D&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> p <span style="color:#f92672">=</span> strtok(str, <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> p <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (p <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> strtok(NULL, <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> p <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;abc&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The output is：</p>
+<pre tabindex="0"><code>A
+B
+C
+D
+</code></pre><p>The final &ldquo;abc&rdquo; is missing in the output。</p>
+<p>After consulting with ChatGPT, the explanation received is as follows:</p>
+<p>The issue in this C++ code is that when iterating and outputting the split substrings, the value of p is printed first before proceeding to the next iteration. This causes the value of p to be set as NULL after the last iteration, and then attempting to print the value of p leads to undefined behavior.</p>
+<p>In line 8, you print the value of p and then in line 9, it is set to the next split substring. Then, in line 10, when the loop begins again, you print the value of p again, but at this point, it may already be NULL, resulting in undefined behavior.</p>
+<p>To fix this issue, you can move the printing statement to the end of the loop, so that the value of p is printed after proceeding to the next iteration, ensuring that p is not NULL.</p>
+<p>Here is the corrected code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstring&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> str[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;A B C D&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> p <span style="color:#f92672">=</span> strtok(str, <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (p <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> p <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> strtok(NULL, <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;abc&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>After making this modification, the code will correctly output the split substrings and then output &ldquo;abc&rdquo;. Please note that std::endl is used to add a newline character after the output to ensure the correct formatting of the output result.</p>
+<h2 id="the-second-incorrect-approach">The second incorrect approach</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include&lt;string.h&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> s[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;A B C D&#34;</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>p; 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>d <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34; &#34;</span>;
+</span></span><span style="display:flex;"><span>  p <span style="color:#f92672">=</span> strtok(s, d);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span>(p)
+</span></span><span style="display:flex;"><span>  {  
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, p);  
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> strtok(NULL, <span style="color:#e6db74">&#34; &#34;</span>);  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  printf(<span style="color:#e6db74">&#34;abc&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This time, we output the previous split p first within the loop body and then read the next p. However, the string &ldquo;abc&rdquo; still doesn&rsquo;t output correctly. Here&rsquo;s ChatGPT&rsquo;s answer:</p>
+<p>ChatGPT:</p>
+<p>The reason why &ldquo;abc&rdquo; cannot be output correctly in this code is that when using the strtok function to split the string, it replaces the delimiter in the original string with a null character &lsquo;\0&rsquo; to separate the substrings. This modification alters the original string s, and subsequent printf statements will terminate prematurely when encountering &lsquo;\0&rsquo;.</p>
+<p>In the code, the content of the original string s is &ldquo;A B C D&rdquo;, and strtok(s, d) will split it into four substrings: &ldquo;A&rdquo;, &ldquo;B&rdquo;, &ldquo;C&rdquo;, and &ldquo;D&rdquo;. Therefore, the printf statement in the loop will output these four substrings: &ldquo;A&rdquo;, &ldquo;B&rdquo;, &ldquo;C&rdquo;, and &ldquo;D&rdquo;.</p>
+<p>Then, in the last call to strtok(NULL, &quot; &ldquo;), since there are no more delimiters, strtok will return NULL and terminate the loop. Subsequently, the printf(&ldquo;abc&rdquo;) statement in the code will attempt to output &ldquo;abc&rdquo;. However, due to the previous strtok calls modifying the original string s and replacing the spaces with &lsquo;\0&rsquo;, when reaching the printf statement, the function encounters the &lsquo;\0&rsquo; character, treating it as the end of the string and causing the output to terminate prematurely.</p>
+<p>If you want to output &ldquo;abc&rdquo;, you can add a newline character \n to the printf statement as shown below:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> s[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;A B C D&#34;</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>p;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>d <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34; &#34;</span>;
+</span></span><span style="display:flex;"><span>  p <span style="color:#f92672">=</span> strtok(s, d);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> (p)
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, p);
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> strtok(NULL, <span style="color:#e6db74">&#34; &#34;</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  printf(<span style="color:#e6db74">&#34;abc</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);  <span style="color:#75715e">// 在&#34;abc&#34;后添加换行符\n
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>With the above modification, the code will be able to output &ldquo;A&rdquo;, &ldquo;B&rdquo;, &ldquo;C&rdquo;, &ldquo;D&rdquo;, and &ldquo;abc&rdquo; correctly.</p>
+<h1 id="strtok-function">strtok() Function</h1>
+<p>After the strtok() function performs the splitting, it fills the cut positions with &lsquo;\0&rsquo;, thereby modifying the original string. Therefore, it is essential to exercise caution and use this function carefully.
+通过上述修改，代码将能够正常输出&quot;A&rdquo;、&ldquo;B&rdquo;、&ldquo;C&rdquo;、&ldquo;D&quot;和&quot;abc&rdquo;。
+strtok()函数</p>]]></content:encoded>
     </item>
     <item>
       <title>My Self-introduction</title>
       <link>https://windypath.com/en/posts/about_myself/</link>
       <pubDate>Sat, 29 Apr 2023 00:00:00 +0800</pubDate>
       <guid>https://windypath.com/en/posts/about_myself/</guid>
-      <description>Welcome Hello and welcome to WindyPath. I am the owner of this website. My English name is Johnathan.
-My Chinese nickname is &amp;ldquo;凌虚&amp;rdquo; which comes from a Chinese animated film called The Legend of Qin. &amp;ldquo;凌虚&amp;rdquo; is the name of a sword that belong to Zhang Liang(张良), a famous strategist in the Warring Period. The name of this website is WindyPath, and its Chinese name is &amp;ldquo;风萧古道&amp;rdquo;.
-The first two characters, &amp;ldquo;风萧&amp;rdquo; come from poetry &amp;ldquo;风萧萧兮易水寒&amp;rdquo; while the last two characters, &amp;ldquo;古道&amp;rdquo; are derived from poetry &amp;ldquo;古道西风瘦马&amp;rdquo;.</description>
+      <description>&lt;h1 id=&#34;welcome&#34;&gt;Welcome&lt;/h1&gt;
+&lt;p&gt;Hello and welcome to WindyPath. I am the owner of this website. My English name is Johnathan.&lt;/p&gt;
+&lt;p&gt;My Chinese nickname is &amp;ldquo;凌虚&amp;rdquo; which comes from a Chinese animated film called &lt;em&gt;The Legend of Qin&lt;/em&gt;. &amp;ldquo;凌虚&amp;rdquo; is the name of a sword that belong to Zhang Liang(张良), a famous strategist in the Warring Period. The name of this website is &lt;em&gt;WindyPath&lt;/em&gt;, and its Chinese name is &amp;ldquo;风萧古道&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;The first two characters, &amp;ldquo;风萧&amp;rdquo; come from poetry &amp;ldquo;风萧萧兮易水寒&amp;rdquo; while the last two characters, &amp;ldquo;古道&amp;rdquo; are derived from poetry &amp;ldquo;古道西风瘦马&amp;rdquo;.&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<h1 id="welcome">Welcome</h1>
+<p>Hello and welcome to WindyPath. I am the owner of this website. My English name is Johnathan.</p>
+<p>My Chinese nickname is &ldquo;凌虚&rdquo; which comes from a Chinese animated film called <em>The Legend of Qin</em>. &ldquo;凌虚&rdquo; is the name of a sword that belong to Zhang Liang(张良), a famous strategist in the Warring Period. The name of this website is <em>WindyPath</em>, and its Chinese name is &ldquo;风萧古道&rdquo;.</p>
+<p>The first two characters, &ldquo;风萧&rdquo; come from poetry &ldquo;风萧萧兮易水寒&rdquo; while the last two characters, &ldquo;古道&rdquo; are derived from poetry &ldquo;古道西风瘦马&rdquo;.</p>
+<h1 id="about-me">About Me</h1>
+<p>I work as a Game Server Engineer and I have previously developed website, including both frontend and backend. However, I no longer develop websites.</p>
+<p>I graduated from university in 2019, and I moved to ShangHai in December 2020.</p>
+<p>You can read more about my computer story <a href="../individual_project_experience">HERE</a>.</p>
+<h1 id="my-idealism">My Idealism</h1>
+<p>For a long time, I didn&rsquo;t know what to study software development for. I have earned some money in these years, but I wanted to move forward in my career of software development. I am interested in developing Chinese software.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>For Chinese Software
+</span></span></code></pre></div><h1 id="my-articles">My Articles</h1>
+<p>I do not update my blog frequently, but I do browse articles on other blogs. I have noticed that some blogs have many articles that are little more than complaints or notes. These types of articles do not effectively improve software development.</p>
+<p>On my blog, I only publish <strong>technology articles</strong>. Even if I feel compelled to complain about something, I always try to tie it back to a software development concept so that visitors can learn something from it.</p>
+<p>I post other daily life observations and complaints on my Twitter account.</p>
+<h1 id="contact">Contact</h1>
+<p>Email: <a href="mailto:windypathblog@gmail.com">windypathblog@gmail.com</a>
+Telegram: @windypath</p>]]></content:encoded>
     </item>
     <item>
       <title>Windows XP Virtual Machine Chinese Version Without Activation Image Download</title>
       <link>https://windypath.com/en/posts/nostalgic_winxp/</link>
       <pubDate>Sun, 02 Oct 2022 18:51:17 +0800</pubDate>
       <guid>https://windypath.com/en/posts/nostalgic_winxp/</guid>
-      <description>Click here to download my virtual machine image Download virtual machine image:
-Link：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l
-Fetch Code：374l
-My VirtualBox version is 6.1
-Let me talk about nostalgic For most people, Win95 is their youth, so they create UI component library React95, or create an OS serenity together. But for most Chinese people, when they got PC in 2000-2010, they used Windows XP in their PC.
-sh1zuku is from China, Taiwan, he created a Windows XP simulator on website: Project Link, Online Demo, and another programmer from Vietnam wrote a Windows 7 Simulator on website Online Demo.</description>
+      <description>&lt;h1 id=&#34;click-here-to-download-my-virtual-machine-image&#34;&gt;Click here to download my virtual machine image&lt;/h1&gt;
+&lt;p&gt;Download virtual machine image:&lt;/p&gt;
+&lt;p&gt;Link：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l&lt;/p&gt;
+&lt;p&gt;Fetch Code：374l&lt;/p&gt;
+&lt;p&gt;My VirtualBox version is 6.1&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<h1 id="click-here-to-download-my-virtual-machine-image">Click here to download my virtual machine image</h1>
+<p>Download virtual machine image:</p>
+<p>Link：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l</p>
+<p>Fetch Code：374l</p>
+<p>My VirtualBox version is 6.1</p>
+<h1 id="let-me-talk-about-nostalgic">Let me talk about nostalgic</h1>
+<p>For most people, Win95 is their youth, so they create UI component library <a href="https://github.com/arturbien/React95">React95</a>, or create an OS <a href="https://github.com/SerenityOS/serenity">serenity</a> together. But for most Chinese people, when they got PC in 2000-2010, they used Windows XP in their PC.</p>
+<p><a href="https://sh1zuku.csie.io/#/">sh1zuku</a> is from China, Taiwan, he created a Windows XP simulator on website: <a href="https://github.com/ShizukuIchi/winXP">Project Link</a>, <a href="https://winxp.vercel.app/">Online Demo</a>, and another programmer from Vietnam wrote a Windows 7 Simulator on website <a href="https://win7simu.visnalize.com/">Online Demo</a>.</p>
+<p>Honestly, I don&rsquo;t have enough ability to develop simulator program like them, but I have an idea that I can install a Windows XP virtual machine on my PC.</p>
+<h1 id="the-steps-you-might-choose">The steps you might choose</h1>
+<ol>
+<li>Install VirtualBox.</li>
+<li>Download Image: Find Windows XP Image in <a href="https://msdn.itellyou.cn/">MSDN Itellyou</a> and then download it.</li>
+<li>Install the Image in VirtualBox.</li>
+<li>Run the installed image, and install the OS.</li>
+</ol>
+<p>Then, you will discover that the Windows XP only has 30-day trail. In the early 2000s, piracy was rampant, and Microsoft took strong measures to limit it. Even if you enter the correct serial number when you install, Microsoft will ask you to activate using a phone, etc.</p>
+<p>But I just want to experienct the old OS in my PC! (It&rsquo;s too hard for me to activate a copyrighted WinXP!)</p>
+<h1 id="the-right-solution">The Right Solution</h1>
+<p>So I don&rsquo;t use this copyrighted WinXP image anymore, I should search some WinXP image without activation.</p>
+<p>Here, I found <a href="https://github.com/lucianoferrari/winxpimage">github WinXPImage</a> from Github, but his Image file saved on Google Drive. I have downloaded that and uploaded to Baidu Cloud:</p>
+<p>Link：https://pan.baidu.com/s/1ypKeaZixJXnbqAo4ZT0YLQ?pwd=30dd
+Fetch Code：30dd</p>
+<p>When you install this image on VirtualBox, you will get a WinXP(<strong>English Edition</strong>) that you can use indefinitely.</p>
+<p>But you may not be able to start this Image successfully, you should execute this after importing the OVA File:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmd" data-lang="cmd"><span style="display:flex;"><span>vbox-img geometry --filename Windows_XP_Professional-disk1.vdi --format VDI --cylinders 5874 --heads 255 --sectors 56
+</span></span></code></pre></div><p>From <a href="https://github.com/lucianoferrari/winxpimage/issues/1">github issue</a> streeg&rsquo;s solution.</p>
+<h1 id="how-to-chinesize-windows-xp">How to Chinesize Windows XP?</h1>
+<p>I want to use Chinese Windows XP to reminisce about the past, but this image doesn&rsquo;t have Chinese language support.</p>
+<p>After searching many source, I finally found a language package mui_win_xp_pro_n_cd1 in <a href="https://msdn.alicesworld.tech/Windows%20XP">here</a>.</p>
+<p>I downloaded it and uploaded to Baidu Cloud:</p>
+<p>Link：https://pan.baidu.com/s/18mW9OCRejMDoEpUcih-zlA?pwd=peu4</p>
+<p>Fetch Code：peu4</p>
+<p>Then,</p>
+<ol>
+<li>Configure share folder in Windows XP virtual machine. <a href="https://www.jianshu.com/p/060103d48244">Source</a></li>
+<li>Transfer mui_win_xp_pro_n_cd1.iso to Windows XP virtual machine by share folder.</li>
+<li>Install it, <a href="https://www.docin.com/p-2998336055.html">Source</a></li>
+</ol>
+<p>Finally, reboot Windows XP virtual machine.</p>
+<p>Screenshot:
+<img loading="lazy" src="/images/nostalgic_xp.png" alt=""  />
+</p>]]></content:encoded>
     </item>
     <item>
       <title>Some Usage and features on Java TreeSet</title>
       <link>https://windypath.com/en/posts/about_java_treeset/</link>
       <pubDate>Sat, 18 Jun 2022 17:10:44 +0800</pubDate>
       <guid>https://windypath.com/en/posts/about_java_treeset/</guid>
-      <description>An Example (kotlin) import java.util.TreeSet /** * Define a data class to test TreeSet Collection * Sort by TreeSet * id: player id * score: player score */ data class PlayerScore(var id: Int, var score: Int): Comparable&amp;lt;PlayerScore&amp;gt; { override fun compareTo(other: PlayerScore): Int { return if (score &amp;gt; other.score) { 1 } else if (score &amp;lt; other.score) { -1 } else { 0 } } } fun main() { //create a TreeSet val treeSet: TreeSet&amp;lt;PlayerScore&amp;gt; = TreeSet() //create 3 PlayerScore object，and use &amp;#39;id101Obj&amp;#39; reference to the first obj //put these objects into the treeset val id101Obj = PlayerScore(101,100) //put in different order treeSet.</description>
+      <description>&lt;p&gt;Just Some Usage and features on Java TreeSet. :-)&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>Just Some Usage and features on Java TreeSet. :-)</p>
+<h2 id="an-example-kotlin">An Example (kotlin)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#66d9ef">import</span> java.util.TreeSet
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Define a data class to test TreeSet Collection
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Sort by TreeSet
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * id: player id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * score: player score
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">data</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PlayerScore</span>(<span style="color:#66d9ef">var</span> id: Int, <span style="color:#66d9ef">var</span> score: Int): Comparable&lt;PlayerScore&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">compareTo</span>(other: PlayerScore): Int {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">if</span> (score &gt; other.score) {
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (score &lt; other.score) {
+</span></span><span style="display:flex;"><span>            -<span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//create a TreeSet
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> treeSet: TreeSet&lt;PlayerScore&gt; = TreeSet()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//create 3 PlayerScore object，and use &#39;id101Obj&#39; reference to the first obj
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//put these objects into the treeset
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> id101Obj = PlayerScore(<span style="color:#ae81ff">101</span>,<span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//put in different order 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    treeSet.add(PlayerScore(<span style="color:#ae81ff">102</span>,<span style="color:#ae81ff">200</span>))
+</span></span><span style="display:flex;"><span>    treeSet.add(id101Obj)
+</span></span><span style="display:flex;"><span>    treeSet.add(PlayerScore(<span style="color:#ae81ff">103</span>,<span style="color:#ae81ff">300</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    println(<span style="color:#e6db74">&#34;Add the objects in a different order and print out by score from smallest to largest:&#34;</span>)
+</span></span><span style="display:flex;"><span>    showTreeSet(treeSet)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    println(<span style="color:#e6db74">&#34;Add an object with duplicated id but different score, and print out by score from smallest to largest:&#34;</span>)
+</span></span><span style="display:flex;"><span>    treeSet.add(PlayerScore(<span style="color:#ae81ff">101</span>,<span style="color:#ae81ff">500</span>))
+</span></span><span style="display:flex;"><span>    showTreeSet(treeSet)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    println(<span style="color:#e6db74">&#34;Change the score of the object whose id is 101 to 400， and print out by score from smallest to largest:&#34;</span>)
+</span></span><span style="display:flex;"><span>    id101Obj.score = <span style="color:#ae81ff">400</span>
+</span></span><span style="display:flex;"><span>    showTreeSet(treeSet)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">showTreeSet</span>(treeSet: TreeSet&lt;PlayerScore&gt;) {
+</span></span><span style="display:flex;"><span>    treeSet.forEachIndexed { index, s <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>        println(<span style="color:#e6db74">&#34;rank:</span><span style="color:#e6db74">${index+1}</span><span style="color:#e6db74"> score:</span><span style="color:#e6db74">${s.score}</span><span style="color:#e6db74"> id:</span><span style="color:#e6db74">${s.id}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    println()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Console output:</p>
+<pre tabindex="0"><code>Add the objects in a different order and print out by score from smallest to largest:
+rank:1 score:100 id:101
+rank:2 score:200 id:102
+rank:3 score:300 id:103
+
+Add an object with duplicated id but different score, and print out by score from smallest to largest:
+rank:1 score:100 id:101
+rank:2 score:200 id:102
+rank:3 score:300 id:103
+rank:4 score:500 id:101
+
+Change the score of the object whose id is 101 to 400， and print out by score from smallest to largest:
+rank:1 score:400 id:101
+rank:2 score:200 id:102
+rank:3 score:300 id:103
+rank:4 score:500 id:101
+</code></pre><h2 id="analysis">Analysis</h2>
+<p>First, <code>PlayerScore</code> implements <code>Comparable</code> interface , implements the function of sorting from smallest to largest. If there are only three data pieces at the beginning, insert them in different order, treeset does sort normally.</p>
+<p>Then, when player 101 score was changed, we need to resort. We tried 2 ways to resort.</p>
+<ol>
+<li>Change <code>id101Obj</code>&rsquo;s score by reference.</li>
+<li>Add a new obj which id is 101 and has a new score into treeset.</li>
+</ol>
+<p>Result:</p>
+<ol>
+<li><code>id101Obj</code>&rsquo;s score was changed, but its rank is still 1.</li>
+<li>Although the score is sorted, it has two objects which id is 101.</li>
+</ol>
+<p>So how to resort treeset when player&rsquo;s score was changed?</p>
+<p>One solution is that you can remove the object from treeset, and change its score, then add it to treeset. This is because the underlying TreeSet is a red-black tree, and the tree structure is adjusted when it is deleted and inserted.</p>
+<p>Code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span>    <span style="color:#75715e">//create a TreeSet
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> treeSet: TreeSet&lt;PlayerScore&gt; = TreeSet()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//create 3 PlayerScore object，and use &#39;id101Obj&#39; reference to the first obj
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//put these objects into the treeset
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> id101Obj = PlayerScore(<span style="color:#ae81ff">101</span>,<span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//put in different order 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    treeSet.add(PlayerScore(<span style="color:#ae81ff">102</span>,<span style="color:#ae81ff">200</span>))
+</span></span><span style="display:flex;"><span>    treeSet.add(id101Obj)
+</span></span><span style="display:flex;"><span>    treeSet.add(PlayerScore(<span style="color:#ae81ff">103</span>,<span style="color:#ae81ff">300</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     println(<span style="color:#e6db74">&#34;Add the objects in a different order and print out by score from smallest to largest:&#34;</span>)
+</span></span><span style="display:flex;"><span>    showTreeSet(treeSet)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    treeSet.remove(id101Obj)
+</span></span><span style="display:flex;"><span>    id101Obj.score = <span style="color:#ae81ff">400</span>
+</span></span><span style="display:flex;"><span>    treeSet.add(id101Obj)
+</span></span><span style="display:flex;"><span>    println(<span style="color:#e6db74">&#34;remove id101Obj from TreeSet，change score，and then add to treeSet中， print out by score from smallest to largest:&#34;</span>)
+</span></span><span style="display:flex;"><span>    showTreeSet(treeSet)
+</span></span></code></pre></div><p>Console output:</p>
+<pre tabindex="0"><code>Add the objects in a different order and print out by score from smallest to largest:
+rank:1 score:100 id:101
+rank:2 score:200 id:102
+rank:3 score:300 id:103
+
+remove id101Obj from TreeSet，change score，and then add to treeSet中， print out by score from smallest to largest:
+rank:1 score:200 id:102
+rank:2 score:300 id:103
+rank:3 score:400 id:101
+</code></pre><h2 id="move-forward">Move Forward</h2>
+<p>The solution that &ldquo;Remove it, edit it, and add it&rdquo; can finish resort, but treeSet is thread-unsafe. If there are many threads update player&rsquo;s score, it might be cause some problems.</p>
+<p>Although TreeSet can sort as it inserts, it only allow insert once. The modification of the score after insertion does not change the sorting.</p>
+<p>TreeSet doesn&rsquo;t make sense for rank list that move around a lot.</p>
+<h2 id="another-rank-list-solution">Another Rank List Solution</h2>
+<p>I use TreeSet because it can sort as it inserts, but it&rsquo;s not appropriate for a rank list.</p>
+<p>So, if
+So another way to think about it is, if you only use a longer ArrayList to store the player&rsquo;s score object, you also sort it on insert/update/delete?</p>
+<p>Insert/update/delete, modify the data in the ArrayList, and then sort.</p>]]></content:encoded>
     </item>
     <item>
       <title>Linux C&#43;&#43; Socket in Action</title>
       <link>https://windypath.com/en/posts/linux_socket_programming/</link>
       <pubDate>Sat, 30 Apr 2022 23:23:49 +0800</pubDate>
       <guid>https://windypath.com/en/posts/linux_socket_programming/</guid>
-      <description>This article primarily introduces the basics of Linux C++ Socket network programming. Most of the knowledge is sourced from the website: https://www.geeksforgeeks.org/socket-programming-cc/
-Socket Programming State Diagram From the diagram, we can see that the server side needs to go through four steps to enter the &amp;ldquo;waiting for connection&amp;rdquo; state, while the client side only requires two.
-Brief Analysis of Socket Programming Functions This analysis is for personal understanding and may have some omissions.</description>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;This article primarily introduces the basics of Linux C++ Socket network programming.
+Most of the knowledge is sourced from the website: &lt;a href=&#34;https://www.geeksforgeeks.org/socket-programming-cc/&#34;&gt;https://www.geeksforgeeks.org/socket-programming-cc/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+      <content:encoded><![CDATA[<blockquote>
+<p>This article primarily introduces the basics of Linux C++ Socket network programming.
+Most of the knowledge is sourced from the website: <a href="https://www.geeksforgeeks.org/socket-programming-cc/">https://www.geeksforgeeks.org/socket-programming-cc/</a></p>
+</blockquote>
+<h2 id="socket-programming-state-diagram">Socket Programming State Diagram</h2>
+<p><img loading="lazy" src="/images/StatediagramforserverandclientmodelofSocketdrawio2-448x660.png" alt=""  />
+</p>
+<p>From the diagram, we can see that the server side needs to go through four steps to enter the &ldquo;waiting for connection&rdquo; state, while the client side only requires two.</p>
+<h2 id="brief-analysis-of-socket-programming-functions">Brief Analysis of Socket Programming Functions</h2>
+<p>This analysis is for personal understanding and may have some omissions. If there are any, please correct them.
+The original article summarizes the knowledge better than I do. Please refer to the original article as much as possible. My understanding is only for auxiliary purposes.</p>
+<h3 id="server">Server</h3>
+<p>Let&rsquo;s start with the server. The server needs to specify a port and listen, so it needs to use bind() to bind the port, use listen() to enter the listening state, and then use accept() to block and wait for messages from the client.</p>
+<p>C++ including:</p>
+<ul>
+<li>#include &lt;sys/socket&gt;
+<ul>
+<li>socket()</li>
+<li>setsockopt()</li>
+<li>bind()</li>
+<li>listen()</li>
+<li>accept()</li>
+</ul>
+</li>
+<li>#include &lt;netinet/in.h&gt;
+<ul>
+<li>struct sockaddr_in</li>
+</ul>
+</li>
+<li>#include &lt;unistd.h&gt;
+<ul>
+<li>read()</li>
+</ul>
+</li>
+<li>#include &lt;arpa/inet.h&gt;
+<ul>
+<li>inet_pton()</li>
+</ul>
+</li>
+</ul>
+<h4 id="socket">socket()</h4>
+<p>This function is used to create a socket. Among the three parameters, the first two are particularly important. It returns a socket number, which is an integer value.</p>
+<blockquote>
+<p>int sockfd = socket(domain, type, protocol)</p>
+</blockquote>
+<p>domain: Use AF_INET for IPv4, and AF_INET6 for IPv6.
+type: Use SOCK_STREAM for TCP, and SOCK_DGRAM for UDP.</p>
+<h4 id="setsockopt">setsockopt()</h4>
+<p>This function is used to set properties for the socket returned by the socket() function above. As a server, for convenience, you can set the options for address and port reuse.</p>
+<blockquote>
+<p>int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);</p>
+</blockquote>
+<p>To reuse the address and port, you need to do the following:</p>
+<ul>
+<li>Set level to SOL_SOCKET, which represents which module the property value you are setting is for.</li>
+<li>Set optname to SO_REUSEADDR|SO_REUSEPORT, which means you intend to set both of these properties at the same time.</li>
+<li>optval should be a pointer to an int, pointing to a specific number.</li>
+<li>optlen should be sizeof() of the above optval.</li>
+</ul>
+<p>Many C++ socket functions require you to pass a length to determine how long the data you really want to pass to this function is.</p>
+<h4 id="sockaddr_in">sockaddr_in</h4>
+<p>So how is an address represented in socket programming? It&rsquo;s defined using struct sockaddr_in.</p>
+<p>When using it, you need to set three values: sin_family, sin_addr.s_addr, and sin_port.</p>
+<ul>
+<li>sin_family: Same as the domain parameter in the socket() function, it&rsquo;s AF_INET.</li>
+<li>sin_addr.s_addr: This property converts our dotted decimal IP address into a number, and it requires a dedicated function for processing, such as inet_pton().</li>
+<li>sin_port: Specifies the port number, but it&rsquo;s not directly passed as an integer. You need to use htons() to convert it into a hexadecimal number.</li>
+</ul>
+<h4 id="bind">bind()</h4>
+<p>This function is used to bind address information to a socket.</p>
+<p>In the previous section, we discussed how to set up the address. In this section, we&rsquo;ll talk about binding the socket with an address.</p>
+<blockquote>
+<p>int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);</p>
+</blockquote>
+<p>As usual, associate sockFd with the address.</p>
+<blockquote>
+<p>Note: The type of addr here is struct sockaddr *, not struct sockaddr_in *.
+The structure of struct sockaddr does not provide properties to hold the IP address and port number, so you need to use struct sockaddr_in for type casting.
+In the documentation, the author mentions that the lengths of struct sockaddr and struct sockaddr_in must be the same, so you can definitely perform the type casting without worry.
+<a href="https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html">https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html</a>
+Note that addrlen later is a value, not a pointer.</p>
+</blockquote>
+<h4 id="listen">listen()</h4>
+<blockquote>
+<p>int listen(int sockfd, int backlog);</p>
+</blockquote>
+<p>This function switches the socket to passive mode, entering the listening state. The second parameter backlog specifies the maximum length of the message waiting queue.</p>
+<h4 id="accept">accept()</h4>
+<blockquote>
+<p>int new_socket= accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+After this function is executed, the socket will wait for a client connection. Once the connection is established, it returns a new socket for communication between the client and server.</p>
+</blockquote>
+<blockquote>
+<p>Note: The third parameter socklen_t *addrlen of accept() is different from the third parameter socklen_t addrlen of bind(). accept() requires a pointer.
+Some say that the parameter of accept() is a bidirectional parameter and will update the length value of the address. However, others say that in the accept() function, it doesn&rsquo;t know if an int can hold this length. If the length is particularly large, it might not be suitable for storage. To ensure a uniform storage structure, just pass a pointer.</p>
+</blockquote>
+<h4 id="send">send()</h4>
+<p>send() is used to send messages to the other party through the socket.</p>
+<h4 id="read">read()</h4>
+<p>The read() function is included in #include &lt;unistd.h&gt;. It uses a char array to store the received message.</p>
+<h3 id="client">Client</h3>
+<p>Now let&rsquo;s talk about the client. The client needs to specify the IP address and port number, and then initiate the connection.</p>
+<h4 id="connect">connect()</h4>
+<blockquote>
+<p>int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);</p>
+</blockquote>
+<p>The client also needs to create a socket, specify sockaddr_in, and then typecast. This socket is responsible not only for initiating the connection but also for sending and receiving data.</p>
+<h3 id="sample-code-without-error-handling">Sample Code (Without Error Handling)</h3>
+<p>Currently, I only want to learn these low-level socket APIs, so I don&rsquo;t want to spend too much effort on memorizing what the return values of the APIs might indicate in terms of errors. I just want to focus on successfully implementing a very basic server and client.</p>
+<h4 id="server-side-code">Server-side Code:</h4>
+<p>server.cpp</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/in.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define PORT 8000
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sockFd, newSockFd, valread;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> opt <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> buffer[<span style="color:#ae81ff">1024</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> helloFromServer <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello from server&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sockaddr_in</span> address;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    sockFd <span style="color:#f92672">=</span> socket(AF_INET, SOCK_STREAM, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    setsockopt(sockFd, SOL_SOCKET, SO_REUSEADDR<span style="color:#f92672">|</span>SO_REUSEPORT, <span style="color:#f92672">&amp;</span>opt, <span style="color:#66d9ef">sizeof</span>(opt));
+</span></span><span style="display:flex;"><span>    address.sin_family <span style="color:#f92672">=</span> AF_INET;
+</span></span><span style="display:flex;"><span>    address.sin_addr.s_addr <span style="color:#f92672">=</span> INADDR_ANY;
+</span></span><span style="display:flex;"><span>    address.sin_port <span style="color:#f92672">=</span> htons(PORT);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> addrlen <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(address);
+</span></span><span style="display:flex;"><span>    bind(sockFd, (<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sockaddr</span><span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>address, addrlen);
+</span></span><span style="display:flex;"><span>    listen(sockFd, <span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>    newSockFd <span style="color:#f92672">=</span> accept(sockFd, (<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sockaddr</span><span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>address, (socklen_t<span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>addrlen);
+</span></span><span style="display:flex;"><span>    read(newSockFd, buffer, <span style="color:#ae81ff">1024</span>);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;receive: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, buffer);
+</span></span><span style="display:flex;"><span>    send(newSockFd, helloFromServer, strlen(helloFromServer), <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;server sent message</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="client-side-code">Client-side Code:</h4>
+<p>client.cpp</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/in.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;arpa/inet.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define PORT 8000
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sockFd <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> buffer[<span style="color:#ae81ff">1024</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> helloFromClient <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hello from client&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sockaddr_in</span> address;
+</span></span><span style="display:flex;"><span>    address.sin_family <span style="color:#f92672">=</span> AF_INET;
+</span></span><span style="display:flex;"><span>    inet_pton(AF_INET, <span style="color:#e6db74">&#34;127.0.0.1&#34;</span>, <span style="color:#f92672">&amp;</span>address.sin_addr.s_addr);
+</span></span><span style="display:flex;"><span>    address.sin_port <span style="color:#f92672">=</span> htons(PORT);
+</span></span><span style="display:flex;"><span>    sockFd <span style="color:#f92672">=</span> socket(AF_INET, SOCK_STREAM, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    connect(sockFd, (<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sockaddr</span><span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>address, <span style="color:#66d9ef">sizeof</span>(address));
+</span></span><span style="display:flex;"><span>    send(sockFd, helloFromClient, strlen(helloFromClient), <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;client sent</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    read(sockFd, buffer, <span style="color:#ae81ff">1024</span>);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;read message:%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, buffer);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="compilation-execution-and-targeted-output">Compilation, Execution, and Targeted Output</h4>
+<p>In the Linux command line, input the following separately:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>g++ -o server server.cpp
+</span></span><span style="display:flex;"><span>g++ -o client client.cpp
+</span></span></code></pre></div><p>Then open two terminals, and input the following respectively:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>./server
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>./client
+</span></span></code></pre></div><p>The expected outputs are:</p>
+<p>For the server:</p>
+<pre tabindex="0"><code>receive: hello from client
+server sent message
+</code></pre><p>client输出：</p>
+<pre tabindex="0"><code>client sent message
+receive: hello from server
+</code></pre>]]></content:encoded>
     </item>
     <item>
       <title>Traditional Software Server vs. Game Server Architecture Differences</title>
       <link>https://windypath.com/en/posts/compare_web_with_game_server/</link>
       <pubDate>Sat, 16 Apr 2022 18:15:44 +0800</pubDate>
       <guid>https://windypath.com/en/posts/compare_web_with_game_server/</guid>
-      <description>Project Intelligent Customer Service Web Crawler SLG Game Language Java Python Kotlin Model Asynchronous Event Driven There may not be a discernible model Actor Model Transmission Protocol HTTP HTTP TCP + Netty Transmission Structure JSON JSON Protobuf Database Oracle, Redis MongoDB MySQL, Redis Database Framework MyBatis Python Library (similar to JDBC) Hibernate Cache Architecture Redis for Admin Login Status Possibly only caching page numbers All game data is cached, periodically written to the database Configuration Information Only application.</description>
+      <description>&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Project&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Intelligent Customer Service&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Web Crawler&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;SLG Game&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Language&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Java&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Python&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Kotlin&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Model&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Asynchronous Event Driven&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;There may not be a discernible model&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Actor Model&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Transmission Protocol&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;HTTP&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;HTTP&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;TCP + Netty&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Transmission Structure&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;JSON&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;JSON&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Protobuf&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Database&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Oracle, Redis&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;MongoDB&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;MySQL, Redis&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Database Framework&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;MyBatis&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Python Library (similar to JDBC)&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Hibernate&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Cache Architecture&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Redis for Admin Login Status&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Possibly only caching page numbers&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;All game data is cached, periodically written to the database&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Configuration Information&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Only &lt;code&gt;application.properties&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;code&gt;config.ini&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Zookeeper, pre-loading design table information into ZK&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Concurrency&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;No concurrency (so no need for locks)&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Python multi-threading for simultaneous web crawling&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;No concurrency, Actor model ensures only one task at a time&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Hot Reload&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Directly restart&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;N/A&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Inherit a method from a certain class, replace the online class&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description>
+      <content:encoded><![CDATA[<table>
+<thead>
+<tr>
+<th style="text-align:center">Project</th>
+<th style="text-align:center">Intelligent Customer Service</th>
+<th style="text-align:center">Web Crawler</th>
+<th style="text-align:center">SLG Game</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Language</td>
+<td style="text-align:center">Java</td>
+<td style="text-align:center">Python</td>
+<td style="text-align:center">Kotlin</td>
+</tr>
+<tr>
+<td style="text-align:center">Model</td>
+<td style="text-align:center">Asynchronous Event Driven</td>
+<td style="text-align:center">There may not be a discernible model</td>
+<td style="text-align:center">Actor Model</td>
+</tr>
+<tr>
+<td style="text-align:center">Transmission Protocol</td>
+<td style="text-align:center">HTTP</td>
+<td style="text-align:center">HTTP</td>
+<td style="text-align:center">TCP + Netty</td>
+</tr>
+<tr>
+<td style="text-align:center">Transmission Structure</td>
+<td style="text-align:center">JSON</td>
+<td style="text-align:center">JSON</td>
+<td style="text-align:center">Protobuf</td>
+</tr>
+<tr>
+<td style="text-align:center">Database</td>
+<td style="text-align:center">Oracle, Redis</td>
+<td style="text-align:center">MongoDB</td>
+<td style="text-align:center">MySQL, Redis</td>
+</tr>
+<tr>
+<td style="text-align:center">Database Framework</td>
+<td style="text-align:center">MyBatis</td>
+<td style="text-align:center">Python Library (similar to JDBC)</td>
+<td style="text-align:center">Hibernate</td>
+</tr>
+<tr>
+<td style="text-align:center">Cache Architecture</td>
+<td style="text-align:center">Redis for Admin Login Status</td>
+<td style="text-align:center">Possibly only caching page numbers</td>
+<td style="text-align:center">All game data is cached, periodically written to the database</td>
+</tr>
+<tr>
+<td style="text-align:center">Configuration Information</td>
+<td style="text-align:center">Only <code>application.properties</code></td>
+<td style="text-align:center"><code>config.ini</code></td>
+<td style="text-align:center">Zookeeper, pre-loading design table information into ZK</td>
+</tr>
+<tr>
+<td style="text-align:center">Concurrency</td>
+<td style="text-align:center">No concurrency (so no need for locks)</td>
+<td style="text-align:center">Python multi-threading for simultaneous web crawling</td>
+<td style="text-align:center">No concurrency, Actor model ensures only one task at a time</td>
+</tr>
+<tr>
+<td style="text-align:center">Hot Reload</td>
+<td style="text-align:center">Directly restart</td>
+<td style="text-align:center">N/A</td>
+<td style="text-align:center">Inherit a method from a certain class, replace the online class</td>
+</tr>
+</tbody>
+</table>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<h3 id="intelligent-customer-service-server-overall-architecture">Intelligent Customer Service Server Overall Architecture</h3>
+<p><img loading="lazy" src="/images/%e6%99%ba%e8%83%bd%e5%ae%a2%e6%9c%8d%e6%9c%8d%e5%8a%a1%e7%ab%af%e6%95%b4%e4%bd%93%e6%9e%b6%e6%9e%84.png" alt="Overall Architecture of Intelligent Customer Service Server"  />
+</p>
+<h3 id="deployment-of-soldiers-in-slg-game">Deployment of Soldiers in SLG Game</h3>
+<p><img loading="lazy" src="/images/SLG%e6%b8%b8%e6%88%8f%e6%95%b4%e4%bd%93%e6%9e%b6%e6%9e%84.png" alt="Overall Architecture of SLG Game"  />
+</p>
+<h2 id="typical-case">Typical Case</h2>
+<h3 id="intelligent-customer-service-chat">Intelligent Customer Service Chat</h3>
+<pre class="mermaid">graph LR
+A[Client]-->|HTTP chat message|B[Intelligent Customer Service System]-->|Place chat message in message queue|C[Intelligent Q&A Model]-->|Record Q&A information|D[Oracle Database]
+  </pre>
+  <h3 id="deployment-of-soldiers-in-slg-game-1">Deployment of Soldiers in SLG Game</h3>
+<pre class="mermaid">graph LR
+A[Client]-->|Protobuf sent via TCP|B[Gate's Netty Unpacking]-->|Internal message forwarding in actor|C[WorldActor verifies various states of the outer city sand table]-->|Internal message forwarding in actor|D[PlayerActor verifies and retrieves buffs in the inner city]
+  </pre>
+  <p>Both WorldActor and PlayerActor retrieve the required data by reading from memory, and do not directly read from the MySQL database. The data in memory is updated to MySQL using Hibernate methods for changes every certain period of time (around 30 seconds).</p>
+<h2 id="configuration-information-loading">Configuration Information Loading</h2>
+<p>For the intelligent customer service, due to low concurrency and business volume (because there are relatively few platforms for deployment, and almost no one uses it in the early morning, and the restart speed is very fast), some configuration values on demand (such as how many times &ldquo;transfer to human&rdquo; needs to be sent before entering the human transfer channel) are hard-coded directly into the business logic. Some configuration information, such as the request address URLs of other systems, will be placed in <code>application.properties</code>. Excel is not used to centrally store configuration information for various functional modules, and it is indeed not necessary.</p>
+<p>However, for the game, configuration values are crucial, closely related to gameplay, rewards, and the in-game ecosystem. Therefore, in the game server, almost all values need to be read from the configuration table. Currently, Excel is probably the most powerful software for handling data, and designers can quickly set up values through Excel.</p>
+<p>When starting the server, you need to read the configuration table into memory (in a broad sense). However, with tools like Zookeeper, configuration table data can be stored in ZK and retrieved when needed.</p>
+<h2 id="advantages-of-game-servers">Advantages of Game Servers</h2>
+<h3 id="transmission-structure-is-protobuf">Transmission Structure is Protobuf</h3>
+<p>The data received and sent by the server are all in binary format converted from ProtoBuf, thereby achieving a unified transmission structure between the client and server. ProtoBuf has its own functionality for encoding and decoding binary data, which minimizes the size of message data. Encoding and decoding are executed by Netty, so all you need to do is pass the objects generated by ProtoBuf to Netty. The ProtoBuf version used here is v2, which includes three keywords: <code>required</code>, <code>optional</code>, and <code>repeated</code>, each providing constraints on the properties within the transmitted message.</p>
+<h3 id="akka-actor-architecture">Akka Actor Architecture</h3>
+<p>The Actor architecture implements single-threaded business logic, eliminating the need to lock common properties during development. Through internal message communication, data processing proceeds in an orderly manner. Akka cluster provides dynamic load balancing, allowing for parallel expansion. In other words, if a server can&rsquo;t handle the concurrency, simply configure one or more new servers and add them to the cluster for load balancing.</p>
+<h3 id="configuration-table-information-stored-in-zookeeper">Configuration Table Information Stored in Zookeeper</h3>
+<p>By reading Excel data table information into Java code, converting it into binary, and placing it in Zookeeper, configuration table hot updates can be achieved, making it possible to read it at any time.</p>
+<h3 id="data-cached-in-memory-after-server-startup-periodically-flushed-into-the-database">Data Cached in Memory after Server Startup, Periodically Flushed into the Database</h3>
+<p>The game server does not directly manipulate the database, but rather operates on data in memory. The data in memory is updated to the database at regular intervals. Consequently, even in cases of very high concurrent I/O, modifications are made only to the data in memory and do not directly affect the database.</p>
+<h2 id="problems-existing-in-both-systems">Problems Existing in Both Systems</h2>
+<h3 id="intelligent-customer-service">Intelligent Customer Service</h3>
+<h4 id="inefficient-oracle-joins-for-extracting-reports-lack-of-read-write-separation">Inefficient Oracle Joins for Extracting Reports, Lack of Read-Write Separation</h4>
+<p>The reports in the intelligent customer service system are real-time and are written in a very long SQL query using <code>union</code>. As a result, the query speed is very slow. In the production environment, selecting a time interval of more than 14 days and checking multiple report evaluation items leads to a query time of over 30 seconds. This means the SQL query took nearly 30 seconds to execute. We always talked about optimizing it, but in the end, we didn&rsquo;t come up with any effective solutions.</p>
+<p>Later, I also encountered some reports. Generally, raw and unprocessed data is sent to another log collection library through a message queue, which may be called a data warehouse. Then, another system extracts and aggregates data from the data warehouse.</p>
+<p>Another approach is to only query data before today when extracting reports, and then execute a scheduled task after 24:00 at the end of each day to update report data.</p>
+<p>Of course, all of these measures result in the inability to display the latest report data in real time, which is also a trade-off.</p>
+<h4 id="poorly-designed-chat-record-logging">Poorly Designed Chat Record Logging</h4>
+<p>Each row in the chat record table contains various information about the sender and the chat session, storing too many states (because there are special messages like chat record evaluations, the structure has undergone significant changes). It is possible that initially only text was considered, then images were added (which support HTML and have HTML injection risks), and later the &ldquo;Guess You Want to Ask&rdquo; bubbles were introduced. However, &ldquo;Guess You Want to Ask&rdquo; itself is not included in the chat record, requiring special handling.</p>
+<p>Due to a lack of refactoring, both the front-end and back-end code became very messy as development progressed.</p>
+<h3 id="slg-game-server">SLG Game Server</h3>
+<h4 id="hot-update-issues">Hot Update Issues</h4>
+<p>The larger the project, the more problems we encounter. The more problems there are, the faster we want to fix and update them in the production environment. Thanks to Java&rsquo;s inheritance feature, we can achieve seamless hot updates for online players by inheriting a class with business logic, rewriting a problematic function, and correcting it with the correct business logic. However, this cannot cover every online problem. In addition to business logic classes, there are also data processing and storage classes, which cannot be hot updated because they are closely associated with the logic of scheduled data writing. Some business logic written by developers in data processing and storage classes cannot be hot updated.</p>
+<p>Additionally, some properties have been marked with the <code>private</code> identifier, making it impossible to directly retrieve them. Reflection must be used to access them.</p>
+<h4 id="communication-between-nodes">Communication Between Nodes</h4>
+<p>Akka Actor is single-threaded, but this does not mean the entire system is single-threaded. To improve efficiency, we have divided the system into different Actors based on business logic and functionality modules, such as the gateway <code>Gate</code>, the outer city sandbox <code>World</code>, the inner city player <code>Home</code>, the alliance <code>Alliance</code>, and the global ranking <code>Rank</code>. However, as a result, some data that should have been shared by multiple nodes needs to be synchronized using internal messages.</p>
+<p>For example, there is an operation activity related to a person attacking a monster on the sandbox, which adds points to themselves and their alliance. In this case, the <code>World</code>, <code>Home</code>, and <code>Alliance</code> nodes each need to store a copy of the activity&rsquo;s start and end times. Of course, there is another way, which is to allocate a JSON object on Zookeeper to store the current activity information. However, if all complex activities use this method, Zookeeper will end up storing too much rarely used data.</p>
+<h2 id="other-systems">Other Systems</h2>
+<h3 id="intelligent-customer-service-edge-system-knowledge-base-system">Intelligent Customer Service Edge System: Knowledge Base System</h3>
+<p>The original intention was to extract the linguistic information of the intelligent customer service as a separate subsystem. However, due to the tight association between the linguistic information and the core of the intelligent customer service, it was not possible to separate them.</p>
+<p>To implement fuzzy queries, Elasticsearch (ES) was used as the storage database. However, there is a contradiction between relational databases and non-relational databases. Relational databases are convenient for managing data and reducing data redundancy but lose the ability to perform fuzzy queries and inverted indexing in ES. Using only a non-relational database would prevent direct associations with tables in other databases within the system, necessitating the use of services to obtain resources and increasing system overhead. If both a relational database like Oracle and a non-relational database like ES store a copy, the problem of data synchronization arises. It would require scheduled tasks to synchronize the two databases, and even the need for discrimination between the two databases, similar to version control systems like Git and SVN.</p>
+<h3 id="game-server-operations-gm">Game Server: Operations GM</h3>
+<ul>
+<li>Sending patches to the live servers, replacing the implementation of a specific method in a specific class on the live servers, thereby achieving seamless hot updates for players.</li>
+<li>Sending Groovy scripts to the live servers and executing business logic written in Groovy on the live servers.</li>
+</ul>]]></content:encoded>
     </item>
     <item>
       <title>About</title>
@@ -78,6 +1342,14 @@ Brief Analysis of Socket Programming Functions This analysis is for personal und
       <guid>https://windypath.com/en/about/</guid>
       <description>Born in the mid-1990s, male, from FJNU (Fujian Normal University), a native of Xiamen, Fujian, currently residing in Shanghai.
 As a child, I always lost in computer games. Suddenly, I became interested in web pages. I would randomly modify saved web pages and open them to see the text change. It was incredibly exciting. In order to have unlimited time using computers, I decisively applied for a major in computer science.</description>
+      <content:encoded><![CDATA[<p>Born in the mid-1990s, male, from FJNU (Fujian Normal University), a native of Xiamen, Fujian, currently residing in Shanghai.</p>
+<p>As a child, I always lost in computer games. Suddenly, I became interested in web pages. I would randomly modify saved web pages and open them to see the text change. It was incredibly exciting. In order to have unlimited time using computers, I decisively applied for a major in computer science.</p>
+<p>Never did I imagine that I would end up working as a game server developer. Two and a half years have passed in the project team of &ldquo;Game of Thrones: Winter is Coming&rdquo; Asia-Pacific version. I independently maintained the server for as long as half a year, becoming the &ldquo;Guardian of the North Kingdom.&rdquo;</p>
+<p>Here, I document the process of my step-by-step growth.</p>
+<h1 id="contact">Contact</h1>
+<p>Email: <a href="mailto:windypathblog@gmail.com">windypathblog@gmail.com</a></p>
+<p>Telegram: <a href="https://t.me/windypath">@windypath</a></p>
+]]></content:encoded>
     </item>
     <item>
       <title>My Books</title>
@@ -85,6 +1357,58 @@ As a child, I always lost in computer games. Suddenly, I became interested in we
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://windypath.com/en/mybooks/</guid>
       <description>Recently The Illustrated Happiness Trap: How to Stop Struggling and Start Living Honor Yourself: The Inner Art of Giving and Receiving The ONE Thing: The Surprisingly Simple Truth About Extraordinary Results Favorite Computer Systems: A Programmer&amp;#39;s Perspective (3rd Edition) The Illustrated Happiness Trap: How to Stop Struggling and Start Living Life Is Worth Living (Chinese Edition) The Courage to Be Disliked </description>
+      <content:encoded><![CDATA[<h1 id="recently">Recently</h1>
+<div class="book">
+   <a href="https://www.amazon.com/Illustrated-Happiness-Trap-Struggling-Living-ebook/dp/B00JEK72L2" target="_blank">
+    <img loading="lazy" src="/images/The_Illustrated_Happiness_Trap.jpg"/>
+    <span>The Illustrated Happiness Trap: How to Stop Struggling and Start Living </span>
+</a>
+</div>
+
+<div class="book">
+   <a href="https://www.amazon.com/Honor-Yourself-Inner-Giving-Receiving-ebook/dp/B004T4M5SS" target="_blank">
+    <img loading="lazy" src="/images/honor_yourself_en.jpg"/>
+    <span>Honor Yourself: The Inner Art of Giving and Receiving </span>
+</a>
+</div>
+
+<div class="book">
+   <a href="https://www.amazon.com/ONE-Thing-Surprisingly-Extraordinary-Results-ebook/dp/B00C1BHQXK" target="_blank">
+    <img loading="lazy" src="/images/the_one_thing_en.jpg"/>
+    <span>The ONE Thing: The Surprisingly Simple Truth About Extraordinary Results </span>
+</a>
+</div>
+
+<h1 id="favorite">Favorite</h1>
+<div class="book">
+   <a href="https://www.amazon.com/Computer-Systems-Programmers-Perspective-3rd/dp/013409266X" target="_blank">
+    <img loading="lazy" src="/images/csapp_en.jpg"/>
+    <span>Computer Systems: A Programmer&#39;s Perspective (3rd Edition) </span>
+</a>
+</div>
+
+<div class="book">
+   <a href="https://www.amazon.com/Illustrated-Happiness-Trap-Struggling-Living-ebook/dp/B00JEK72L2" target="_blank">
+    <img loading="lazy" src="/images/The_Illustrated_Happiness_Trap.jpg"/>
+    <span>The Illustrated Happiness Trap: How to Stop Struggling and Start Living </span>
+</a>
+</div>
+
+<div class="book">
+   <a href="https://www.amazon.com/Life-Worth-Living-Chinese/dp/7547734316/" target="_blank">
+    <img loading="lazy" src="/images/book_worth_living.jpg"/>
+    <span>Life Is Worth Living (Chinese Edition) </span>
+</a>
+</div>
+
+<div class="book">
+   <a href="https://www.amazon.com/The-Courage-to-Be-Disliked-audiobook/dp/B07BRPW98K/" target="_blank">
+    <img loading="lazy" src="/images/book_courage_to_be_hated_en.jpg"/>
+    <span>The Courage to Be Disliked </span>
+</a>
+</div>
+
+]]></content:encoded>
     </item>
     <item>
       <title>My Friends</title>
@@ -92,6 +1416,92 @@ As a child, I always lost in computer games. Suddenly, I became interested in we
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://windypath.com/en/myfriends/</guid>
       <description> </description>
+      <content:encoded><![CDATA[<script>
+    
+$( document ).ready(function() {
+  var cacheFriendsData = getItem("windypath-friend");
+  if (cacheFriendsData !== null) {
+    console.log("from cache")
+    showFriends(cacheFriendsData)
+  } else {
+    console.log("not cache")
+    $.get("https://getgithubfriend.azurewebsites.net/api/getGithubFriend", { name: '0x2E,ch549235962,kwh3884858,Chengke123' }, function(data) {
+      showFriends(data)
+      setItem("windypath-friend", data)
+    });
+  }
+});
+
+
+
+
+function setItem(key, value, maxAge = 30 * 60 * 60 * 1000) {
+    
+    
+    let result  = {
+      data : value
+    }
+    
+    
+    if(maxAge){
+      
+      
+      result.expireTime = Date.now() + maxAge;
+    }
+    
+    
+    
+    window.localStorage.setItem(key, JSON.stringify(result));
+}
+
+function getItem(key) {
+  
+  let result = JSON.parse(window.localStorage.getItem(key));
+  
+  
+  if(result){ 
+      
+      
+      
+      if(result.expireTime <= Date.now()){
+          window.localStorage.removeItem(key);
+          return null;
+      }  
+      
+      
+      return result.data;
+  }
+  
+  
+  return null;
+}
+
+function showFriends(data) {
+  var dataObj = JSON.parse(data)
+  Object.keys(dataObj['data']).forEach(element => {
+    
+    $("div.post-content").append(' \
+      <div class="friend-link"> \
+        <div class="friend-link-avatar"> \
+          <img src="' + dataObj['data'][element]['avatarUrl'] + '"/> \
+        </div> \
+        <div> \
+          <div class="friend-link-name">' + dataObj['data'][element]['name'] + '</div> \
+          <div class="friend-link-bio">' + dataObj['data'][element]['bioHTML'] + '</div> \
+        </div>\
+        <a class="friend-link-button" href="https://github.com/'+ dataObj['data'][element]['login']+'" target="_blank""><i class="fa-brands fa-github"></i></a>\
+        <a class="friend-link-button-2" href="' + dataObj['data'][element]['websiteUrl'] +'" target="_blank"><i class="fa-regular fa-file"></i></i></a>\
+      </div>'
+    )
+  });
+}
+
+</script>
+
+
+
+
+]]></content:encoded>
     </item>
   </channel>
 </rss>
