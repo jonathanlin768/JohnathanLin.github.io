@@ -1425,7 +1425,7 @@ $( document ).ready(function() {
     showFriends(cacheFriendsData)
   } else {
     console.log("not cache")
-    $.get("https://getgithubfriend.azurewebsites.net/api/getGithubFriend", { name: '0x2E,ch549235962,kwh3884858,Chengke123' }, function(data) {
+    $.get("https://getgithubfriend.azurewebsites.net/api/getGithubFriend", { name: '0x2E,ch549235962,kwh3884858,Chengke123,kirsi0' }, function(data) {
       showFriends(data)
       setItem("windypath-friend", data)
     });
