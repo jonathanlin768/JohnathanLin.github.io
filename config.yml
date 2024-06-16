@@ -123,8 +123,15 @@ languages:
 
       label:
         text: "风萧古道"
-        # icon: /apple-touch-icon.png
+        icon: /logo.png
         iconHeight: 35
+      assets:
+        favicon: /logo.png
+        favicon16x16: /logo.png
+        favicon32x32: /logo.png
+        apple_touch_icon: /logo.png
+        safari_pinned_tab: /logo.png
+
 
       profileMode:
         enabled: false

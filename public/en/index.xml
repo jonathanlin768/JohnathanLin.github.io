@@ -1417,7 +1417,7 @@ As a child, I always lost in computer games. Suddenly, I became interested in we
       <guid>http://localhost:1313/en/myfriends/</guid>
       <description></description>
       <content:encoded><![CDATA[<script>
-    
+  
 $( document ).ready(function() {
   var cacheFriendsData = getItem("windypath-friend");
   if (cacheFriendsData !== null) {
@@ -1479,8 +1479,7 @@ function getItem(key) {
 function showFriends(data) {
   var dataObj = JSON.parse(data)
   Object.keys(dataObj['data']).forEach(element => {
-    
-    $("div.post-content").append(' \
+    var html = ' \
       <div class="friend-link"> \
         <div class="friend-link-avatar"> \
           <img src="' + dataObj['data'][element]['avatarUrl'] + '"/> \
@@ -1490,14 +1489,13 @@ function showFriends(data) {
           <div class="friend-link-bio">' + dataObj['data'][element]['bioHTML'] + '</div> \
         </div>\
         <a class="friend-link-button" href="https://github.com/'+ dataObj['data'][element]['login']+'" target="_blank""><i class="fa-brands fa-github"></i></a>\
-      </div>'
-    )
-    if (dataObj['data'][element]['websiteUrl'] != null) {
-      $("div.post-content").append('<a class="friend-link-button-2" href="' + dataObj['data'][element]['websiteUrl'] +'" target="_blank"><i class="fa-regular fa-file"></i></i></a></div>')
-    } else {
-      $("div.post-content").append('<a class="friend-link-button-2 friend-link-disabled"><i class="fa-regular fa-file"></i></i></a></div>')
+    '
+    if (dataObj['data'][element]['websiteUrl'] != null) { 
+      html += '<a class="friend-link-button-2" href="' + dataObj['data'][element]['websiteUrl'] +'" target="_blank"><i class="fa-regular fa-file"></i></i></a></div>'
+    } else { 
+      html += '<a class="friend-link-button-2 friend-link-disabled"><i class="fa-regular fa-file"></i></i></a></div>'
     }
-
+    $("div.post-content").append(html)
   });
 }
 

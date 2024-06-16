@@ -40,7 +40,8 @@
 <h2 id="经历得越多越能成长">经历得越多，越能成长</h2>
 <p>这一路走来，我听了太多道理。有些道理，别人说了，自己不一定懂；有些道理，别人不会告诉你；有些道理，别人说给你听，是为了他们自己。但是这些所有的道理，自己没有经历过，就永远也无法完全理解。纸上得来终觉浅，绝知
 此事要躬行。</p>
-<h2 id="永不自我设限">永不自我设限</h2>]]></content:encoded>
+<h2 id="永不自我设限">永不自我设限</h2>
+<h2 id="永远不要因为恐惧而驻足勇往直前">永远不要因为恐惧而驻足，勇往直前</h2>]]></content:encoded>
     </item>
     <item>
       <title>用爱发电项目开发两个月的心得体会</title>
@@ -5896,7 +5897,7 @@ Location、History
 <p>而究其原因，是因为在自动生成的CommentsMapper.xml中，对TEXT字段的定义是不一样的。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;resultMap</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;BaseResultMap&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;com.windypath.seer.pojo.Comments&#34;</span><span style="color:#f92672">&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;id</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#a6e22e">jdbcType=</span><span style="color:#e6db74">&#34;INTEGER&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">/&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;result</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;uid&#34;</span> <span style="color:#a6e22e">jdbcType=</span><span style="color:#e6db74">&#34;INTEGER&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;uid&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;result</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;uid&#34;</span> <span style="color:#960050;background-color:#1e0010">j</span><span style="color:#a6e22e">dbcType=</span><span style="color:#e6db74">&#34;INTEGER&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;uid&#34;</span> <span style="color:#f92672">/&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;result</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;aid&#34;</span> <span style="color:#a6e22e">jdbcType=</span><span style="color:#e6db74">&#34;INTEGER&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;aid&#34;</span> <span style="color:#f92672">/&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;result</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;floor&#34;</span> <span style="color:#a6e22e">jdbcType=</span><span style="color:#e6db74">&#34;INTEGER&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;floor&#34;</span> <span style="color:#f92672">/&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;result</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;createDate&#34;</span> <span style="color:#a6e22e">jdbcType=</span><span style="color:#e6db74">&#34;TIMESTAMP&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;createDate&#34;</span> <span style="color:#f92672">/&gt;</span>
