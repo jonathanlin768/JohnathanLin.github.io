@@ -7,12 +7,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
-    <lastBuildDate>Sun, 21 Apr 2024 20:30:14 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 23 Jun 2024 19:30:14 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>35岁找不到工作,绝对不会是软件开发人员的结局</title>
       <link>http://localhost:1313/posts/35_not_the_end_of_software_developer/</link>
-      <pubDate>Sun, 21 Apr 2024 20:30:14 +0800</pubDate>
+      <pubDate>Sun, 23 Jun 2024 19:30:14 +0800</pubDate>
       <guid>http://localhost:1313/posts/35_not_the_end_of_software_developer/</guid>
       <description>&lt;p&gt;最近在Bilibili刷到了一个视频，是一个38岁老程序员找不到工作后，发了个视频发发牢骚。&lt;a href=&#34;https://www.bilibili.com/video/BV1CT421m7Mx&#34;&gt;视频链接&lt;/a&gt;。看了之后很有感慨，因为我自己在2023年也经历了总计4个多月的失业时光。在那段时间的自我怀疑让我印象深刻。不过本文并不是在此忆苦思甜，而是借由此视频，探讨35岁是否真的是软件开发人员的终点，软件人是否真的到了35岁就必须“退役”，找不到工作或者转行。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>最近在Bilibili刷到了一个视频，是一个38岁老程序员找不到工作后，发了个视频发发牢骚。<a href="https://www.bilibili.com/video/BV1CT421m7Mx">视频链接</a>。看了之后很有感慨，因为我自己在2023年也经历了总计4个多月的失业时光。在那段时间的自我怀疑让我印象深刻。不过本文并不是在此忆苦思甜，而是借由此视频，探讨35岁是否真的是软件开发人员的终点，软件人是否真的到了35岁就必须“退役”，找不到工作或者转行。</p>
@@ -40,8 +40,29 @@
 <h2 id="经历得越多越能成长">经历得越多，越能成长</h2>
 <p>这一路走来，我听了太多道理。有些道理，别人说了，自己不一定懂；有些道理，别人不会告诉你；有些道理，别人说给你听，是为了他们自己。但是这些所有的道理，自己没有经历过，就永远也无法完全理解。纸上得来终觉浅，绝知
 此事要躬行。</p>
+<p>我们生存的世界，时间与空间不断变化。我们遇到的问题是千奇百怪的，不再是上学时有标准答案。有时候工作上的一些问题，也许永远也没有办法做到标准答案，会让人很气馁。但是只要我们能够正确区分工作不等于自我价值，知道离开了工作，它们就什么都不是，那么我们就能用更积极证明的方向来思考自己面对的问题，及问题背后更深层次的原因，而不是将产生问题的原因全部指向自己。</p>
+<p>当你自以为懂了很多道理，踩过不少的坑，也要记得不要“好为人师”。每个人都有自己的人生，有自己必须要踩的坑，也就是“人生的劫难”。虽然有些玄学，但是由于每个人性格、出身等一系列客观原因，每个人都有自己不得不面对的棘手问题。直接告诉他们答案，并不能让他们真的学会那些道理。不论是对长辈上级、同辈亲友还是晚辈孩子，都要记得尊重他们经历和成长的机会。</p>
 <h2 id="永不自我设限">永不自我设限</h2>
-<h2 id="永远不要因为恐惧而驻足勇往直前">永远不要因为恐惧而驻足，勇往直前</h2>]]></content:encoded>
+<p>我们讨论过35岁不好找工作的原因，但是每个行业都会有一些“更高难度”的部分，需要先行者去攻克。而35岁恰好就是一个黄金年龄：它正好积累了一部分在学校时学习的理论经验，也有在工作中积累的工作经验，直接面对过一些行业内棘手的问题；同时，35岁正值青壮年，虽不像刚毕业的毛头小子那样活力无限，但是连肝几周攻坚难题还是绰绰有余。我认为让35岁成为门槛的另一部分原因，是有一部分人看到年纪渐长，自觉竞争不过年轻人，于是自我设限，将自己难找工作归咎于年龄。</p>
+<p>Wine软件是一款能在Mac、Linux系统上运行Windows软件的一个框架。他们常年在全世界范围内招聘员工，进行远程开发Wine软件。他们正在招聘General Wine Developer （https://www.codeweavers.com/about/jobs），招聘要求大致如下：</p>
+<pre tabindex="0"><code>[Requirements]
+
+Strong C language skills. Compilers, linkers, macros and function pointers don&#39;t scare you.
+Excellent debugging skills. You will be debugging applications whose source you do not have.
+Familiarity with developing on and administering a Linux system (bash, unix utilities, package management, etc)
+Ability to understand and debug build systems (Makefiles, autotools, etc)
+Understanding of good development practices (source control, atomic commits, code readability, test-driven development)
+Self-motivated to find work and learn new skills
+No exposure to Microsoft code or reverse-engineering of Microsoft software
+
+[Bonus skills we want] not required, but it helps
+
+Win32 programming experience
+Systems-level programming experience
+Previous contributions to open source software
+</code></pre><p>试问又有多少程序员能做到呢？而Wine软件是开源软件，任何人不需要登录就可以获得源码，又有多少人愿意自己研究代码，参与开发呢？</p>
+<p>如果在中国没有办法找到工作，那么是否考虑过学习英语，去海外发展呢？真正对软件行业充满热忱，愿意投入时间和精力在行业中深耕，或者愿意花时间分析可能存在的需求，通过自己的软件能力去解决，也不至于无法以此为生。在上一个10年里，软件行业培训催生出一批为了钱而来的程序员，在经济下行的时候自然要稍微淘汰一部分人。但是总体来看，软件行业、计算机行业，正在经历AI的变革，还在影响着我们生活的方方面面，我们又如何能直接下一个“软件行业没啥前途”的结论呢？</p>
+<p>就算真的做不到满怀热忱推动行业发展，那么做一名先行者，带领行业中的新人少走弯路，何尝不是功德一件呢？诸如左耳朵耗子、阮一峰、廖雪峰、游戏行业的云风等前辈，几十年如一日愿意分享自己的见识和理解，他们正在推动大家编写更加优质的软件，带领大家进行更为深度的思考。</p>]]></content:encoded>
     </item>
     <item>
       <title>用爱发电项目开发两个月的心得体会</title>
@@ -5897,7 +5918,7 @@ Location、History
 <p>而究其原因，是因为在自动生成的CommentsMapper.xml中，对TEXT字段的定义是不一样的。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;resultMap</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;BaseResultMap&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;com.windypath.seer.pojo.Comments&#34;</span><span style="color:#f92672">&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;id</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#a6e22e">jdbcType=</span><span style="color:#e6db74">&#34;INTEGER&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">/&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;result</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;uid&#34;</span> <span style="color:#960050;background-color:#1e0010">j</span><span style="color:#a6e22e">dbcType=</span><span style="color:#e6db74">&#34;INTEGER&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;uid&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;result</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;uid&#34;</span> <span style="color:#a6e22e">jdbcType=</span><span style="color:#e6db74">&#34;INTEGER&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;uid&#34;</span> <span style="color:#f92672">/&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;result</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;aid&#34;</span> <span style="color:#a6e22e">jdbcType=</span><span style="color:#e6db74">&#34;INTEGER&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;aid&#34;</span> <span style="color:#f92672">/&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;result</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;floor&#34;</span> <span style="color:#a6e22e">jdbcType=</span><span style="color:#e6db74">&#34;INTEGER&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;floor&#34;</span> <span style="color:#f92672">/&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;result</span> <span style="color:#a6e22e">column=</span><span style="color:#e6db74">&#34;createDate&#34;</span> <span style="color:#a6e22e">jdbcType=</span><span style="color:#e6db74">&#34;TIMESTAMP&#34;</span> <span style="color:#a6e22e">property=</span><span style="color:#e6db74">&#34;createDate&#34;</span> <span style="color:#f92672">/&gt;</span>
