@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/en/categories/</loc>
-    <lastmod>2023-12-04T17:27:44+08:00</lastmod>
+    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
@@ -15,11 +15,21 @@
                 href="http://localhost:1313/en/categories/"
                 />
   </url><url>
-    <loc>http://localhost:1313/en/categories/note/</loc>
-    <lastmod>2023-12-04T17:27:44+08:00</lastmod>
+    <loc>http://localhost:1313/en/posts/using_weiyan_strategy_to_analyze_software_possibly/</loc>
+    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="http://localhost:1313/posts/using_weiyan_strategy_to_analyze_software_possibly/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/en/posts/using_weiyan_strategy_to_analyze_software_possibly/"
+                />
   </url><url>
     <loc>http://localhost:1313/en/posts/</loc>
-    <lastmod>2023-12-04T17:27:44+08:00</lastmod>
+    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
@@ -32,6 +42,35 @@
                 />
   </url><url>
     <loc>http://localhost:1313/en/categories/tech/</loc>
+    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/en/</loc>
+    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="http://localhost:1313/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/en/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/en/categories/%E6%9D%82%E8%B0%88/</loc>
+    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="http://localhost:1313/categories/%E6%9D%82%E8%B0%88/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/en/categories/%E6%9D%82%E8%B0%88/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/en/categories/note/</loc>
     <lastmod>2023-12-04T17:27:44+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/en/posts/java_juc_briefly/</loc>
@@ -45,19 +84,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="http://localhost:1313/en/posts/java_juc_briefly/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/en/</loc>
-    <lastmod>2023-12-04T17:27:44+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="http://localhost:1313/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/en/"
                 />
   </url><url>
     <loc>http://localhost:1313/en/posts/how_to_split_a_string_in_cpp/</loc>
