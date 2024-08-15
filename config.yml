@@ -45,20 +45,6 @@ params:
   tocopen: true
   ShowFullTextinRSS: true   # RSS 输出全文
 
-  assets:
-    # disableHLJS: true # to disable highlight.js
-    # disableFingerprinting: true
-    favicon: "<link / abs url>"
-    favicon16x16: "<link / abs url>"
-    favicon32x32: "<link / abs url>"
-    apple_touch_icon: "<link / abs url>"
-    safari_pinned_tab: "<link / abs url>"
-
-  label:
-    text: "Windypath"
-    # icon: /apple-touch-icon.png
-    iconHeight: 35
-
 
   # home-info mode
   homeInfoParams:
@@ -188,6 +174,18 @@ languages:
       homeInfoParams:
         Title: "\U0001F44B Hi, I'm Johnathan, Nice to meet you."
         Content: "Only software technique articles are in this website. I hope you can get improved here."
+
+      label:
+        text: "WindyPath"
+        icon: /logo.png
+        iconHeight: 35
+      assets:
+        favicon: /logo.png
+        favicon16x16: /logo.png
+        favicon32x32: /logo.png
+        apple_touch_icon: /logo.png
+        safari_pinned_tab: /logo.png
+
       profileMode:
         enabled: false
         title: Johnathan Lin

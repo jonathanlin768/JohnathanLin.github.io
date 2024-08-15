@@ -2,8 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://localhost:1313/en/posts/35_not_the_end_of_software_developer/</loc>
+    <lastmod>2024-06-23T19:30:14+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="http://localhost:1313/posts/35_not_the_end_of_software_developer/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/en/posts/35_not_the_end_of_software_developer/"
+                />
+  </url><url>
     <loc>http://localhost:1313/en/categories/</loc>
-    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
+    <lastmod>2024-06-23T19:30:14+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
@@ -14,6 +27,77 @@
                 hreflang="en"
                 href="http://localhost:1313/en/categories/"
                 />
+  </url><url>
+    <loc>http://localhost:1313/en/posts/</loc>
+    <lastmod>2024-06-23T19:30:14+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="http://localhost:1313/posts/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/en/posts/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/en/</loc>
+    <lastmod>2024-06-23T19:30:14+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="http://localhost:1313/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/en/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/en/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</loc>
+    <lastmod>2024-06-23T19:30:14+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/en/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/en/categories/%E6%9D%82%E8%B0%88/</loc>
+    <lastmod>2024-06-23T19:30:14+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="http://localhost:1313/categories/%E6%9D%82%E8%B0%88/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/en/categories/%E6%9D%82%E8%B0%88/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/en/posts/two_month_voluntary_project_conclusion/</loc>
+    <lastmod>2024-04-14T18:59:08+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="http://localhost:1313/posts/two_month_voluntary_project_conclusion/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/en/posts/two_month_voluntary_project_conclusion/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/en/categories/synthesis/</loc>
+    <lastmod>2024-04-14T18:59:08+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/en/categories/tech/</loc>
+    <lastmod>2024-04-14T18:59:08+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/en/posts/using_weiyan_strategy_to_analyze_software_possibly/</loc>
     <lastmod>2024-03-10T11:59:48+08:00</lastmod>
@@ -26,48 +110,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="http://localhost:1313/en/posts/using_weiyan_strategy_to_analyze_software_possibly/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/en/posts/</loc>
-    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="http://localhost:1313/posts/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/en/posts/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/en/categories/tech/</loc>
-    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/en/</loc>
-    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="http://localhost:1313/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/en/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/en/categories/%E6%9D%82%E8%B0%88/</loc>
-    <lastmod>2024-03-10T11:59:48+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="http://localhost:1313/categories/%E6%9D%82%E8%B0%88/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/en/categories/%E6%9D%82%E8%B0%88/"
                 />
   </url><url>
     <loc>http://localhost:1313/en/categories/note/</loc>
