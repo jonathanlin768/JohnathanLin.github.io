@@ -38,8 +38,7 @@
 <li>更进一步，如果团队中需要自己，那么可以做一些力所能及的事情帮助更多的人。站在团队的角度上思考问题，理解更高层面的责任，并且尝试通过自己的力量做一些事情。</li>
 </ol>
 <h2 id="经历得越多越能成长">经历得越多，越能成长</h2>
-<p>这一路走来，我听了太多道理。有些道理，别人说了，自己不一定懂；有些道理，别人不会告诉你；有些道理，别人说给你听，是为了他们自己。但是这些所有的道理，自己没有经历过，就永远也无法完全理解。纸上得来终觉浅，绝知
-此事要躬行。</p>
+<p>这一路走来，我听了太多道理。有些道理，别人说了，自己不一定懂；有些道理，别人不会告诉你；有些道理，别人说给你听，是为了他们自己。但是这些所有的道理，自己没有经历过，就永远也无法完全理解。纸上得来终觉浅，绝知此事要躬行。</p>
 <p>我们生存的世界，时间与空间不断变化。我们遇到的问题是千奇百怪的，不再是上学时有标准答案。有时候工作上的一些问题，也许永远也没有办法做到标准答案，会让人很气馁。但是只要我们能够正确区分工作不等于自我价值，知道离开了工作，它们就什么都不是，那么我们就能用更积极证明的方向来思考自己面对的问题，及问题背后更深层次的原因，而不是将产生问题的原因全部指向自己。</p>
 <p>当你自以为懂了很多道理，踩过不少的坑，也要记得不要“好为人师”。每个人都有自己的人生，有自己必须要踩的坑，也就是“人生的劫难”。虽然有些玄学，但是由于每个人性格、出身等一系列客观原因，每个人都有自己不得不面对的棘手问题。直接告诉他们答案，并不能让他们真的学会那些道理。不论是对长辈上级、同辈亲友还是晚辈孩子，都要记得尊重他们经历和成长的机会。</p>
 <h2 id="永不自我设限">永不自我设限</h2>
@@ -3508,7 +3507,7 @@ SELinux设置为disable。
 </span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">600</span> ~/.ssh/authorized_keys
 </span></span></code></pre></div><p>至此，配置服务器1信任服务器2完成。</p>
 <h4 id="在服务器2上配置服务器1的信任">在服务器2上配置服务器1的信任</h4>
-<p>执行方法与服务器1完全一致。在服务器2上，使用system2登录，然后使用ssh-keygen –t rsa 生成公私钥，使用scp复制公钥到服务器1的system1的~目录下，在服务器1上将服务器2的id_rsa.pub公钥移动到~/.ssh/下并改名为authorized_keys。</p>
+<p>执行方法与服务器1完全一致。在服务器2上，使用system2登录，然后使用ssh-keygen –t rsa 生成公私钥，使用scp复制公钥到服务器1的system1的<del>目录下，在服务器1上将服务器2的id_rsa.pub公钥移动到</del>/.ssh/下并改名为authorized_keys。</p>
 <h4 id="重启ssh服务">重启ssh服务</h4>
 <p>在两台服务器上分别使用如下命令以重启ssh服务。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>/etc/init.d/ssh stop 
@@ -5081,7 +5080,7 @@ vue-cli（vue脚手架）超详细教程：<a href="https://blog.csdn.net/wulala
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">typeof</span> <span style="color:#66d9ef">null</span>		<span style="color:#75715e">//object
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">typeof</span> <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>	<span style="color:#75715e">//function
 </span></span></span></code></pre></div><p>注：null也是对象</p>
-<p>1~4行是值类型，5~8行是引用类型，但JS只能区分函数与非函数，而不能区分数组和对象。</p>
+<p>1<del>4行是值类型，5</del>8行是引用类型，但JS只能区分函数与非函数，而不能区分数组和对象。</p>
 <h2 id="变量计算">变量计算</h2>
 <h3 id="强制类型转换">强制类型转换</h3>
 <h4 id="字符串拼接">字符串拼接</h4>
