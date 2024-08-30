@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on 风萧古道 - 勤学苦练，年复一年</title>
-    <link>https://windypath.com/posts/</link>
+    <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on 风萧古道 - 勤学苦练，年复一年</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
     <lastBuildDate>Sun, 23 Jun 2024 19:30:14 +0800</lastBuildDate>
-    <atom:link href="https://windypath.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>35岁找不到工作,绝对不会是软件开发人员的结局</title>
-      <link>https://windypath.com/posts/35_not_the_end_of_software_developer/</link>
+      <link>http://localhost:1313/posts/35_not_the_end_of_software_developer/</link>
       <pubDate>Sun, 23 Jun 2024 19:30:14 +0800</pubDate>
-      <guid>https://windypath.com/posts/35_not_the_end_of_software_developer/</guid>
+      <guid>http://localhost:1313/posts/35_not_the_end_of_software_developer/</guid>
       <description>&lt;p&gt;最近在Bilibili刷到了一个视频，是一个38岁老程序员找不到工作后，发了个视频发发牢骚。&lt;a href=&#34;https://www.bilibili.com/video/BV1CT421m7Mx&#34;&gt;视频链接&lt;/a&gt;。看了之后很有感慨，因为我自己在2023年也经历了总计4个多月的失业时光。在那段时间的自我怀疑让我印象深刻。不过本文并不是在此忆苦思甜，而是借由此视频，探讨35岁是否真的是软件开发人员的终点，软件人是否真的到了35岁就必须“退役”，找不到工作或者转行。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>最近在Bilibili刷到了一个视频，是一个38岁老程序员找不到工作后，发了个视频发发牢骚。<a href="https://www.bilibili.com/video/BV1CT421m7Mx">视频链接</a>。看了之后很有感慨，因为我自己在2023年也经历了总计4个多月的失业时光。在那段时间的自我怀疑让我印象深刻。不过本文并不是在此忆苦思甜，而是借由此视频，探讨35岁是否真的是软件开发人员的终点，软件人是否真的到了35岁就必须“退役”，找不到工作或者转行。</p>
 <h1 id="35岁不是软件人的终点">35岁不是软件人的终点</h1>
@@ -65,9 +65,9 @@ Previous contributions to open source software
     </item>
     <item>
       <title>用爱发电项目开发两个月的心得体会</title>
-      <link>https://windypath.com/posts/two_month_voluntary_project_conclusion/</link>
+      <link>http://localhost:1313/posts/two_month_voluntary_project_conclusion/</link>
       <pubDate>Sun, 14 Apr 2024 18:59:08 +0800</pubDate>
-      <guid>https://windypath.com/posts/two_month_voluntary_project_conclusion/</guid>
+      <guid>http://localhost:1313/posts/two_month_voluntary_project_conclusion/</guid>
       <description>&lt;p&gt;前阵子我参加了一个用爱发电的独立游戏项目，是由一批网友聚集起来想要复刻某三国单机游戏的团队。“用爱发电”，即不获取酬劳，为了自己的梦想去努力奋斗。从24年2月4日开始得知这个组，2月7日进组，到4月4日离开，共经历了两个月。&lt;/p&gt;
 &lt;p&gt;我不想过多讨论这个游戏开发组中遇到的问题，因为在这个组的问题有其特殊性，并不具有普遍性。我想探讨的是个人开发者面对用爱发电项目时需要注意的内容，和一些心得体会。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>前阵子我参加了一个用爱发电的独立游戏项目，是由一批网友聚集起来想要复刻某三国单机游戏的团队。“用爱发电”，即不获取酬劳，为了自己的梦想去努力奋斗。从24年2月4日开始得知这个组，2月7日进组，到4月4日离开，共经历了两个月。</p>
@@ -116,9 +116,9 @@ Previous contributions to open source software
     </item>
     <item>
       <title>以魏延“子午谷奇谋”讨论软件需求可行性问题</title>
-      <link>https://windypath.com/posts/using_weiyan_strategy_to_analyze_software_possibly/</link>
+      <link>http://localhost:1313/posts/using_weiyan_strategy_to_analyze_software_possibly/</link>
       <pubDate>Sun, 10 Mar 2024 11:59:48 +0800</pubDate>
-      <guid>https://windypath.com/posts/using_weiyan_strategy_to_analyze_software_possibly/</guid>
+      <guid>http://localhost:1313/posts/using_weiyan_strategy_to_analyze_software_possibly/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;摘自某百科：《魏略》蜀军大将魏延认为，长安守将夏侯楙年少，娇生惯养、怯而无谋。今日假若我魏延领精兵五千，背负粮草五千，直由山道深入，寻秦岭而向东，到达子午再往北行。不过十日就能抵达长安。夏侯楙见我军突然出现，必然乘船而逃。如此一来，长安城内只剩下御史、京兆太守而已。长安北门有散民之谷，足以供应我军粮食。而由东方相会合，需要二十日，届时丞相您在由斜谷赶来，必定可以在此与我会师，这么一来，可以一举平定咸阳以西。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -147,9 +147,9 @@ Previous contributions to open source software
     </item>
     <item>
       <title>MQTT协议中可变长度的具体计算方式（有计算过程解析）</title>
-      <link>https://windypath.com/posts/mqtt_remain_length_calculate/</link>
+      <link>http://localhost:1313/posts/mqtt_remain_length_calculate/</link>
       <pubDate>Tue, 26 Dec 2023 16:06:34 +0800</pubDate>
-      <guid>https://windypath.com/posts/mqtt_remain_length_calculate/</guid>
+      <guid>http://localhost:1313/posts/mqtt_remain_length_calculate/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;本文介绍MQTT协议中，固定报头中的可变长度部分的计算方式。通过提供一些例子，将其他介绍MQTT协议的文章中没有仔细说明的计算部分进行解释。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -266,9 +266,9 @@ Previous contributions to open source software
     </item>
     <item>
       <title>关于游戏服务器配置表功能的探讨</title>
-      <link>https://windypath.com/posts/config_table_project/</link>
+      <link>http://localhost:1313/posts/config_table_project/</link>
       <pubDate>Sun, 24 Dec 2023 16:15:34 +0800</pubDate>
-      <guid>https://windypath.com/posts/config_table_project/</guid>
+      <guid>http://localhost:1313/posts/config_table_project/</guid>
       <description>&lt;h1 id=&#34;简介&#34;&gt;简介&lt;/h1&gt;
 &lt;p&gt;在游戏开发中，配置表是策划与程序员之间针对功能模块开发而搭建的桥梁。配置表在游戏开发中扮演非常重要的角色。策划需要向配置表填入各种数据，以完成功能数值的配置；程序员需要在项目代码中读取配置表，根据配置表和需求决定的业务逻辑来开发功能模块。&lt;/p&gt;
 &lt;p&gt;本文想探讨接触过的两个项目的配置表功能设计。在本文中，我不会泄露项目相关的具体信息，仅针对方案进行讨论。&lt;/p&gt;</description>
@@ -501,9 +501,9 @@ A[Excel文件]-->|Python转换|B[Csv文件]-->|Java代码读取|C[Zookeeper节�
     </item>
     <item>
       <title>Java并发编程中上锁的几种方式</title>
-      <link>https://windypath.com/posts/java_juc_briefly/</link>
+      <link>http://localhost:1313/posts/java_juc_briefly/</link>
       <pubDate>Mon, 04 Dec 2023 17:27:44 +0800</pubDate>
-      <guid>https://windypath.com/posts/java_juc_briefly/</guid>
+      <guid>http://localhost:1313/posts/java_juc_briefly/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;前言：本文想要介绍Synchronized，ReentrantLock和ReentrantLock的Condition的相关用法。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -975,9 +975,9 @@ t2一共输出了 49986 次
     </item>
     <item>
       <title>如何用C&#43;&#43;分割一个字符串？</title>
-      <link>https://windypath.com/posts/how_to_split_a_string_in_cpp/</link>
+      <link>http://localhost:1313/posts/how_to_split_a_string_in_cpp/</link>
       <pubDate>Sun, 02 Jul 2023 11:54:44 +0800</pubDate>
-      <guid>https://windypath.com/posts/how_to_split_a_string_in_cpp/</guid>
+      <guid>http://localhost:1313/posts/how_to_split_a_string_in_cpp/</guid>
       <description>&lt;h1 id=&#34;前言&#34;&gt;前言&lt;/h1&gt;
 &lt;p&gt;在上机面试的时候，遇到了一道题，它的输入是两行字符串，每行字符串有未知数量的数字（两行数字数量一致），用空格分隔开，输入形如：&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;12 34 567 888 99 100
@@ -1216,9 +1216,9 @@ D
     </item>
     <item>
       <title>CSAPP第二章-信息的表示与处理</title>
-      <link>https://windypath.com/posts/csapp_chapter2_representing_manipulating_info/</link>
+      <link>http://localhost:1313/posts/csapp_chapter2_representing_manipulating_info/</link>
       <pubDate>Sun, 30 Apr 2023 21:08:43 +0800</pubDate>
-      <guid>https://windypath.com/posts/csapp_chapter2_representing_manipulating_info/</guid>
+      <guid>http://localhost:1313/posts/csapp_chapter2_representing_manipulating_info/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;23年3月23日，我在公司进行了一次分享会，内容是本文的内容。在分享前，我重新对文章知识点进行了梳理，补充了很多细节。现将补充的细节重新编写到本文中。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -2106,9 +2106,9 @@ IEEE标准要求使用“向偶数舍入”，不是我们常说的四舍五入�
     </item>
     <item>
       <title>我的自我介绍</title>
-      <link>https://windypath.com/posts/about_myself/</link>
+      <link>http://localhost:1313/posts/about_myself/</link>
       <pubDate>Sat, 29 Apr 2023 00:00:00 +0800</pubDate>
-      <guid>https://windypath.com/posts/about_myself/</guid>
+      <guid>http://localhost:1313/posts/about_myself/</guid>
       <description>&lt;h1 id=&#34;欢迎&#34;&gt;欢迎&lt;/h1&gt;
 &lt;p&gt;你好啊，我是本站的站长，我的花名是凌虚。&lt;/p&gt;
 &lt;p&gt;“凌虚”是动漫《秦时明月》中，张良的佩剑名。凌虚剑身修长秀美,通体晶莹夺目,虽为利器却不见血腥之气,剑身之上有一十八颗碧血丹心,高贵儒雅之风浓重。而其持剑人为张良。取此花名，有暗含自己才智比肩张良之嫌。&lt;/p&gt;
@@ -2138,9 +2138,9 @@ Telegram: @windypath</p>]]></content:encoded>
     </item>
     <item>
       <title>Windows XP虚拟机中文版无需激活下载</title>
-      <link>https://windypath.com/posts/nostalgic_winxp/</link>
+      <link>http://localhost:1313/posts/nostalgic_winxp/</link>
       <pubDate>Sun, 02 Oct 2022 18:51:17 +0800</pubDate>
-      <guid>https://windypath.com/posts/nostalgic_winxp/</guid>
+      <guid>http://localhost:1313/posts/nostalgic_winxp/</guid>
       <description>&lt;h1 id=&#34;在这里直接下载我最后完成的虚拟机镜像&#34;&gt;在这里直接下载我最后完成的虚拟机镜像&lt;/h1&gt;
 &lt;p&gt;虚拟机镜像下载：&lt;/p&gt;
 &lt;p&gt;链接：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l&lt;/p&gt;
@@ -2193,9 +2193,9 @@ Windows XP英文版默认没有中文语言包。
     </item>
     <item>
       <title>Java TreeSet的一些用法和特性</title>
-      <link>https://windypath.com/posts/about_java_treeset/</link>
+      <link>http://localhost:1313/posts/about_java_treeset/</link>
       <pubDate>Sat, 18 Jun 2022 17:10:44 +0800</pubDate>
-      <guid>https://windypath.com/posts/about_java_treeset/</guid>
+      <guid>http://localhost:1313/posts/about_java_treeset/</guid>
       <description>&lt;p&gt;就是一些例子啦。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>就是一些例子啦。</p>
 <h2 id="先看一个例子kotlin实现">先看一个例子（kotlin实现）</h2>
@@ -2320,9 +2320,9 @@ TreeSet虽然可以边插边排序，但是它只允许一次插入，插入之�
     </item>
     <item>
       <title>Linux C&#43;&#43; Socket实战</title>
-      <link>https://windypath.com/posts/linux_socket_programming/</link>
+      <link>http://localhost:1313/posts/linux_socket_programming/</link>
       <pubDate>Sat, 30 Apr 2022 23:23:49 +0800</pubDate>
-      <guid>https://windypath.com/posts/linux_socket_programming/</guid>
+      <guid>http://localhost:1313/posts/linux_socket_programming/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;本文主要介绍Linux C++ 基础Socket网络编程。
 大部分知识来自于网站：&lt;a href=&#34;https://www.geeksforgeeks.org/socket-programming-cc/&#34;&gt;https://www.geeksforgeeks.org/socket-programming-cc/&lt;/a&gt;&lt;/p&gt;
@@ -2516,9 +2516,9 @@ receive: hello from server
     </item>
     <item>
       <title>传统软件服务器与游戏服务器架构区别</title>
-      <link>https://windypath.com/posts/compare_web_with_game_server/</link>
+      <link>http://localhost:1313/posts/compare_web_with_game_server/</link>
       <pubDate>Sat, 16 Apr 2022 18:15:44 +0800</pubDate>
-      <guid>https://windypath.com/posts/compare_web_with_game_server/</guid>
+      <guid>http://localhost:1313/posts/compare_web_with_game_server/</guid>
       <description>&lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -2727,10 +2727,185 @@ A[客户端]-->|tcp发送的protobuf|B[Gate的Netty解包]-->|actor内部消息�
 </ul>]]></content:encoded>
     </item>
     <item>
+      <title>独立个人项目开发心得 - 任务切分、挑战性、实用性和半途而废</title>
+      <link>http://localhost:1313/posts/individual_project_experience/</link>
+      <pubDate>Tue, 05 Apr 2022 18:37:07 +0800</pubDate>
+      <guid>http://localhost:1313/posts/individual_project_experience/</guid>
+      <description>&lt;p&gt;在写文章前容许我啰嗦一下：对于软件开发，我走了不少弯路，有时觉得自己作为API侠，无所不能，有时又觉得自己很多LeetCode题写不出来，无能为力。我有一个博客，但是写满了自己的絮絮叨叨，真正有本领的东西九牛一毛。&lt;/p&gt;
+&lt;p&gt;我甚至没有自己的“代表作”，因为我是一个急性子，想马上得到结果（事实上计算机真能马上给出结果，但开发过程不行）。我经常在“造自己的轮子”和“用别人的轮子”之间徘徊，“造自己的轮子”比较有成就感，但是难度其实很大，需要踩很多别人踩过的坑；“用别人的轮子”则没有什么成就感，做出来也不像是自己做的。而平时工作中，每天都在用别人的轮子，自己真正从比较底层开始实现的情况是非常少的，导致我在闲暇时间也不想用别人的轮子。&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>在写文章前容许我啰嗦一下：对于软件开发，我走了不少弯路，有时觉得自己作为API侠，无所不能，有时又觉得自己很多LeetCode题写不出来，无能为力。我有一个博客，但是写满了自己的絮絮叨叨，真正有本领的东西九牛一毛。</p>
+<p>我甚至没有自己的“代表作”，因为我是一个急性子，想马上得到结果（事实上计算机真能马上给出结果，但开发过程不行）。我经常在“造自己的轮子”和“用别人的轮子”之间徘徊，“造自己的轮子”比较有成就感，但是难度其实很大，需要踩很多别人踩过的坑；“用别人的轮子”则没有什么成就感，做出来也不像是自己做的。而平时工作中，每天都在用别人的轮子，自己真正从比较底层开始实现的情况是非常少的，导致我在闲暇时间也不想用别人的轮子。</p>
+<h2 id="啰嗦一下自己的经历">啰嗦一下自己的经历：</h2>
+<p>2004年，我家买了电脑，我也接触了很多电脑上的游戏。但是也许是我心浮气躁或者没有游戏天赋，我总是在游戏里输，总是追不上邻居小伙伴；</p>
+<p>2008年，我萌生了“自己写一个什么东西”的想法。</p>
+<p>2009年夏，小学毕业的我开始摆弄魔兽地图编辑器，虽然一点脚本都没写，做出来的游戏也粗制滥造。也开始查找“如何创建一个个人网站”。</p>
+<p>2010年，在和初中新同学混熟之后，我们打算做一个班级网站，我找了一圈发现5566和phpwindy有免费的论坛可以注册，我们注册了一个论坛，并且想把每天的作业更新发布上去。但事实上那位同学仅发布过一次作业。</p>
+<p>2011年，我利用爸妈给我的打游戏的时间，将网页保存下来，咬着牙研读里面的html标签，然后给我当时加入的一个魔兽争霸群做了一个纯html的“官网”。在某免费空间上注册了一个只支持asp和基础web的免费空间，用8uFTP把网站上传上去。</p>
+<p>2014年，在学校的图书室，我昧着良心在寻找Dreamweaver的教程书，还真给我找到了。但是我根本没有自己的电脑，只能对着书发呆脑补。</p>
+<p>2015年夏，我高中毕业，填志愿的时候几乎把“软件工程”和“计算机科学与技术”都填的满满的。我查了资料发现“软件工程”比“计算机科学与技术”学费更贵，在询问了父母的意见之后，我把“软件工程”填到了第一位，然后和父母说，一定会考上。最后我考上了一个普通的本科，开始学习软件工程专业。</p>
+<p>2015年暑假，还有一件事情，我自己注册了（已经失效了的）域名，购买了阿里云的虚拟主机，配置了WordPress服务器，在上面写博客文章。仅仅是备份就花了一周，然后终于拿到了自己的备案号。我永远不会忘记第一次用自己的域名打开自己的网站那一刻的快乐。</p>
+<p>2016年春，我推开软件学院大楼某间实验室的大门，然后就我大学一年级就和学长们一起做项目，当时团队里缺人写html页面，而我正好已经算是html css入门了（完全不会js），开始仿写各大网站。然后想自己写一个象棋游戏，结果找资料就找了一个下午，最后不了了之。</p>
+<p>2017年夏，我跟着课程开始研究蚁群算法，最后实现了论文的内容。现在回想起来，对着论文依葫芦画瓢其实没什么技术含量，当打包运行并且在台上汇报之后，我真的觉得很快乐。不过，我并没有学到什么“真才实学”。</p>
+<p>2017年秋，在Java课上，我带领团队（其实开发就我一个人）用Bmob作为后端，安卓作为前端，开发了一个“今日特价”
+app。我对着github上的一个高仿微博的项目，拼命的抄各种代码。而最后我觉得写的太差，而把代码都删除了，真是太可惜了。</p>
+<p>2018年，我有了很多很多想法，但是都没有执行下去。</p>
+<ul>
+<li>我想自己从零搭建一个博客，用新学的SpringMVC，替换掉WordPress。</li>
+<li>我想做一个网站，叫做“预言”，简单来说就是让用户发表一些对未来的猜测，并且定一个时间，然后系统到了那个时间会提醒用户确认是否预言成功</li>
+<li>我想做一个安卓app，像三国志11一样，将所有三国的人物，历史事件，城池信息，战役，单挑，舌战都完整地汇总在里面，然后再像游戏一样，将“官渡之战”、“赤壁之战”、“夷陵之战”都像三国志11一样活灵活现地展示在地图上。</li>
+<li>当时我觉得做网页做系统已经很没有意思了，所以我决定做机器学习，深度学习。</li>
+<li>我想考研，因为不太满意自己的双非学历。</li>
+<li>那时候LPL竞猜挺火的，我和朋友商量写一个统计各队伍各选手的评分的系统。当时我先用jQuery写了前端，拼命的append html标签，导致我自己写完的时候都不知道自己在写什么。</li>
+</ul>
+<p>2019年春，考研没考上，但是数学二确实也让我复习了高数和线代。借助这点基础，我选了一个“手写汉字识别的研究”的题目，然后开始学习吴恩达的机器学习入门，学习深度学习Tensorflow，学习卷积神经网络等等，然后由于自己的电脑的显卡是1050ti，有点不够用，我就花钱去租专门用于训练的服务器，印象中要6块1小时。那时候为了一个好的结果，，花了不少家里的钱。</p>
+<p>2019年春夏之交，我的论文提交给了一个不太懂机器学习的老师，老师一看就觉得我在抄别人的论文。给我的建议是，我要么一意孤行继续这样答辩，但可能延毕；要么就把手写汉字识别改成某个系统，走需求分析，UML设计，数据库设计，开发，测试，结论的框架。当时我感到了深刻的绝望，自信心几乎被击垮，支离破碎。仗着自己之前也曾一个人咬着牙实现过不少系统，我决定把这个算法的研究都丢掉，转用百度提供的手写汉字识别api，包装成一个笔记系统，手写的笔记拍个照就转储成汉字。</p>
+<p>2019年秋，我入职某软件公司，我终于会写Vue了。在之前我总是写jQuery。我甚至以为jQuery是最好的解决方案。也许2015年前是，2015年后就不是了。</p>
+<p>2020年，我虽然是Java开发工程师，但是做了很多很多前端的内容。我被迫花很多时间去调CSS，去抄别人的js来完成移动端的h5网页的展示效果。我感到非常的厌恶，觉得自己的能力被封锁了。领导想弄区块链，想提供API接口给其他公司使用，但现在看来根本没有任何优势，仅仅是困兽之斗。另外，为了能把智能客服的问答预料快速查找，我学习了ElasticSearch数据库的用法。为了爬取一些信息，我学习了Python开发。</p>
+<p>2020年秋，我被“发配”北京，每天都过得很不开心，回家遥遥无期。本来说好的出差一个月，到了地方之后却要求长期驻地开发。而那套系统的代码很乱，找到机会我马上就离职了。</p>
+<p>2021年，我来到上海，接触了游戏服务器开发。我第一次发现服务器是如此的庞大。</p>
+<ul>
+<li>我学习了新的架构：Actor架构。</li>
+<li>我受到网上的信息“蛊惑”，觉得hibernate已经过时，但在游戏这个场景里，hibernate比mybatis更适合。</li>
+<li>我以前不理解Zookeeper到底用来做什么，他们总是只教我存和取，现在我知道可以配置系统信息；</li>
+<li>我自学过netty，但是不理解为什么要用netty，现在我知道了，封包解包，NIO这些情况用netty确实快人一步。</li>
+<li>我以前觉得mysql能力有限，但是在mysql前加一层缓存的话，速度就会成倍提高。还有索引和主键的配置也是有考究的，慢查询也是可以分析的。并不能武断的认为mysql能力不行。</li>
+<li>还有一些完全没听过的，比如protobuf，akka，集群，ticker，在我之前的认知里只有json是唯一通信的结构。</li>
+</ul>
+<p>2022年，我回过头来发现，我好像是从2021年之后，才真正打破“啥都会，啥都不会”的尴尬局面。在此之前，我好像什么都会：</p>
+<ul>
+<li>Web前端：html，css，js基础语法，jQuery的用法，简单的WebPack打包，简单的Vue</li>
+<li>Java后端：SpringMVC过渡到SpringBoot，MyBatis</li>
+<li>移动端：基础的Android开发</li>
+<li>数据库：使用过关系型的Oracle，mysql，也使用过非关系型的mongodb和ElasticSearch</li>
+<li>Python：爬虫相关</li>
+<li>服务器：只会简单的java -jar部署，netstat -nlp看端口，然后给我所有的电脑都装好双系统。</li>
+</ul>
+<p>又啥都不会：</p>
+<ul>
+<li>Web前端不会最有技术含量的React</li>
+<li>Java后端不会hibernate，HashMap的底层逻辑，Java虚拟机的垃圾回收机制都是用背的。</li>
+<li>移动端：不会用kotlin写安卓，也不知道最新的安卓有什么内容</li>
+<li>数据库：从没有仔细学习mysql背后的存储优化原理，也没有上手实操过</li>
+<li>服务器：以为服务器只是java -jar，而没有研究过docker，zookeeper，jenkins等更优秀的工具和中间件。装双系统也就装的那一刻用一下，真要做事还是用虚拟机多开……</li>
+<li>没有研究过消息队列。</li>
+</ul>
+<p>总的来说就是，都是浅尝辄止。当跑完hello world，把环境搭起来的时候，我就觉得自己行了，牛了，然后关掉编译器去玩了。</p>
+<p>不过有意思的是，2021年我在10年工作经验的主程面前点开8uFTP的时候，他惊讶地问：“woc你怎么在用这个东西？太老了这个，可以换一下Filezila”。而我会心一笑。后来团队发生了变动，换了个新主程。在闲暇时间我和他攀谈“网页三剑客”，向他展示我2015年就搭建起来的博客，和他开玩笑说，我和他是同一个软件开发时代的人，我是Young OG！</p>
+<p>但也仅此而已了。也许我真的是Young OG，但是我总是缺了点什么很关键的东西。以前我觉得自己不懂坚持，总是半途而废，而现在，在上海工作了一年多之后，我发现我的能力并没有任何问题，我的问题在于不知道怎么将工作切分，不知道怎么保存自己的体力，不知道自己的目标是什么。</p>
+<p>不管是写LeetCode，写项目，还是研究某个新框架，都需要安排时间，都需要统筹自己拥有的资源。特别是写项目，写项目有一点像写小说。只有将小说里每个章节都完成并且有所关联（长篇小说），才能是一部优秀的小说。长篇小说家也不是一朝一夕能写完一部大作，我们软件开发人员自然也不能一朝一夕写好一个系统，更何况我们还需要测试自己的代码。</p>
+<p>所以我们需要对任务进行切分。</p>
+<h2 id="任务切分的方法和意义">任务切分的方法和意义</h2>
+<p>最近两三个月，在工作中，我开始使用画图工具来画一些流程图或者架构图。这些图不是标准的UML图，但是是我自己能看懂的图。</p>
+<p>简单说一下本次系统做了什么。
+我平常会看LPL比赛，尤其是季后赛或者国际赛事。这些赛事一般是BO5（五局三胜制），一局比赛一般30分钟，加上休息的10分钟，如果打满5局大概4个小时多。如果中途出了点差错，还有暂停的时间。
+而最好看的比赛往往不是前两三局，而是第四局或者第五局。因为如果第三局就结束这场BO5，只有可能是3-0碾压，没什么意思。而如果打到第四局，必然是2-1，这时领先方再加把劲就赢下整场比赛，而落后方已经站到悬崖边，这时候的比赛是最好看的。
+但要打完3局，至少也要两个多小时了。如果我手头上有一件其他的事情要做，那么我就需要经常点开某个APP检查比赛是否到了2-1？又或者我对两队的实力很信任，我相信他们一定能打到2-2进决胜局，那我就很可能需要在三个小时内不断的抽时间查看比赛进度。这会影响我手上的事的效率。
+所以，不如写一个系统，每隔好几分钟去请求一下LPL的接口，和数据库的预定比赛信息比对，如果到达了我预定的比赛比分，或者到不了我预定的比分，就发邮件提醒我。我只需要开着QQ，等着右下角提示就好了。</p>
+<h3 id="技术选型">技术选型</h3>
+<p>回到上一节说的“造自己的轮子”和“用别人的轮子”的讨论，我平时的工作用Java进行开发，如果用SpringBoot，在路由，操作数据库逻辑，发送邮件那几块的内容，在数据库设计好了的情况下，我会写的很快。
+在这个情况下，“用别人的轮子”就是用SpringBoot，“造自己的轮子”就是用某个自己没学过的语言或者框架，边做边学。
+本次我选用的是Go语言和Gin，对标Java和SpringBoot。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">语言</th>
+<th style="text-align:left">路由</th>
+<th style="text-align:left">ORM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Java</td>
+<td style="text-align:left">SpringBoot</td>
+<td style="text-align:left">MyBatis</td>
+</tr>
+<tr>
+<td style="text-align:left">Go</td>
+<td style="text-align:left">Gin</td>
+<td style="text-align:left">Gorm</td>
+</tr>
+</tbody>
+</table>
+<h3 id="系统切分">系统切分</h3>
+<p>在这次开发中，我不再像过去一样无头苍蝇乱撞，而是先画了好几个框框，来分析到底自己想做什么事情。
+<img loading="lazy" src="/images/%e8%b5%9b%e4%ba%8b%e6%8f%90%e9%86%92%e7%b3%bb%e7%bb%9f.png" alt=""  />
+</p>
+<p>别看内容不多，事实上这一步是非常重要的。我们对于某个需求，可能仅仅是觉得“这个拿出来，然后和那个比一下，有就做这个，没有就做那个”，最后加一句“不就好了吗？”。但在实际操作的过程中，大概率会发现“这个”不好拿出来，“那个”也不太好取出来，取出来不知道在哪里“比一下”，“有”的情况可能不方便“做这个”，“没有”的情况可能不方便“做那个”。</p>
+<p>所以不要说“不就好了吗”，对于自己不熟悉的领域来说，做什么都会遇到问题。如果用的是自己熟悉的内容，那么就失去了提升自己的机会了。</p>
+<p>首先我先用一句话把我脑中的需求写明白。只要自己看懂就好。
+然后我开始幻想前端，前端要做几件事？我列出了5件事：</p>
+<ol>
+<li>获取预约信息</li>
+<li>创建预约</li>
+<li>删除预约</li>
+<li>执行预约</li>
+<li>取消预约</li>
+</ol>
+<p>在这个简单的需求中，这5件事就是5个接口（最后开发的时候发现“执行预约”和“创建预约”的功能是重合的，但是无所谓，这里更多的是提供思路）。
+而在后端那块，我从前端要做的事情反推后端应该要有什么功能：要发送请求肯定需要路由，要落库肯定要操作数据库和设计数据库。在需求里需要读取比赛到达的某个比分，那么就需要一个轮询的定时器，每隔一段时间发送请求问一下，然后通知就用邮件，因为邮件协议是通用的，而且QQ邮箱的提醒非常醒目。最后业务逻辑也是需要时间进行设计的。</p>
+<p>基于前后端的内容，我开始排工作：</p>
+<ol>
+<li>前端页面框架搭建</li>
+<li>前端页面开发及设计（边做边弄）</li>
+<li>gin路由基础框架搭建</li>
+<li>基础请求框架编写</li>
+<li>获取赛事接口编写</li>
+<li>数据库设计</li>
+<li>gorm数据库操作</li>
+<li>邮件发送逻辑</li>
+<li>ticker研究及实现</li>
+<li>开发所有请求</li>
+<li>自己联调前后端</li>
+</ol>
+<p>事实上这个工作安排，虽然是11条，但是每一条的工作量并不平均。我感觉在任何项目组，切分工作也不代表工作量是平均的。
+现在做完回头看，发现go语言对邮件发送和ticker有自带的支持，然后gorm的逻辑和gin解析json的逻辑几乎一致。其实并没有浪费多久时间。
+这次我没有预估具体时间，因为我心里没底。事实上更好的做法是稍微评估一个时间长度。</p>
+<p>任务切分的意义在于，任务有时候不像买来的蛋糕，你可以用肉眼看到蛋糕的大小和形状。你手上只有一把塑料刀，对着盲盒里切。
+但是有意思的地方在于，任务这块“蛋糕”的结构虽然乱七八糟，但是你大概能找到你知道的位置，然后胡乱的“划一刀”。这种切分可能并不准确，你并不知道你的蛋糕具体是什么样的，但是当你用这种方式多“划好几刀”之后，你的图中会有一个大概的系统模型，这会反过来指导你接下来要怎么划分工作内容。当工作内容越来越细，你就越能准确的评估每一块的时间和困难点。
+也就是一件事变成了好几件事。而每一件事都有单独的内容，有单独的评判标准。从而能清楚的知道自己做了多少内容。</p>
+<p>关于评估时间，我发现自己经常落入一个陷阱里：认为简单的事情一定能很快做完。但实际情况是，一个任务的时间长度，既取决于难易，也取决于工作量。我经常忽视工作量的大小，乐观的估计比较简单的工作任务。其实在拿不准时间的情况下，可以把时间评估的更长一些，是没有问题的。</p>
+<h2 id="挑战性">挑战性</h2>
+<p>如果说在公司工作是为了谋生，那么在业余时间做自己的项目就是为了取乐。
+如果不是为了取乐，那么也没有必要再浪费时间了。
+经过这次的开发，我发现自己的开发内容其实也不少，但是我没有觉得很不开心，相反，我感到很兴奋。
+在21年10月我有自学Go语言的语法，但是我不知道怎么去应用于实践。而编写一些基础语法的训练代码，让我觉得很像读书时看着例题做例题。
+挑战性不能太高，比如写一个完整的用户注册登录找回密码的体系，然后提供第三方token登录这种，对于一个人开发来说，太难，而且也是重复造轮子的工作。
+也不能太低，比如写一个golang的Hello world，包装一个在网页上发邮件的功能等，做出来没有意义。
+自己的项目，应该是有点挑战，然后尽可能实用，能在生活中用得到。如此一来，才不会陷入“我做这玩意又没钱赚，学不到东西，我不知道为了什么而写”的错误想法中。</p>
+<p>结合上一节写的“任务切分”，当有一个想法在脑中亮起，请你拿出纸笔或者打开画图软件，花一个晚上或者一天做一做简单的功能设计和任务划分，你就能知道自己的想法值不值得做，需要什么资源，做出来是为了什么。</p>
+<h2 id="实用性">实用性</h2>
+<p>如果一个需求没有实际的作用，那么就没有必要浪费时间了。如果“实用性”仅仅是为了“让大家知道我有本领”，而没有办法在生活中应用到，或者是让人感到很快乐，又或者能带来收入，那么尽早停止吧。（当然了如果“让大家知道我有本领”能让你升职加薪跳槽，那么就属于“能带来收入”的范畴了）</p>
+<h2 id="半途而废">半途而废</h2>
+<p>翻看github和gitee，我有很多想法和点子。</p>
+<ul>
+<li>凌天战队：2016年最爱玩LOL的时候，想给我们宿舍和隔壁宿舍组个战队，读取他们游戏账号的数据接口，把他们的数据列出来。然后搞个官网招摇显摆；</li>
+<li>中国象棋：想自己写一个象棋，能让玩家消耗道具，让电脑帮忙走一步棋，或者悔棋等</li>
+<li>自己完整写一个博客</li>
+<li>睡眠宠物：安卓应用，根据睡觉时间来提升宠物等级，然后白天宠物出去游历（旅行青蛙）</li>
+<li>预言家的网站：写预言然后定时，时间到了发邮件询问预言是否成真</li>
+<li>英雄联盟数据平台：记录BO5的双方赢下第几局的胜率最高</li>
+<li>三国数据平台：想整理所有三国人物，事件，城池，战役</li>
+<li>想学Unity做一个RPG游戏</li>
+</ul>
+<p>但真实的情况是，我每次花了一天做一点内容，就觉得浑身难受，没有任何正反馈。比如自己的博客那个，我花了一晚上调style样式，然后已经没力气写后端了；中国象棋我把基础的棋盘和走子逻辑对着书里翻译成kotlin就花了一周的休息时间，界面是用命令行print的，而这一周我一点游戏都没玩！预言家的网站也是用bootstrap写了个基础的主页和个人中心，后端那块就没体力做了。Unity和UE根本不知道怎么入门，或者说看看教程自己弄一下一天也就过去了。</p>
+<p>我属于是又想学，又想做，但更想玩的人。我无数次觉得自己是很糟糕的人，因为我有这些想法和点子，却从未付诸实践。</p>
+<p>而从前两节的分析上来讲，这几个需求大多都属于挑战性逆天高，实用性几乎没有的需求。而我其实并不特别喜欢这些需求做完之后的具体效果。
+自己写网站（凌天战队、自己的博客、预言家的网站）对我来说其实还是很消耗时间的，即使我现在有能力能做的很快。自己的用户体系就算建起来也需要维护，还不如直接作为一个信息发布平台+邮箱联系的模式，作为自己的名片；
+中国象棋则是属于做出来就是为了自娱自乐，但是也没有多有趣，因为象棋游戏现在多如牛毛，我要的功能现在天天象棋也有了，如果是为了学习剪枝算法，倒是值得一学，但是为了做一个游戏系统，又不打算捞钱，就是浪费时间了；
+睡眠宠物是属于难度特别特别大，需要自己测很多很多轮，但是没什么收益的东西。而且还需要美工的支持，不然就毫无用处和趣味了；
+英雄联盟数据平台是属于爬虫爬到数据库+命令行展示结果即可的功能，做一整套系统属实是为了装逼，但事实上代码放到github上，然后在Readme里贴出结果，反而更有范儿；
+三国数据平台属实是劳民伤财，挑战性拉满，而实用性还不如百度百科。
+学习Unity或者UE，首先应该先学基础，而不是先做RPG，现在根本没办法做好系统设计和切分需求。</p>
+<p>有想法是好事，但是现在的情况是，你想到的东西，前人肯定有人也想到了，他们没有做成功，所以才轮到你想到。</p>
+<p>而这次做的赛事预约平台，则是我第一次用正确的方式分析、设计、排期、开发、测试，还差一步上线。整个过程里我不觉得有多辛苦，而是觉得这个系统还可以有很多地方可以优化，让他更人性化，甚至让他不再依赖接口爬虫等，保障系统数据来源正常提供。并且这个系统真真切切能为我提供便利，让我能更专注于我的工作内容，又不落下比赛。</p>
+<p>我接触代码已有14年之久，但为自己开发一个完整的系统（包括前后端和测试），并且真正用于实际，是头一回。一起拿我不过是个“雇佣兵”，为了学校的学分，为了公司的工资而疲于奔命，而自己的想法又太过庞大。</p>
+<p>以此次经验为鉴，今后一定可以有很多有意思的想法，在“任务切分刀”切分之后，逐步完善。成为我自己的“代表作”。</p>]]></content:encoded>
+    </item>
+    <item>
       <title>使用Python实现简单UDP Ping</title>
-      <link>https://windypath.com/posts/simple_udp_ping_with_python/</link>
+      <link>http://localhost:1313/posts/simple_udp_ping_with_python/</link>
       <pubDate>Sat, 13 Nov 2021 15:31:00 +0800</pubDate>
-      <guid>https://windypath.com/posts/simple_udp_ping_with_python/</guid>
+      <guid>http://localhost:1313/posts/simple_udp_ping_with_python/</guid>
       <description>&lt;h2 id=&#34;套接字编程作业2udp-ping-程序&#34;&gt;套接字编程作业2：UDP ping 程序&lt;/h2&gt;
 &lt;p&gt;在本实验中，您将学习使用Python进行UDP套接字编程的基础知识。您将学习如何使用UDP套接字发送和接收数据报，以及如何设置适当的套接字超时。在实验中，您将熟悉Ping应用程序及其在计算统计信息（如丢包率）中的作用。&lt;/p&gt;
 &lt;p&gt;您首先需要研究一个用Python编写的简单的ping服务器程序，并实现对应的客户端程序。这些程序提供的功能类似于现代操作系统中可用的标准ping程序功能。然而，我们的程序使用更简单的UDP协议，而不是标准互联网控制消息协议（ICMP）来进行通信。 ping协议允许客户端机器发送一个数据包到远程机器，并使远程机器将数据包返回到客户（称为回显）的操作。另外，ping协议允许主机计算它到其他机器的往返时间。&lt;/p&gt;
@@ -2854,9 +3029,9 @@ A[客户端]-->|tcp发送的protobuf|B[Gate的Netty解包]-->|actor内部消息�
     </item>
     <item>
       <title>使用Python开发一个简单的web服务器</title>
-      <link>https://windypath.com/posts/simple_web_server_with_python/</link>
+      <link>http://localhost:1313/posts/simple_web_server_with_python/</link>
       <pubDate>Sun, 07 Nov 2021 21:02:00 +0800</pubDate>
-      <guid>https://windypath.com/posts/simple_web_server_with_python/</guid>
+      <guid>http://localhost:1313/posts/simple_web_server_with_python/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;来自书籍《计算机网络-自顶向下方法-第6版(课本)》第120页，第二章应用层的课后题第一题。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -3031,9 +3206,9 @@ A[客户端]-->|tcp发送的protobuf|B[Gate的Netty解包]-->|actor内部消息�
     </item>
     <item>
       <title>Kotlin手动实现一个最简单的哈希表</title>
-      <link>https://windypath.com/posts/kotlin_implement_a_simple_hashmap/</link>
+      <link>http://localhost:1313/posts/kotlin_implement_a_simple_hashmap/</link>
       <pubDate>Sat, 16 Oct 2021 17:43:32 +0800</pubDate>
-      <guid>https://windypath.com/posts/kotlin_implement_a_simple_hashmap/</guid>
+      <guid>http://localhost:1313/posts/kotlin_implement_a_simple_hashmap/</guid>
       <description>&lt;p&gt;参考的是《数据结构(C语言版)》上256页左右的哈希表的介绍，用了最简单的直接寻址法 + 链地址法。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>参考的是《数据结构(C语言版)》上256页左右的哈希表的介绍，用了最简单的直接寻址法 + 链地址法。</p>
 <p>用的是Kotlin。</p>
@@ -3163,9 +3338,9 @@ A[客户端]-->|tcp发送的protobuf|B[Gate的Netty解包]-->|actor内部消息�
     </item>
     <item>
       <title>Kotlin实现二叉堆、大顶堆、优先级队列</title>
-      <link>https://windypath.com/posts/kotlin_implement_heap/</link>
+      <link>http://localhost:1313/posts/kotlin_implement_heap/</link>
       <pubDate>Thu, 14 Oct 2021 23:30:30 +0800</pubDate>
-      <guid>https://windypath.com/posts/kotlin_implement_heap/</guid>
+      <guid>http://localhost:1313/posts/kotlin_implement_heap/</guid>
       <description>&lt;p&gt;参考了&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.bilibili.com/video/BV11t4y1r79L&#34;&gt;https://www.bilibili.com/video/BV11t4y1r79L&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/qq_19782019/article/details/78301832&#34;&gt;https://blog.csdn.net/qq_19782019/article/details/78301832&lt;/a&gt;&lt;/p&gt;
@@ -3435,9 +3610,9 @@ Process finished with exit code 0
     </item>
     <item>
       <title>搭建Spark实战环境（3台linux虚拟机集群）（一）样板机的搭建</title>
-      <link>https://windypath.com/posts/build_spark_environment/</link>
+      <link>http://localhost:1313/posts/build_spark_environment/</link>
       <pubDate>Sat, 23 May 2020 17:42:09 +0800</pubDate>
-      <guid>https://windypath.com/posts/build_spark_environment/</guid>
+      <guid>http://localhost:1313/posts/build_spark_environment/</guid>
       <description>&lt;h2 id=&#34;系统及软件配置&#34;&gt;系统及软件配置&lt;/h2&gt;
 &lt;h3 id=&#34;系统配置&#34;&gt;系统配置&lt;/h3&gt;
 &lt;p&gt;内存：16g 2400
@@ -3697,9 +3872,9 @@ SELinux设置为disable。
     </item>
     <item>
       <title>Springboot操作MongoDB，包括增改查及复杂操作</title>
-      <link>https://windypath.com/posts/spring_operate_mongodb/</link>
+      <link>http://localhost:1313/posts/spring_operate_mongodb/</link>
       <pubDate>Tue, 19 May 2020 12:41:37 +0800</pubDate>
-      <guid>https://windypath.com/posts/spring_operate_mongodb/</guid>
+      <guid>http://localhost:1313/posts/spring_operate_mongodb/</guid>
       <description>&lt;h2 id=&#34;单条件查询&#34;&gt;单条件查询&lt;/h2&gt;
 &lt;p&gt;使用BasicDBObject配置查询条件&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;AbstractMongoEntity&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; list &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Lists.&lt;span style=&#34;color:#a6e22e&#34;&gt;newArrayList&lt;/span&gt;();
@@ -3865,9 +4040,9 @@ SELinux设置为disable。
     </item>
     <item>
       <title>Unison在Linux下的安装与使用</title>
-      <link>https://windypath.com/posts/unison_install_in_linux/</link>
+      <link>http://localhost:1313/posts/unison_install_in_linux/</link>
       <pubDate>Sat, 22 Feb 2020 14:19:06 +0800</pubDate>
-      <guid>https://windypath.com/posts/unison_install_in_linux/</guid>
+      <guid>http://localhost:1313/posts/unison_install_in_linux/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;这是一篇在公司写的文档，但不涉及公司隐私。几乎所有内容参考于：&lt;a href=&#34;https://www.cnblogs.com/welcomer/p/5068287.html&#34;&gt;https://www.cnblogs.com/welcomer/p/5068287.html&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -3943,7 +4118,7 @@ SELinux设置为disable。
 </span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">600</span> ~/.ssh/authorized_keys
 </span></span></code></pre></div><p>至此，配置服务器1信任服务器2完成。</p>
 <h4 id="在服务器2上配置服务器1的信任">在服务器2上配置服务器1的信任</h4>
-<p>执行方法与服务器1完全一致。在服务器2上，使用system2登录，然后使用ssh-keygen –t rsa 生成公私钥，使用scp复制公钥到服务器1的system1的<del>目录下，在服务器1上将服务器2的id_rsa.pub公钥移动到</del>/.ssh/下并改名为authorized_keys。</p>
+<p>执行方法与服务器1完全一致。在服务器2上，使用system2登录，然后使用ssh-keygen –t rsa 生成公私钥，使用scp复制公钥到服务器1的system1的~目录下，在服务器1上将服务器2的id_rsa.pub公钥移动到~/.ssh/下并改名为authorized_keys。</p>
 <h4 id="重启ssh服务">重启ssh服务</h4>
 <p>在两台服务器上分别使用如下命令以重启ssh服务。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>/etc/init.d/ssh stop 
@@ -4029,9 +4204,9 @@ log = true logfile = /home/system2/.unison/unison.log
     </item>
     <item>
       <title>Java实现类似WINSCP访问远程Linux服务器，执行命令、上传文件、下载文件</title>
-      <link>https://windypath.com/posts/java_implement_winscp_like/</link>
+      <link>http://localhost:1313/posts/java_implement_winscp_like/</link>
       <pubDate>Thu, 20 Feb 2020 10:32:24 +0800</pubDate>
-      <guid>https://windypath.com/posts/java_implement_winscp_like/</guid>
+      <guid>http://localhost:1313/posts/java_implement_winscp_like/</guid>
       <description>&lt;p&gt;pom.xml添加的依赖：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!-- https://mvnrepository.com/artifact/ch.ethz.ganymed/ganymed-ssh2 --&amp;gt;&lt;/span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt; 
@@ -4239,9 +4414,9 @@ log = true logfile = /home/system2/.unison/unison.log
     </item>
     <item>
       <title>一个被废弃的项目——自动爬取信息然后发给我自己邮箱上</title>
-      <link>https://windypath.com/posts/a_bad_project_crawler_and_email/</link>
+      <link>http://localhost:1313/posts/a_bad_project_crawler_and_email/</link>
       <pubDate>Sun, 09 Feb 2020 17:21:03 +0800</pubDate>
-      <guid>https://windypath.com/posts/a_bad_project_crawler_and_email/</guid>
+      <guid>http://localhost:1313/posts/a_bad_project_crawler_and_email/</guid>
       <description>&lt;p&gt;这是一个python项目。&lt;/p&gt;
 &lt;p&gt;使用到的技术包括爬虫和发邮件&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>这是一个python项目。</p>
@@ -4434,9 +4609,9 @@ log = true logfile = /home/system2/.unison/unison.log
     </item>
     <item>
       <title>Python连接MongoDB和Oracle实战</title>
-      <link>https://windypath.com/posts/python_connect_mongodb_and_oracle/</link>
+      <link>http://localhost:1313/posts/python_connect_mongodb_and_oracle/</link>
       <pubDate>Sun, 09 Feb 2020 17:06:29 +0800</pubDate>
-      <guid>https://windypath.com/posts/python_connect_mongodb_and_oracle/</guid>
+      <guid>http://localhost:1313/posts/python_connect_mongodb_and_oracle/</guid>
       <description>&lt;h2 id=&#34;python连接mongodb&#34;&gt;Python连接MongoDB&lt;/h2&gt;
 &lt;h3 id=&#34;安装&#34;&gt;安装&lt;/h3&gt;
 &lt;p&gt;首先要安装pymongo，用pip装一下就好了。&lt;/p&gt;</description>
@@ -4646,9 +4821,9 @@ database=yyy
     </item>
     <item>
       <title>MongoDB常用查询语句</title>
-      <link>https://windypath.com/posts/mongodb_search_script/</link>
+      <link>http://localhost:1313/posts/mongodb_search_script/</link>
       <pubDate>Sun, 09 Feb 2020 16:36:27 +0800</pubDate>
-      <guid>https://windypath.com/posts/mongodb_search_script/</guid>
+      <guid>http://localhost:1313/posts/mongodb_search_script/</guid>
       <description>&lt;h2 id=&#34;增删改查部分&#34;&gt;增删改查部分&lt;/h2&gt;
 &lt;h3 id=&#34;mongodb单条件查询&#34;&gt;MongoDB单条件查询&lt;/h3&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;db.xxx.find({&amp;#39;city.value&amp;#39;:&amp;#39;深圳市&amp;#39;})
@@ -4790,9 +4965,9 @@ W:\xxxxxx.bson
     </item>
     <item>
       <title>vue和springboot项目部署到Linux服务器</title>
-      <link>https://windypath.com/posts/vue_springboot_deploy_in_linux/</link>
+      <link>http://localhost:1313/posts/vue_springboot_deploy_in_linux/</link>
       <pubDate>Mon, 27 Jan 2020 16:53:23 +0800</pubDate>
-      <guid>https://windypath.com/posts/vue_springboot_deploy_in_linux/</guid>
+      <guid>http://localhost:1313/posts/vue_springboot_deploy_in_linux/</guid>
       <description>&lt;h2 id=&#34;写在前面的话&#34;&gt;写在前面的话&lt;/h2&gt;
 &lt;p&gt;前后端分离的项目中，需要分别部署前端与后端项目。前端项目使用npm打包，将得到的dist文件夹下的内容上传到服务器后，用nginx的alias指向文件夹即可访问，而后端项目使用maven打包，需使用tomcat在后台启动，再通过nginx转发，供前端项目调用。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<h2 id="写在前面的话">写在前面的话</h2>
@@ -5059,9 +5234,9 @@ http {
     </item>
     <item>
       <title>Python的一些用法（可能不定时更新）</title>
-      <link>https://windypath.com/posts/some_usages_of_python/</link>
+      <link>http://localhost:1313/posts/some_usages_of_python/</link>
       <pubDate>Sun, 01 Dec 2019 10:45:46 +0800</pubDate>
-      <guid>https://windypath.com/posts/some_usages_of_python/</guid>
+      <guid>http://localhost:1313/posts/some_usages_of_python/</guid>
       <description>&lt;h2 id=&#34;striplstrip和rstrip&#34;&gt;strip()、lstrip()、和rstrip()&lt;/h2&gt;
 &lt;p&gt;Python strip() 方法用于移除字符串头尾指定的字符（默认为空格或换行符）或字符序列。&lt;/p&gt;
 &lt;p&gt;注意：该方法只能删除开头或是结尾的字符，不能删除中间部分的字符。&lt;/p&gt;
@@ -5189,9 +5364,9 @@ http {
     </item>
     <item>
       <title>java正则表达式 - 双反斜杠（\）和Pattern的matches()与find()</title>
-      <link>https://windypath.com/posts/regular_expression/</link>
+      <link>http://localhost:1313/posts/regular_expression/</link>
       <pubDate>Sun, 24 Nov 2019 19:43:31 +0800</pubDate>
-      <guid>https://windypath.com/posts/regular_expression/</guid>
+      <guid>http://localhost:1313/posts/regular_expression/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;参考文献
 &lt;a href=&#34;https://www.cnblogs.com/huhongy/p/7541875.html&#34;&gt;java正则表达式（find()和 matches()）&lt;/a&gt;
@@ -5238,9 +5413,7 @@ http {
 <h3 id="find和matches">find()和matches()</h3>
 <p>1.find()方法是部分匹配，是查找输入串中与模式匹配的子串，如果该匹配的串有组还可以使用group()函数。
 matches()是全部匹配，是将整个输入串与模式匹配，如果要验证一个输入的数据是否为数字类型或其他类型，一般要用matches()。</p>
-<ol start="2">
-<li></li>
-</ol>
+<p>2.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>Pattern pattern<span style="color:#f92672">=</span> Pattern.<span style="color:#a6e22e">compile</span>(<span style="color:#e6db74">&#34;.*?,(.*)&#34;</span>);
 </span></span><span style="display:flex;"><span>Matcher matcher <span style="color:#f92672">=</span> pattern.<span style="color:#a6e22e">matcher</span>(result);
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (matcher.<span style="color:#a6e22e">find</span>()) {
@@ -5370,9 +5543,9 @@ matcher.group()返回匹配到的子字符串
     </item>
     <item>
       <title>简述爬虫对两种网站的不同爬取方式</title>
-      <link>https://windypath.com/posts/two_crawl_web_approach/</link>
+      <link>http://localhost:1313/posts/two_crawl_web_approach/</link>
       <pubDate>Fri, 15 Nov 2019 23:05:46 +0800</pubDate>
-      <guid>https://windypath.com/posts/two_crawl_web_approach/</guid>
+      <guid>http://localhost:1313/posts/two_crawl_web_approach/</guid>
       <description>&lt;p&gt;爬虫的目的是采集网站的数据。而网站渲染数据有两种方式。我个人将其称为前端渲染和后端渲染。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>爬虫的目的是采集网站的数据。而网站渲染数据有两种方式。我个人将其称为前端渲染和后端渲染。</p>
 <h2 id="前端渲染">前端渲染</h2>
@@ -5530,9 +5703,9 @@ matcher.group()返回匹配到的子字符串
     </item>
     <item>
       <title>Vue的路由配置及手动改地址栏为啥又跳转回来？？</title>
-      <link>https://windypath.com/posts/why_vue_router_back/</link>
+      <link>http://localhost:1313/posts/why_vue_router_back/</link>
       <pubDate>Tue, 05 Mar 2019 20:22:47 +0800</pubDate>
-      <guid>https://windypath.com/posts/why_vue_router_back/</guid>
+      <guid>http://localhost:1313/posts/why_vue_router_back/</guid>
       <description>&lt;p&gt;​
 vue-cli（vue脚手架）超详细教程：&lt;a href=&#34;https://blog.csdn.net/wulala_hei/article/details/85000530&#34;&gt;vue-cli（vue脚手架）超详细教程_Yin_Xiaobo的博客-CSDN博客_vue-cli(vue脚手架)超详细教程&lt;/a&gt;&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>​
@@ -5615,9 +5788,9 @@ vue-cli（vue脚手架）超详细教程：<a href="https://blog.csdn.net/wulala
     </item>
     <item>
       <title>[JavaScript]JS基础知识</title>
-      <link>https://windypath.com/posts/javascript_basic_knowledge/</link>
+      <link>http://localhost:1313/posts/javascript_basic_knowledge/</link>
       <pubDate>Wed, 06 Jun 2018 21:32:09 +0800</pubDate>
-      <guid>https://windypath.com/posts/javascript_basic_knowledge/</guid>
+      <guid>http://localhost:1313/posts/javascript_basic_knowledge/</guid>
       <description>&lt;h1 id=&#34;javascriptjs基础知识上&#34;&gt;[JavaScript]JS基础知识（上）&lt;/h1&gt;
 &lt;h2 id=&#34;变量类型及计算&#34;&gt;变量类型及计算&lt;/h2&gt;
 &lt;h3 id=&#34;变量类型&#34;&gt;变量类型&lt;/h3&gt;
@@ -5660,7 +5833,7 @@ vue-cli（vue脚手架）超详细教程：<a href="https://blog.csdn.net/wulala
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">typeof</span> <span style="color:#66d9ef">null</span>		<span style="color:#75715e">//object
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">typeof</span> <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>	<span style="color:#75715e">//function
 </span></span></span></code></pre></div><p>注：null也是对象</p>
-<p>1<del>4行是值类型，5</del>8行是引用类型，但JS只能区分函数与非函数，而不能区分数组和对象。</p>
+<p>1~4行是值类型，5~8行是引用类型，但JS只能区分函数与非函数，而不能区分数组和对象。</p>
 <h2 id="变量计算">变量计算</h2>
 <h3 id="强制类型转换">强制类型转换</h3>
 <h4 id="字符串拼接">字符串拼接</h4>
@@ -6309,9 +6482,9 @@ Location、History
     </item>
     <item>
       <title>[Mybatis]逆向工程中Select语句查询不出‘TEXT’字段</title>
-      <link>https://windypath.com/posts/mybatis_text_not_queried/</link>
+      <link>http://localhost:1313/posts/mybatis_text_not_queried/</link>
       <pubDate>Thu, 24 May 2018 14:21:21 +0800</pubDate>
-      <guid>https://windypath.com/posts/mybatis_text_not_queried/</guid>
+      <guid>http://localhost:1313/posts/mybatis_text_not_queried/</guid>
       <description>&lt;p&gt;这个标题有点奇怪。不过我要说的就是，在&lt;a href=&#34;http://how2j.cn/k/mybatis/mybatis-generator/1376.html&#34;&gt;Mybatis逆向工程&lt;/a&gt;自动生成的Mapper中，对TEXT字段的定义和其他的字段不一样。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>这个标题有点奇怪。不过我要说的就是，在<a href="http://how2j.cn/k/mybatis/mybatis-generator/1376.html">Mybatis逆向工程</a>自动生成的Mapper中，对TEXT字段的定义和其他的字段不一样。</p>
 <p>Comments表设计：
@@ -6342,9 +6515,9 @@ Location、History
     </item>
     <item>
       <title>[编译原理]FIRST、FOLLOW和SELECT</title>
-      <link>https://windypath.com/posts/compilation_principle_first_follow_select/</link>
+      <link>http://localhost:1313/posts/compilation_principle_first_follow_select/</link>
       <pubDate>Mon, 30 Apr 2018 16:23:34 +0800</pubDate>
-      <guid>https://windypath.com/posts/compilation_principle_first_follow_select/</guid>
+      <guid>http://localhost:1313/posts/compilation_principle_first_follow_select/</guid>
       <description>&lt;h2 id=&#34;first集&#34;&gt;FIRST集&lt;/h2&gt;
 &lt;p&gt;FIRST(α)为α的开始符号集或者首符号集。&lt;/p&gt;
 &lt;h3 id=&#34;定义&#34;&gt;定义&lt;/h3&gt;
@@ -6386,9 +6559,9 @@ FOLLOW(A)=｛a|S能推导出μAβ,且a∈VT，a∈FIRST(β),μ∈VT* ,β∈V+｝
 <p>对下面的文法G：
 E→TE‘
 E‘→+E|ε
-T→FT'
+T→FT&rsquo;
 T‘→T|ε
-F→PF'
+F→PF&rsquo;
 F&rsquo;→*F&rsquo;|ε
 P→(E)|a|b|^</p>
 <p>问：</p>
@@ -6477,9 +6650,9 @@ FIRST(F&rsquo;) ∩ FOLLOW(F&rsquo;) = {*,ε} ∩ {(,A,B,^,+,),#} = ∅</p>
     </item>
     <item>
       <title>[Spring]Spring学习笔记</title>
-      <link>https://windypath.com/posts/spring_learning_notes/</link>
+      <link>http://localhost:1313/posts/spring_learning_notes/</link>
       <pubDate>Sat, 14 Apr 2018 15:17:52 +0800</pubDate>
-      <guid>https://windypath.com/posts/spring_learning_notes/</guid>
+      <guid>http://localhost:1313/posts/spring_learning_notes/</guid>
       <description>&lt;h1 id=&#34;springspring学习笔记一&#34;&gt;[Spring]Spring学习笔记（一）&lt;/h1&gt;
 &lt;h2 id=&#34;spring-概念&#34;&gt;Spring 概念&lt;/h2&gt;
 &lt;ol&gt;
@@ -6949,9 +7122,9 @@ action调用service，service调用dao</p>
     </item>
     <item>
       <title>[算法]分布估计算法 - 一种求解多维背包问题的混合分布估计算法_王凌</title>
-      <link>https://windypath.com/posts/distribution_estimation_algorithm/</link>
+      <link>http://localhost:1313/posts/distribution_estimation_algorithm/</link>
       <pubDate>Mon, 18 Dec 2017 22:36:13 +0800</pubDate>
-      <guid>https://windypath.com/posts/distribution_estimation_algorithm/</guid>
+      <guid>http://localhost:1313/posts/distribution_estimation_algorithm/</guid>
       <description>&lt;p&gt;作业要求实现《一种求解多维背包问题的混合分布估计算法_王凌》&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;http://xueshu.baidu.com/s?wd=paperuri:(43e8c4d78e8a6d2f44bc6cf5f5724c68)&amp;filter=sc_long_sign&amp;sc_ks_para=q%3D%E4%B8%80%E7%A7%8D%E6%B1%82%E8%A7%A3%E5%A4%9A%E7%BB%B4%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E6%B7%B7%E5%90%88%E5%88%86%E5%B8%83%E4%BC%B0%E8%AE%A1%E7%AE%97%E6%B3%95&amp;tn=SE_baiduxueshu_c1gjeupa&amp;ie=utf-8&amp;sc_us=17828901901562222937&#34;&gt;百度学术路径&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;写这篇文章主要是因为，这论文的数据集实在是找不到，但最后我还是找到了。&lt;/p&gt;
@@ -7383,10 +7556,10 @@ action调用service，service调用dao</p>
     </item>
     <item>
       <title>[日常]我做独立博客的原因</title>
-      <link>https://windypath.com/posts/why_i_build_blog/</link>
+      <link>http://localhost:1313/posts/why_i_build_blog/</link>
       <pubDate>Sat, 29 Aug 2015 13:32:03 +0800</pubDate>
-      <guid>https://windypath.com/posts/why_i_build_blog/</guid>
-      <description>&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://windypath.com/images/why_i_build_blog_img.jpg&#34; alt=&#34;&#34;  /&gt;
+      <guid>http://localhost:1313/posts/why_i_build_blog/</guid>
+      <description>&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/why_i_build_blog_img.jpg&#34; alt=&#34;&#34;  /&gt;
 &lt;/p&gt;
 &lt;h2 id=&#34;我做独立博客的原因&#34;&gt;我做独立博客的原因&lt;/h2&gt;
 &lt;p&gt;记得以前有看到一篇由独立博客站长的博文，介绍独立博客如何搭建，搭建完后的注意事项。其中就有说到独立博客上线后，可以发布一篇《我为什么要做独立博客》的博文。而我认为这个题目是一个问句，自问自答略显古怪。所以我的这篇文章的名字就是《我做独立博客的原因》。&lt;/p&gt;

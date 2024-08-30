@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>日常 on 风萧古道 - 勤学苦练，年复一年</title>
-    <link>https://windypath.com/categories/%E6%97%A5%E5%B8%B8/</link>
+    <link>http://localhost:1313/categories/%E6%97%A5%E5%B8%B8/</link>
     <description>Recent content in 日常 on 风萧古道 - 勤学苦练，年复一年</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
     <lastBuildDate>Sat, 29 Aug 2015 13:32:03 +0800</lastBuildDate>
-    <atom:link href="https://windypath.com/categories/%E6%97%A5%E5%B8%B8/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/categories/%E6%97%A5%E5%B8%B8/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>[日常]我做独立博客的原因</title>
-      <link>https://windypath.com/posts/why_i_build_blog/</link>
+      <link>http://localhost:1313/posts/why_i_build_blog/</link>
       <pubDate>Sat, 29 Aug 2015 13:32:03 +0800</pubDate>
-      <guid>https://windypath.com/posts/why_i_build_blog/</guid>
-      <description>&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://windypath.com/images/why_i_build_blog_img.jpg&#34; alt=&#34;&#34;  /&gt;
+      <guid>http://localhost:1313/posts/why_i_build_blog/</guid>
+      <description>&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/why_i_build_blog_img.jpg&#34; alt=&#34;&#34;  /&gt;
 &lt;/p&gt;
 &lt;h2 id=&#34;我做独立博客的原因&#34;&gt;我做独立博客的原因&lt;/h2&gt;
 &lt;p&gt;记得以前有看到一篇由独立博客站长的博文，介绍独立博客如何搭建，搭建完后的注意事项。其中就有说到独立博客上线后，可以发布一篇《我为什么要做独立博客》的博文。而我认为这个题目是一个问句，自问自答略显古怪。所以我的这篇文章的名字就是《我做独立博客的原因》。&lt;/p&gt;

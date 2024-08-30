@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>CSAPP on 风萧古道 - 勤学苦练，年复一年</title>
-    <link>https://windypath.com/tags/csapp/</link>
+    <link>http://localhost:1313/tags/csapp/</link>
     <description>Recent content in CSAPP on 风萧古道 - 勤学苦练，年复一年</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
     <lastBuildDate>Sun, 30 Apr 2023 21:08:43 +0800</lastBuildDate>
-    <atom:link href="https://windypath.com/tags/csapp/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/csapp/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CSAPP第二章-信息的表示与处理</title>
-      <link>https://windypath.com/posts/csapp_chapter2_representing_manipulating_info/</link>
+      <link>http://localhost:1313/posts/csapp_chapter2_representing_manipulating_info/</link>
       <pubDate>Sun, 30 Apr 2023 21:08:43 +0800</pubDate>
-      <guid>https://windypath.com/posts/csapp_chapter2_representing_manipulating_info/</guid>
+      <guid>http://localhost:1313/posts/csapp_chapter2_representing_manipulating_info/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;23年3月23日，我在公司进行了一次分享会，内容是本文的内容。在分享前，我重新对文章知识点进行了梳理，补充了很多细节。现将补充的细节重新编写到本文中。&lt;/p&gt;
 &lt;/blockquote&gt;</description>

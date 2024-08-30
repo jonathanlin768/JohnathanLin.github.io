@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Bookdigests on 风萧古道 - 勤学苦练，年复一年</title>
-    <link>https://windypath.com/bookdigest/</link>
+    <link>http://localhost:1313/bookdigest/</link>
     <description>Recent content in Bookdigests on 风萧古道 - 勤学苦练，年复一年</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
-    <atom:link href="https://windypath.com/bookdigest/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/bookdigest/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>被讨厌的勇气</title>
-      <link>https://windypath.com/bookdigest/book_courage_to_be_hated/</link>
+      <link>http://localhost:1313/bookdigest/book_courage_to_be_hated/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://windypath.com/bookdigest/book_courage_to_be_hated/</guid>
+      <guid>http://localhost:1313/bookdigest/book_courage_to_be_hated/</guid>
       <description>豆瓣链接 https://book.douban.com/subject/36150914/</description>
       <content:encoded><![CDATA[<h1 id="豆瓣链接">豆瓣链接</h1>
 <p><a href="https://book.douban.com/subject/36150914/">https://book.douban.com/subject/36150914/</a></p>
@@ -20,9 +20,9 @@
     </item>
     <item>
       <title>人间值得</title>
-      <link>https://windypath.com/bookdigest/book_worth_living/</link>
+      <link>http://localhost:1313/bookdigest/book_worth_living/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://windypath.com/bookdigest/book_worth_living/</guid>
+      <guid>http://localhost:1313/bookdigest/book_worth_living/</guid>
       <description>豆瓣链接 https://book.douban.com/subject/34797578/</description>
       <content:encoded><![CDATA[<h1 id="豆瓣链接">豆瓣链接</h1>
 <p><a href="https://book.douban.com/subject/34797578/">https://book.douban.com/subject/34797578/</a></p>
@@ -30,9 +30,9 @@
     </item>
     <item>
       <title>深入理解计算机系统</title>
-      <link>https://windypath.com/bookdigest/book_csapp/</link>
+      <link>http://localhost:1313/bookdigest/book_csapp/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://windypath.com/bookdigest/book_csapp/</guid>
+      <guid>http://localhost:1313/bookdigest/book_csapp/</guid>
       <description>豆瓣链接 https://book.douban.com/subject/26912767/</description>
       <content:encoded><![CDATA[<h1 id="豆瓣链接">豆瓣链接</h1>
 <p><a href="https://book.douban.com/subject/26912767/">https://book.douban.com/subject/26912767/</a></p>
@@ -40,9 +40,9 @@
     </item>
     <item>
       <title>想想就开心！</title>
-      <link>https://windypath.com/bookdigest/deep_thinking/</link>
+      <link>http://localhost:1313/bookdigest/deep_thinking/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://windypath.com/bookdigest/deep_thinking/</guid>
+      <guid>http://localhost:1313/bookdigest/deep_thinking/</guid>
       <description>豆瓣链接 https://book.douban.com/subject/35706244/</description>
       <content:encoded><![CDATA[<h1 id="豆瓣链接">豆瓣链接</h1>
 <p><a href="https://book.douban.com/subject/35706244/">https://book.douban.com/subject/35706244/</a></p>
@@ -50,9 +50,9 @@
     </item>
     <item>
       <title>最重要的事，只有一件</title>
-      <link>https://windypath.com/bookdigest/the_one_thing/</link>
+      <link>http://localhost:1313/bookdigest/the_one_thing/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://windypath.com/bookdigest/the_one_thing/</guid>
+      <guid>http://localhost:1313/bookdigest/the_one_thing/</guid>
       <description>豆瓣链接 https://book.douban.com/subject/26656532/</description>
       <content:encoded><![CDATA[<h1 id="豆瓣链接">豆瓣链接</h1>
 <p><a href="https://book.douban.com/subject/26656532/">https://book.douban.com/subject/26656532/</a></p>
@@ -60,9 +60,9 @@
     </item>
     <item>
       <title>尊重自己：给予与接收的心灵艺术</title>
-      <link>https://windypath.com/bookdigest/honor_yourself/</link>
+      <link>http://localhost:1313/bookdigest/honor_yourself/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://windypath.com/bookdigest/honor_yourself/</guid>
+      <guid>http://localhost:1313/bookdigest/honor_yourself/</guid>
       <description>豆瓣链接 https://read.douban.com/ebook/132946207/
 读后感 这是一本教人如何尊重自己的书。
 我们从小到大接收的教育都是尊重别人，而很少有人告诉我们，要尊重自己。

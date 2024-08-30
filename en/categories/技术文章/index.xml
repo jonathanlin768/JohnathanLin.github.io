@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>技术文章 on WindyPath - Study And Practice, Years Of It</title>
-    <link>https://windypath.com/en/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</link>
+    <link>http://localhost:1313/en/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</link>
     <description>Recent content in 技术文章 on WindyPath - Study And Practice, Years Of It</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
     <lastBuildDate>Sun, 23 Jun 2024 19:30:14 +0800</lastBuildDate>
-    <atom:link href="https://windypath.com/en/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/en/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Age 35 Is Not the End for Software Developers</title>
-      <link>https://windypath.com/en/posts/35_not_the_end_of_software_developer/</link>
+      <link>http://localhost:1313/en/posts/35_not_the_end_of_software_developer/</link>
       <pubDate>Sun, 23 Jun 2024 19:30:14 +0800</pubDate>
-      <guid>https://windypath.com/en/posts/35_not_the_end_of_software_developer/</guid>
+      <guid>http://localhost:1313/en/posts/35_not_the_end_of_software_developer/</guid>
       <description>&lt;p&gt;Recently, I stumbled upon a video on Bilibili where a 38-year-old software developer shared his frustrations about being unable to find a job. &lt;a href=&#34;https://www.bilibili.com/video/BV1CT421m7Mx&#34;&gt;Video Link&lt;/a&gt;。Watching it brought back memories, as I too experienced over four months of unemployment in 2023. The self-doubt during that period was deeply impactful. However, this article isn&amp;rsquo;t about reminiscing over tough times but rather to explore whether 35 is truly the end of the road for software developers. Is it really inevitable that programmers must &amp;ldquo;retire&amp;rdquo; at 35, unable to find work or forced to change careers?&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>Recently, I stumbled upon a video on Bilibili where a 38-year-old software developer shared his frustrations about being unable to find a job. <a href="https://www.bilibili.com/video/BV1CT421m7Mx">Video Link</a>。Watching it brought back memories, as I too experienced over four months of unemployment in 2023. The self-doubt during that period was deeply impactful. However, this article isn&rsquo;t about reminiscing over tough times but rather to explore whether 35 is truly the end of the road for software developers. Is it really inevitable that programmers must &ldquo;retire&rdquo; at 35, unable to find work or forced to change careers?</p>
 <h1 id="age-35-is-not-the-end">Age 35 Is Not the End</h1>

@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>HashMap on 风萧古道 - 勤学苦练，年复一年</title>
-    <link>https://windypath.com/tags/hashmap/</link>
+    <link>http://localhost:1313/tags/hashmap/</link>
     <description>Recent content in HashMap on 风萧古道 - 勤学苦练，年复一年</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
     <lastBuildDate>Sat, 16 Oct 2021 17:43:32 +0800</lastBuildDate>
-    <atom:link href="https://windypath.com/tags/hashmap/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/hashmap/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kotlin手动实现一个最简单的哈希表</title>
-      <link>https://windypath.com/posts/kotlin_implement_a_simple_hashmap/</link>
+      <link>http://localhost:1313/posts/kotlin_implement_a_simple_hashmap/</link>
       <pubDate>Sat, 16 Oct 2021 17:43:32 +0800</pubDate>
-      <guid>https://windypath.com/posts/kotlin_implement_a_simple_hashmap/</guid>
+      <guid>http://localhost:1313/posts/kotlin_implement_a_simple_hashmap/</guid>
       <description>&lt;p&gt;参考的是《数据结构(C语言版)》上256页左右的哈希表的介绍，用了最简单的直接寻址法 + 链地址法。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>参考的是《数据结构(C语言版)》上256页左右的哈希表的介绍，用了最简单的直接寻址法 + 链地址法。</p>
 <p>用的是Kotlin。</p>
