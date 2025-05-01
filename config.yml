@@ -172,7 +172,7 @@ languages:
     description: Study And Practice, Years Of It
     params: 
       homeInfoParams:
-        Title: "\U0001F44B Hi, I'm Johnathan, Nice to meet you."
+        Title: "\U0001F44B Hi, I'm Jonathan, Nice to meet you."
         Content: "Only software technique articles are in this website. I hope you can get improved here."
 
       label:
@@ -188,7 +188,7 @@ languages:
 
       profileMode:
         enabled: false
-        title: Johnathan Lin
+        title: Jonathan Lin
         subtitle: "Server Development Engineer<br/>Study And Practice, Years Of It"
         imageUrl: "/images/Recovery.jpg" # optional
         imageTitle: "windy path" # optional
