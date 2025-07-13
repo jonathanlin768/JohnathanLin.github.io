@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>杂谈 on 风萧古道 - 勤学苦练，年复一年</title>
-    <link>http://localhost:1313/categories/%E6%9D%82%E8%B0%88/</link>
+    <link>http://localhost:13837/categories/%E6%9D%82%E8%B0%88/</link>
     <description>Recent content in 杂谈 on 风萧古道 - 勤学苦练，年复一年</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
     <lastBuildDate>Sun, 23 Jun 2024 19:30:14 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/%E6%9D%82%E8%B0%88/rss.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:13837/categories/%E6%9D%82%E8%B0%88/rss.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>35岁找不到工作,绝对不会是软件开发人员的结局</title>
-      <link>http://localhost:1313/posts/35_not_the_end_of_software_developer/</link>
+      <link>http://localhost:13837/posts/35_not_the_end_of_software_developer/</link>
       <pubDate>Sun, 23 Jun 2024 19:30:14 +0800</pubDate>
-      <guid>http://localhost:1313/posts/35_not_the_end_of_software_developer/</guid>
+      <guid>http://localhost:13837/posts/35_not_the_end_of_software_developer/</guid>
       <description>&lt;p&gt;最近在Bilibili刷到了一个视频，是一个38岁老程序员找不到工作后，发了个视频发发牢骚。&lt;a href=&#34;https://www.bilibili.com/video/BV1CT421m7Mx&#34;&gt;视频链接&lt;/a&gt;。看了之后很有感慨，因为我自己在2023年也经历了总计4个多月的失业时光。在那段时间的自我怀疑让我印象深刻。不过本文并不是在此忆苦思甜，而是借由此视频，探讨35岁是否真的是软件开发人员的终点，软件人是否真的到了35岁就必须“退役”，找不到工作或者转行。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>最近在Bilibili刷到了一个视频，是一个38岁老程序员找不到工作后，发了个视频发发牢骚。<a href="https://www.bilibili.com/video/BV1CT421m7Mx">视频链接</a>。看了之后很有感慨，因为我自己在2023年也经历了总计4个多月的失业时光。在那段时间的自我怀疑让我印象深刻。不过本文并不是在此忆苦思甜，而是借由此视频，探讨35岁是否真的是软件开发人员的终点，软件人是否真的到了35岁就必须“退役”，找不到工作或者转行。</p>
 <h1 id="35岁不是软件人的终点">35岁不是软件人的终点</h1>
@@ -65,9 +65,9 @@ Previous contributions to open source software
     </item>
     <item>
       <title>用爱发电项目开发两个月的心得体会</title>
-      <link>http://localhost:1313/posts/two_month_voluntary_project_conclusion/</link>
+      <link>http://localhost:13837/posts/two_month_voluntary_project_conclusion/</link>
       <pubDate>Sun, 14 Apr 2024 18:59:08 +0800</pubDate>
-      <guid>http://localhost:1313/posts/two_month_voluntary_project_conclusion/</guid>
+      <guid>http://localhost:13837/posts/two_month_voluntary_project_conclusion/</guid>
       <description>&lt;p&gt;前阵子我参加了一个用爱发电的独立游戏项目，是由一批网友聚集起来想要复刻某三国单机游戏的团队。“用爱发电”，即不获取酬劳，为了自己的梦想去努力奋斗。从24年2月4日开始得知这个组，2月7日进组，到4月4日离开，共经历了两个月。&lt;/p&gt;
 &lt;p&gt;我不想过多讨论这个游戏开发组中遇到的问题，因为在这个组的问题有其特殊性，并不具有普遍性。我想探讨的是个人开发者面对用爱发电项目时需要注意的内容，和一些心得体会。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>前阵子我参加了一个用爱发电的独立游戏项目，是由一批网友聚集起来想要复刻某三国单机游戏的团队。“用爱发电”，即不获取酬劳，为了自己的梦想去努力奋斗。从24年2月4日开始得知这个组，2月7日进组，到4月4日离开，共经历了两个月。</p>
@@ -116,9 +116,9 @@ Previous contributions to open source software
     </item>
     <item>
       <title>以魏延“子午谷奇谋”讨论软件需求可行性问题</title>
-      <link>http://localhost:1313/posts/using_weiyan_strategy_to_analyze_software_possibly/</link>
+      <link>http://localhost:13837/posts/using_weiyan_strategy_to_analyze_software_possibly/</link>
       <pubDate>Sun, 10 Mar 2024 11:59:48 +0800</pubDate>
-      <guid>http://localhost:1313/posts/using_weiyan_strategy_to_analyze_software_possibly/</guid>
+      <guid>http://localhost:13837/posts/using_weiyan_strategy_to_analyze_software_possibly/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;摘自某百科：《魏略》蜀军大将魏延认为，长安守将夏侯楙年少，娇生惯养、怯而无谋。今日假若我魏延领精兵五千，背负粮草五千，直由山道深入，寻秦岭而向东，到达子午再往北行。不过十日就能抵达长安。夏侯楙见我军突然出现，必然乘船而逃。如此一来，长安城内只剩下御史、京兆太守而已。长安北门有散民之谷，足以供应我军粮食。而由东方相会合，需要二十日，届时丞相您在由斜谷赶来，必定可以在此与我会师，这么一来，可以一举平定咸阳以西。&lt;/p&gt;
 &lt;/blockquote&gt;</description>

@@ -2,18 +2,153 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>风萧古道 - 勤学苦练，年复一年</title>
-    <link>http://localhost:1313/</link>
+    <link>http://localhost:13837/</link>
     <description>Recent content on 风萧古道 - 勤学苦练，年复一年</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>© Windypath 风萧古道 **For Chinese Software**. [闽ICP备15016446号-3](https://beian.miit.gov.cn/)</copyright>
-    <lastBuildDate>Sun, 16 Feb 2025 17:30:14 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/rss.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 13 Jul 2025 14:24:08 +0800</lastBuildDate>
+    <atom:link href="http://localhost:13837/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>游戏服务器开发经验（三）线上维护</title>
+      <link>http://localhost:13837/posts/game_server_experience_3/</link>
+      <pubDate>Sun, 13 Jul 2025 14:24:08 +0800</pubDate>
+      <guid>http://localhost:13837/posts/game_server_experience_3/</guid>
+      <description>游戏项目公测上线之后，玩家总能找到我们预期之外的方式，做出超乎预料的行为，线上服务器就会有各式各样的错误情况。即使在开发过程中我们已经尽力去编写健壮的代码，完成黑盒白盒测试和代码Review，也无法完全避免线上的各种问题。
+不过我们不需要为此悲观。在Java中，底层的虚拟机足够健壮，此外JVM也提供了很多工具给我们进行排查和修复问题。
+重载class以修复错误逻辑 在线上服务器中业务逻辑有问题时，我们可以针对出问题的类，在本地修复代码逻辑后，编译出新的.class文件，然后上传到服务器能访问的文件夹目录中，使用Java虚拟机的redefineClasses()方法，将新编译的正确业务逻辑的类class重载到线上的JVM虚拟机中，覆盖之前的class。
+如此一来，线上执行的class被替换，后续具体的方法被调用时，执行的是新class的代码业务逻辑。
+在线上执行本地编写的代码 使用Groovy脚本，可以在线上服务器中运行代码。在本地编写好groovy脚本代码，通过线上提供的接口（可以是后台接口，或者是GM管理员指令入口）执行groovy脚本内容。
+如此一来，当我们对线上服务器的情况有疑惑，需要打印具体的内容；或是希望能修复线上用户的错误数据，就可以使用直接执行脚本代码进行操作。
+需要注意的是，Groovy脚本实际上是对使用者要求非常高的一项技术，几乎是线上游戏修改器般、黑魔法般的存在。用得好，可以快速修复玩家数据，能够快速查到服务器异常状态；用得不好，甚至可以直接删库跑路。
+策划配表重新加载 有一些在线无感知的游戏热更新是通过策划配表重新加载来实现的。偶尔有一些版本开发过程中，可以先把代码更新到服务器线上，但是不着急马上把新功能开启给玩家，策划可以在功能还未和玩家见面时，修改新功能相关的数值，也可以通过修改活动时间等方式来动态调整功能的开启。
+既然策划配表重载可以调整功能的开启，那么必然也可以完成功能的关闭。在开发过程中可以定义一张系统功能表，上面记录各种功能的id，并且有一个强制关闭的标记。开发过程中如果判定功能id关闭，则不允许执行后续逻辑。
+如此一来，如果线上已出现异常情况（如新玩法无法正常继续、奖励被刷），则可以快速先关闭具体的功能id，让后来的玩家无法继续造成错误情况。
+日志 所有人都知道要打印日志，但是到底打印什么日志最有用的呢？不同的项目有不同的答案。但是打日志是非常有用的，这一点毋庸置疑。
+根据我的理解，要打印日志的情况有：
+策划配表配错时，打warning。在开发阶段，策划要对自己的表进行测试。他们很有可能填错了数值而不知道。这时候打印出日志可以快速定位到底哪里配错了。 千万不能执行到的错误逻辑，打error。开发过程中如果发现一些情况是异常的，是正常逻辑肯定走不进来的，甚至可能因为异常而导致记录了错误的状态，则一定要打印日志。比如某个玩法一定要组队才能游玩，但是玩家在没组队的情况下请求游玩，说明玩家在之前已有错误，因此需要打印日志以记录情况。 玩家多次反馈出问题的功能逻辑，在最关键处打info。比如某个玩法结束后发奖失败，则需要在发奖的各个阶段打印日志，用以分析哪一个步骤出现问题。 玩家核心玩法行为日志记录，这个可以打info，也可以使用额外的行为日志记录（因为玩家行为可能很多，全部打到log文件会太大，所以可以将其通过消息队列发送到另一个数据仓库中进行汇总分析）。比如MMO游戏的玩家地图跳转，SLG游戏的战斗记录等。 不要打印日志的情况有：
+接口的业务逻辑中，已有明确错误提示后返回的情况。如在商店道具购买时道具不足，客户端已能收到有意义的文字错误信息，则再在服务器打印错误日志是意义不大的。 尽量不要在太公用的业务逻辑里打印日志，即使要打印也要加一些条件。这是因为公用逻辑会被各个不同的业务调用，并且一般是主要的玩法。打印日志不加条件限制的话，会造成日志过多而不方便排查。 什么时候用info，warning，error？ 这个问题也是不同的项目有不同的答案。
+我的理解是：为了观察玩家和服务器状态的用info，不影响玩家继续游玩，但是确实可能有异常的用warning，要是执行到就一定是有错误的用error。
+版本更新前的内部服务器日志一定要关注 当版本开发完毕，到测试阶段时，一定不要觉得测试人员没有反馈就完事大吉了。一定要关注内部服务器的日志，尤其是新打印的日志。内网能看到的日志，外网一定能看到；而外网能看到的日志，内网也一定能复现。
+最后，不用担心日志打太多的问题。查不到问题的原因才是更坏的情况。
+服务器状态监控 版本更新后，新玩法开启的几天，一定要有意识观察线上服务器的CPU和内存使用状态。就算没有搭grafana那样的工具，你也可以连到线上服务器通过Linux命令查看是否异常。如果CPU过高或者内存不够，则需要尽快把问题反馈出来，从而尽快分析并且处理问题。
+这绝对是一个好习惯，原因是有一些问题可能玩家遇到了没反馈出来，他们可能觉得无伤大雅，但是那些没反馈的问题，对服务器的状态也许存在一些风险。
+线上问题定位 前文所述内容都是为了避免和修复线上问题。而如何定位线上问题，才是服务器开发中最困难的一环。
+这件事的困难之处在于，
+无法复现玩家所遇到的情景； 玩家反馈的信息是玩家理解的内容，不一定是服务器上的问题所在 情况是耦合发生的，触发条件苛刻 而当我们花了大量时间排查，最后可能发现只要改不超过10行代码就能解决问题。这或许有一点幽默，但是却是经常发生的情况。
+但当我在此回看过去，我发现线上问题一定是能查到结果的，只不过是时间成本问题罢了。真正阻碍我们查到线上问题症结的是我们的内心。
+要相信问题是一定能被排查到的 计算机科学是一门年轻的学科。它远没有达到物理学中“电子双缝干涉”那样深奥而暂时无解的情况（当然你一定要拿“比特跳变”这种极端罕见而异常的情况抬杠的话，我就认输）。而游戏服务器的环境配置，都是由你我这样的凡人搭建的。游戏服务器的业务逻辑更是由团队里的大家编写的。所以一切的问题是一定能定位得到的。
+而在排查过程中，要相信一点：
+“所有的问题都会解决的”
+当你在排查线上问题的时候，不要惧怕那些线上问题，也不要惧怕那些给你施压的人。程序员常有的完美主义让我们认为一切的代码问题都是可控的，因为业务逻辑是我们一行一行写出来的。但是这不代表代码就一定没有问题。恰恰相反，出问题才是常态。出问题不代表我们不好不优秀，而是“我们还有未知的内容需要去学习”。不要惧怕那些给你施压的人，因为与问题正面对抗的人，就是屏幕前的你。你本应该是伟大而强大的。专注于你要排查的问题，像侦探一样耐心地分析各种蛛丝马迹，所有的问题都会解决的。
+分析玩家所述内容，排查异常情况 当玩家反馈错误的情况时，根据玩家的描述定位到具体的玩法，这时不要直接钻到玩法的业务逻辑代码之中，那就如大海捞针了。我们应该根据玩家提供的玩法信息，游玩时间，反过来去查找日志，观察其在出问题的前后执行了什么操作、消耗和获得了什么道具、游玩了其他的什么玩法，在此期间是否有可疑的错误日志等等。
+这一步同时你需要去理解玩法的具体内容，比如时间，状态等。通过日志和玩法内容，去勾勒玩家当时的情况。
+模拟玩家所遇到的环境 有条件的话，尽量能把出问题的玩家的数据导入到自己的服务器上。这样我们就可以在本地进行各种尝试。如果能把玩家出问题前后的玩家数据拿到本地则更佳。即使没有玩家数据也没关系，在内部环境中模拟玩家所遇到的情况，通过玩家提供的视频，和服务器上的日志，可以得到玩家的状态，进行游玩，也一定会有新的理解。如果实在是无法在本地复现，你也可以用脚本到服务器上执行一些代码，打印玩家现在的状态（现在的状态也是有意义的，玩家有自己的方式再次复现）。
+仔细甄别“问题情况”和“猜测的原因” 当线上问题发生时，如果是大问题或者难排查的问题，会有很多人的噪音在耳边叽叽喳喳。他们提供的思路不一定是错的，但是可能和当前最重要的问题没有关系。一定要分析出问题的情况在哪里，专注于要修的问题的情况。会有一些对游戏很了解，但没有看代码的人提出很多猜测，要理性地分辨这些猜测，小心仔细地验证各方论点。
+如果真的查不出，就打印排查日志 分析玩家行为、导玩家数据到本地、模拟出问题的环境、并且各方讨论也没有结果，那么请打印好排查日志。
+排查日志一般是为了以下目的：
+检查关键代码逻辑是否被访问到； 当执行代码逻辑到某一处时，检查玩家的状态是否正确。 因此这样的排查日志，需要打印的细节一定要越丰富越好。如果打印的内容很多，最好能用StringBuilder将多行内容拼成一个String，然后直接用一行log打印出来，以避免日志收集器收录到只言片语。
+你甚至可以针对某一个玩家游玩时，仅针对他打印各种细节日志，甚至可以包括程序调用的堆栈信息。</description>
+      <content:encoded><![CDATA[<p>游戏项目公测上线之后，玩家总能找到我们预期之外的方式，做出超乎预料的行为，线上服务器就会有各式各样的错误情况。即使在开发过程中我们已经尽力去编写健壮的代码，完成黑盒白盒测试和代码Review，也无法完全避免线上的各种问题。</p>
+<p>不过我们不需要为此悲观。在Java中，底层的虚拟机足够健壮，此外JVM也提供了很多工具给我们进行排查和修复问题。</p>
+<h1 id="重载class以修复错误逻辑">重载class以修复错误逻辑</h1>
+<p>在线上服务器中业务逻辑有问题时，我们可以针对出问题的类，在本地修复代码逻辑后，编译出新的.class文件，然后上传到服务器能访问的文件夹目录中，使用Java虚拟机的redefineClasses()方法，将新编译的正确业务逻辑的类class重载到线上的JVM虚拟机中，覆盖之前的class。</p>
+<p>如此一来，线上执行的class被替换，后续具体的方法被调用时，执行的是新class的代码业务逻辑。</p>
+<h1 id="在线上执行本地编写的代码">在线上执行本地编写的代码</h1>
+<p>使用Groovy脚本，可以在线上服务器中运行代码。在本地编写好groovy脚本代码，通过线上提供的接口（可以是后台接口，或者是GM管理员指令入口）执行groovy脚本内容。</p>
+<p>如此一来，当我们对线上服务器的情况有疑惑，需要打印具体的内容；或是希望能修复线上用户的错误数据，就可以使用直接执行脚本代码进行操作。</p>
+<p>需要注意的是，Groovy脚本实际上是对使用者要求非常高的一项技术，几乎是线上游戏修改器般、黑魔法般的存在。用得好，可以快速修复玩家数据，能够快速查到服务器异常状态；用得不好，甚至可以直接删库跑路。</p>
+<h1 id="策划配表重新加载">策划配表重新加载</h1>
+<p>有一些在线无感知的游戏热更新是通过策划配表重新加载来实现的。偶尔有一些版本开发过程中，可以先把代码更新到服务器线上，但是不着急马上把新功能开启给玩家，策划可以在功能还未和玩家见面时，修改新功能相关的数值，也可以通过修改活动时间等方式来动态调整功能的开启。</p>
+<p>既然策划配表重载可以调整功能的开启，那么必然也可以完成功能的关闭。在开发过程中可以定义一张系统功能表，上面记录各种功能的id，并且有一个强制关闭的标记。开发过程中如果判定功能id关闭，则不允许执行后续逻辑。</p>
+<p>如此一来，如果线上已出现异常情况（如新玩法无法正常继续、奖励被刷），则可以快速先关闭具体的功能id，让后来的玩家无法继续造成错误情况。</p>
+<h1 id="日志">日志</h1>
+<p>所有人都知道要打印日志，但是到底打印什么日志最有用的呢？不同的项目有不同的答案。但是打日志是非常有用的，这一点毋庸置疑。</p>
+<p>根据我的理解，要打印日志的情况有：</p>
+<ol>
+<li>策划配表配错时，打warning。在开发阶段，策划要对自己的表进行测试。他们很有可能填错了数值而不知道。这时候打印出日志可以快速定位到底哪里配错了。</li>
+<li>千万不能执行到的错误逻辑，打error。开发过程中如果发现一些情况是异常的，是正常逻辑肯定走不进来的，甚至可能因为异常而导致记录了错误的状态，则一定要打印日志。比如某个玩法一定要组队才能游玩，但是玩家在没组队的情况下请求游玩，说明玩家在之前已有错误，因此需要打印日志以记录情况。</li>
+<li>玩家多次反馈出问题的功能逻辑，在最关键处打info。比如某个玩法结束后发奖失败，则需要在发奖的各个阶段打印日志，用以分析哪一个步骤出现问题。</li>
+<li>玩家核心玩法行为日志记录，这个可以打info，也可以使用额外的行为日志记录（因为玩家行为可能很多，全部打到log文件会太大，所以可以将其通过消息队列发送到另一个数据仓库中进行汇总分析）。比如MMO游戏的玩家地图跳转，SLG游戏的战斗记录等。</li>
+</ol>
+<p>不要打印日志的情况有：</p>
+<ol>
+<li>接口的业务逻辑中，已有明确错误提示后返回的情况。如在商店道具购买时道具不足，客户端已能收到有意义的文字错误信息，则再在服务器打印错误日志是意义不大的。</li>
+<li>尽量不要在太公用的业务逻辑里打印日志，即使要打印也要加一些条件。这是因为公用逻辑会被各个不同的业务调用，并且一般是主要的玩法。打印日志不加条件限制的话，会造成日志过多而不方便排查。</li>
+</ol>
+<p><strong>什么时候用info，warning，error？</strong>
+这个问题也是不同的项目有不同的答案。</p>
+<p>我的理解是：为了观察玩家和服务器状态的用info，不影响玩家继续游玩，但是确实可能有异常的用warning，要是执行到就一定是有错误的用error。</p>
+<p><strong>版本更新前的内部服务器日志一定要关注</strong>
+当版本开发完毕，到测试阶段时，一定不要觉得测试人员没有反馈就完事大吉了。一定要关注内部服务器的日志，尤其是新打印的日志。内网能看到的日志，外网一定能看到；而外网能看到的日志，内网也一定能复现。</p>
+<p>最后，不用担心日志打太多的问题。查不到问题的原因才是更坏的情况。</p>
+<h1 id="服务器状态监控">服务器状态监控</h1>
+<p>版本更新后，新玩法开启的几天，一定要有意识观察线上服务器的CPU和内存使用状态。就算没有搭grafana那样的工具，你也可以连到线上服务器通过Linux命令查看是否异常。如果CPU过高或者内存不够，则需要尽快把问题反馈出来，从而尽快分析并且处理问题。</p>
+<p>这绝对是一个好习惯，原因是有一些问题可能玩家遇到了没反馈出来，他们可能觉得无伤大雅，但是那些没反馈的问题，对服务器的状态也许存在一些风险。</p>
+<h1 id="线上问题定位">线上问题定位</h1>
+<p>前文所述内容都是为了避免和修复线上问题。而如何定位线上问题，才是服务器开发中最困难的一环。</p>
+<p>这件事的困难之处在于，</p>
+<ol>
+<li>无法复现玩家所遇到的情景；</li>
+<li>玩家反馈的信息是玩家理解的内容，不一定是服务器上的问题所在</li>
+<li>情况是耦合发生的，触发条件苛刻</li>
+</ol>
+<p>而当我们花了大量时间排查，最后可能发现只要改不超过10行代码就能解决问题。这或许有一点幽默，但是却是经常发生的情况。</p>
+<p>但当我在此回看过去，我发现线上问题一定是能查到结果的，只不过是时间成本问题罢了。真正阻碍我们查到线上问题症结的是我们的内心。</p>
+<h2 id="要相信问题是一定能被排查到的">要相信问题是一定能被排查到的</h2>
+<p>计算机科学是一门年轻的学科。它远没有达到物理学中“电子双缝干涉”那样深奥而暂时无解的情况（当然你一定要拿“比特跳变”这种极端罕见而异常的情况抬杠的话，我就认输）。而游戏服务器的环境配置，都是由你我这样的凡人搭建的。游戏服务器的业务逻辑更是由团队里的大家编写的。所以一切的问题是一定能定位得到的。</p>
+<p>而在排查过程中，要相信一点：</p>
+<p><strong>“所有的问题都会解决的”</strong></p>
+<p>当你在排查线上问题的时候，不要惧怕那些线上问题，也不要惧怕那些给你施压的人。程序员常有的完美主义让我们认为一切的代码问题都是可控的，因为业务逻辑是我们一行一行写出来的。但是这不代表代码就一定没有问题。恰恰相反，出问题才是常态。出问题不代表我们不好不优秀，而是“我们还有未知的内容需要去学习”。不要惧怕那些给你施压的人，因为与问题正面对抗的人，就是屏幕前的你。你本应该是伟大而强大的。专注于你要排查的问题，像侦探一样耐心地分析各种蛛丝马迹，所有的问题都会解决的。</p>
+<h2 id="分析玩家所述内容排查异常情况">分析玩家所述内容，排查异常情况</h2>
+<p>当玩家反馈错误的情况时，根据玩家的描述定位到具体的玩法，这时不要直接钻到玩法的业务逻辑代码之中，那就如大海捞针了。我们应该根据玩家提供的玩法信息，游玩时间，反过来去查找日志，观察其在出问题的前后执行了什么操作、消耗和获得了什么道具、游玩了其他的什么玩法，在此期间是否有可疑的错误日志等等。</p>
+<p>这一步同时你需要去理解玩法的具体内容，比如时间，状态等。通过日志和玩法内容，去勾勒玩家当时的情况。</p>
+<h2 id="模拟玩家所遇到的环境">模拟玩家所遇到的环境</h2>
+<p>有条件的话，尽量能把出问题的玩家的数据导入到自己的服务器上。这样我们就可以在本地进行各种尝试。如果能把玩家出问题前后的玩家数据拿到本地则更佳。即使没有玩家数据也没关系，在内部环境中模拟玩家所遇到的情况，通过玩家提供的视频，和服务器上的日志，可以得到玩家的状态，进行游玩，也一定会有新的理解。如果实在是无法在本地复现，你也可以用脚本到服务器上执行一些代码，打印玩家现在的状态（现在的状态也是有意义的，玩家有自己的方式再次复现）。</p>
+<h2 id="仔细甄别问题情况和猜测的原因">仔细甄别“问题情况”和“猜测的原因”</h2>
+<p>当线上问题发生时，如果是大问题或者难排查的问题，会有很多人的噪音在耳边叽叽喳喳。他们提供的思路不一定是错的，但是可能和当前最重要的问题没有关系。一定要分析出问题的情况在哪里，专注于要修的问题的情况。会有一些对游戏很了解，但没有看代码的人提出很多猜测，要理性地分辨这些猜测，小心仔细地验证各方论点。</p>
+<h2 id="如果真的查不出就打印排查日志">如果真的查不出，就打印排查日志</h2>
+<p>分析玩家行为、导玩家数据到本地、模拟出问题的环境、并且各方讨论也没有结果，那么请打印好排查日志。</p>
+<p>排查日志一般是为了以下目的：</p>
+<ol>
+<li>检查关键代码逻辑是否被访问到；</li>
+<li>当执行代码逻辑到某一处时，检查玩家的状态是否正确。</li>
+</ol>
+<p>因此这样的排查日志，需要打印的细节一定要越丰富越好。如果打印的内容很多，最好能用StringBuilder将多行内容拼成一个String，然后直接用一行log打印出来，以避免日志收集器收录到只言片语。</p>
+<p>你甚至可以针对某一个玩家游玩时，仅针对他打印各种细节日志，甚至可以包括程序调用的堆栈信息。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>游戏服务器开发经验（二）避免内存泄露</title>
+      <link>http://localhost:13837/posts/game_server_experience_2/</link>
+      <pubDate>Mon, 09 Jun 2025 21:30:14 +0800</pubDate>
+      <guid>http://localhost:13837/posts/game_server_experience_2/</guid>
+      <description>内存泄漏（Memory Leak）通常指的是计算机程序中一种资源管理失当的问题。简单来说，就是程序申请了内存空间，但在不再使用它的时候，没有将其释放，导致这部分内存一直被占用，且无法被程序再次访问或操作系统回收。
+为什么会内存泄漏？ 在Java中，当一个对象A拥有另一个对象B的引用时，如果B只有来自A的这一个引用，并且A一直没有释放，则B也不会被释放。因为JVM并不知晓代码的业务逻辑，他只知道B还被其他对象引用，并且A也正在使用之中。因此JVM会认为，B对象还不可以回收。
+然而，A对象没有移除到B对象的这个引用，有可能是因为业务逻辑处理不当所致。例如，当A是一个单例的全局对象管理器，管理一系列对象，而B对象恰好在业务逻辑中应该被回收，而没有回收时，B会一直存在于A的引用中。此时B就无法进入正常的回收逻辑中了。
+如何避免内存泄漏 在任何时刻，创建对象时，都要思考一下生命周期。 可以试着问问自己：目前的这个对象被创建后，它应该在什么时候被销毁？是这个函数结束时、副本玩法结束时、组队结束时、玩家下线时、还是一直到服务器停止后？ 考虑不使用引用，而使用id等基础数据类型进行关联 这个对象创建之后，要离开创建它的函数，就一定要被其他对象管理。在管理器之外，还会被其他对象引用吗？如果是，那么要考虑其引用什么时候结束。或者，如果管理器能提供唯一的id进行管理，那么在其他对象上就存储一个唯一的id，在需要时再通过id向管理器查询出对象，在函数调用栈中使用，随着函数结束后栈帧弹出回收。 在外部补充业务逻辑，检查内存泄漏 如果业务足够复杂，系统陈旧，无法进行彻底排查泄露的位置，可以考虑每隔一段时间检查内存中是否有内存泄漏，然后强行将其清除。相当于是在业务层执行一次垃圾回收行为。 定义过期时间，限制使用条件 如果业务复杂，可以考虑在对象使用时加一个过期时间，超过时间还被访问，则执行清理。 </description>
+      <content:encoded><![CDATA[<p>内存泄漏（Memory Leak）通常指的是计算机程序中一种资源管理失当的问题。简单来说，就是程序申请了内存空间，但在不再使用它的时候，没有将其释放，导致这部分内存一直被占用，且无法被程序再次访问或操作系统回收。</p>
+<h1 id="为什么会内存泄漏">为什么会内存泄漏？</h1>
+<p>在Java中，当一个对象A拥有另一个对象B的引用时，如果B只有来自A的这一个引用，并且A一直没有释放，则B也不会被释放。因为JVM并不知晓代码的业务逻辑，他只知道B还被其他对象引用，并且A也正在使用之中。因此JVM会认为，B对象还不可以回收。</p>
+<p>然而，A对象没有移除到B对象的这个引用，有可能是因为业务逻辑处理不当所致。例如，当A是一个单例的全局对象管理器，管理一系列对象，而B对象恰好在业务逻辑中应该被回收，而没有回收时，B会一直存在于A的引用中。此时B就无法进入正常的回收逻辑中了。</p>
+<h1 id="如何避免内存泄漏">如何避免内存泄漏</h1>
+<ol>
+<li>在任何时刻，创建对象时，都要思考一下生命周期。
+可以试着问问自己：目前的这个对象被创建后，它应该在什么时候被销毁？是这个函数结束时、副本玩法结束时、组队结束时、玩家下线时、还是一直到服务器停止后？</li>
+<li>考虑不使用引用，而使用id等基础数据类型进行关联
+这个对象创建之后，要离开创建它的函数，就一定要被其他对象管理。在管理器之外，还会被其他对象引用吗？如果是，那么要考虑其引用什么时候结束。或者，如果管理器能提供唯一的id进行管理，那么在其他对象上就存储一个唯一的id，在需要时再通过id向管理器查询出对象，在函数调用栈中使用，随着函数结束后栈帧弹出回收。</li>
+<li>在外部补充业务逻辑，检查内存泄漏
+如果业务足够复杂，系统陈旧，无法进行彻底排查泄露的位置，可以考虑每隔一段时间检查内存中是否有内存泄漏，然后强行将其清除。相当于是在业务层执行一次垃圾回收行为。</li>
+<li>定义过期时间，限制使用条件
+如果业务复杂，可以考虑在对象使用时加一个过期时间，超过时间还被访问，则执行清理。</li>
+</ol>
+]]></content:encoded>
+    </item>
     <item>
       <title>游戏服务器开发经验（一）道具防刷</title>
-      <link>http://localhost:1313/posts/game_server_experience_1/</link>
+      <link>http://localhost:13837/posts/game_server_experience_1/</link>
       <pubDate>Sun, 16 Feb 2025 17:30:14 +0800</pubDate>
-      <guid>http://localhost:1313/posts/game_server_experience_1/</guid>
+      <guid>http://localhost:13837/posts/game_server_experience_1/</guid>
       <description>前言 在多年的游戏服务器开发工作中，在大多数时候，开发内容仅仅是将策划的需求“翻译”成服务器程序代码。但是这份工作需要的严谨程度非常高，远远不止将需求实现而已。 有一些内容是开发过程中就需要有意识去注意的。如：必须校验客户端传参；先扣除道具，再改状态，最后发奖励以保证防止玩家刷奖励等。做到这一步，基本上能保证客户端的行为能在服务器的控制以内。
 但还有一些内容，是由于项目长期开发过程中，多个需求互相杂糅导致的问题。比如今天的功能可能和去年年初的功能耦合，但是触发条件比较苛刻，埋得比较深。这种问题一般不会是什么影响服务器启动的大问题，但是很有可能会造成业务逻辑的漏洞。面对这种问题，我们是比较难在开发中能提前预知，一般是靠人力测试或者接口压力测试的时候查看报错日志来发现。
 还有一些是需求过于复杂，变动太大，程序跟不上策划思路。这种情况其实更考验沟通能力，准确来说，是发现策划“核心需求”的能力。策划想要的东西可能和他说的内容并不一致，他想要的需求也和他真正告诉你的不一致。所以这就要求我们的代码能够支持一定的灵活性，能够提前预判策划真正想要的目标效果。当然这也需要我们程序员多玩不同类型的游戏，从而尽可能让思路和策划在同一水平面上。
@@ -56,9 +191,9 @@
     </item>
     <item>
       <title>35岁找不到工作,绝对不会是软件开发人员的结局</title>
-      <link>http://localhost:1313/posts/35_not_the_end_of_software_developer/</link>
+      <link>http://localhost:13837/posts/35_not_the_end_of_software_developer/</link>
       <pubDate>Sun, 23 Jun 2024 19:30:14 +0800</pubDate>
-      <guid>http://localhost:1313/posts/35_not_the_end_of_software_developer/</guid>
+      <guid>http://localhost:13837/posts/35_not_the_end_of_software_developer/</guid>
       <description>&lt;p&gt;最近在Bilibili刷到了一个视频，是一个38岁老程序员找不到工作后，发了个视频发发牢骚。&lt;a href=&#34;https://www.bilibili.com/video/BV1CT421m7Mx&#34;&gt;视频链接&lt;/a&gt;。看了之后很有感慨，因为我自己在2023年也经历了总计4个多月的失业时光。在那段时间的自我怀疑让我印象深刻。不过本文并不是在此忆苦思甜，而是借由此视频，探讨35岁是否真的是软件开发人员的终点，软件人是否真的到了35岁就必须“退役”，找不到工作或者转行。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>最近在Bilibili刷到了一个视频，是一个38岁老程序员找不到工作后，发了个视频发发牢骚。<a href="https://www.bilibili.com/video/BV1CT421m7Mx">视频链接</a>。看了之后很有感慨，因为我自己在2023年也经历了总计4个多月的失业时光。在那段时间的自我怀疑让我印象深刻。不过本文并不是在此忆苦思甜，而是借由此视频，探讨35岁是否真的是软件开发人员的终点，软件人是否真的到了35岁就必须“退役”，找不到工作或者转行。</p>
 <h1 id="35岁不是软件人的终点">35岁不是软件人的终点</h1>
@@ -110,9 +245,9 @@ Previous contributions to open source software
     </item>
     <item>
       <title>用爱发电项目开发两个月的心得体会</title>
-      <link>http://localhost:1313/posts/two_month_voluntary_project_conclusion/</link>
+      <link>http://localhost:13837/posts/two_month_voluntary_project_conclusion/</link>
       <pubDate>Sun, 14 Apr 2024 18:59:08 +0800</pubDate>
-      <guid>http://localhost:1313/posts/two_month_voluntary_project_conclusion/</guid>
+      <guid>http://localhost:13837/posts/two_month_voluntary_project_conclusion/</guid>
       <description>&lt;p&gt;前阵子我参加了一个用爱发电的独立游戏项目，是由一批网友聚集起来想要复刻某三国单机游戏的团队。“用爱发电”，即不获取酬劳，为了自己的梦想去努力奋斗。从24年2月4日开始得知这个组，2月7日进组，到4月4日离开，共经历了两个月。&lt;/p&gt;
 &lt;p&gt;我不想过多讨论这个游戏开发组中遇到的问题，因为在这个组的问题有其特殊性，并不具有普遍性。我想探讨的是个人开发者面对用爱发电项目时需要注意的内容，和一些心得体会。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>前阵子我参加了一个用爱发电的独立游戏项目，是由一批网友聚集起来想要复刻某三国单机游戏的团队。“用爱发电”，即不获取酬劳，为了自己的梦想去努力奋斗。从24年2月4日开始得知这个组，2月7日进组，到4月4日离开，共经历了两个月。</p>
@@ -161,9 +296,9 @@ Previous contributions to open source software
     </item>
     <item>
       <title>以魏延“子午谷奇谋”讨论软件需求可行性问题</title>
-      <link>http://localhost:1313/posts/using_weiyan_strategy_to_analyze_software_possibly/</link>
+      <link>http://localhost:13837/posts/using_weiyan_strategy_to_analyze_software_possibly/</link>
       <pubDate>Sun, 10 Mar 2024 11:59:48 +0800</pubDate>
-      <guid>http://localhost:1313/posts/using_weiyan_strategy_to_analyze_software_possibly/</guid>
+      <guid>http://localhost:13837/posts/using_weiyan_strategy_to_analyze_software_possibly/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;摘自某百科：《魏略》蜀军大将魏延认为，长安守将夏侯楙年少，娇生惯养、怯而无谋。今日假若我魏延领精兵五千，背负粮草五千，直由山道深入，寻秦岭而向东，到达子午再往北行。不过十日就能抵达长安。夏侯楙见我军突然出现，必然乘船而逃。如此一来，长安城内只剩下御史、京兆太守而已。长安北门有散民之谷，足以供应我军粮食。而由东方相会合，需要二十日，届时丞相您在由斜谷赶来，必定可以在此与我会师，这么一来，可以一举平定咸阳以西。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -192,9 +327,9 @@ Previous contributions to open source software
     </item>
     <item>
       <title>MQTT协议中可变长度的具体计算方式（有计算过程解析）</title>
-      <link>http://localhost:1313/posts/mqtt_remain_length_calculate/</link>
+      <link>http://localhost:13837/posts/mqtt_remain_length_calculate/</link>
       <pubDate>Tue, 26 Dec 2023 16:06:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/mqtt_remain_length_calculate/</guid>
+      <guid>http://localhost:13837/posts/mqtt_remain_length_calculate/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;本文介绍MQTT协议中，固定报头中的可变长度部分的计算方式。通过提供一些例子，将其他介绍MQTT协议的文章中没有仔细说明的计算部分进行解释。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -311,9 +446,9 @@ Previous contributions to open source software
     </item>
     <item>
       <title>关于游戏服务器配置表功能的探讨</title>
-      <link>http://localhost:1313/posts/config_table_project/</link>
+      <link>http://localhost:13837/posts/config_table_project/</link>
       <pubDate>Sun, 24 Dec 2023 16:15:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/config_table_project/</guid>
+      <guid>http://localhost:13837/posts/config_table_project/</guid>
       <description>&lt;h1 id=&#34;简介&#34;&gt;简介&lt;/h1&gt;
 &lt;p&gt;在游戏开发中，配置表是策划与程序员之间针对功能模块开发而搭建的桥梁。配置表在游戏开发中扮演非常重要的角色。策划需要向配置表填入各种数据，以完成功能数值的配置；程序员需要在项目代码中读取配置表，根据配置表和需求决定的业务逻辑来开发功能模块。&lt;/p&gt;
 &lt;p&gt;本文想探讨接触过的两个项目的配置表功能设计。在本文中，我不会泄露项目相关的具体信息，仅针对方案进行讨论。&lt;/p&gt;</description>
@@ -546,9 +681,9 @@ A[Excel文件]-->|Python转换|B[Csv文件]-->|Java代码读取|C[Zookeeper节�
     </item>
     <item>
       <title>Java并发编程中上锁的几种方式</title>
-      <link>http://localhost:1313/posts/java_juc_briefly/</link>
+      <link>http://localhost:13837/posts/java_juc_briefly/</link>
       <pubDate>Mon, 04 Dec 2023 17:27:44 +0800</pubDate>
-      <guid>http://localhost:1313/posts/java_juc_briefly/</guid>
+      <guid>http://localhost:13837/posts/java_juc_briefly/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;前言：本文想要介绍Synchronized，ReentrantLock和ReentrantLock的Condition的相关用法。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -1020,9 +1155,9 @@ t2一共输出了 49986 次
     </item>
     <item>
       <title>如何用C&#43;&#43;分割一个字符串？</title>
-      <link>http://localhost:1313/posts/how_to_split_a_string_in_cpp/</link>
+      <link>http://localhost:13837/posts/how_to_split_a_string_in_cpp/</link>
       <pubDate>Sun, 02 Jul 2023 11:54:44 +0800</pubDate>
-      <guid>http://localhost:1313/posts/how_to_split_a_string_in_cpp/</guid>
+      <guid>http://localhost:13837/posts/how_to_split_a_string_in_cpp/</guid>
       <description>&lt;h1 id=&#34;前言&#34;&gt;前言&lt;/h1&gt;
 &lt;p&gt;在上机面试的时候，遇到了一道题，它的输入是两行字符串，每行字符串有未知数量的数字（两行数字数量一致），用空格分隔开，输入形如：&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;12 34 567 888 99 100
@@ -1261,9 +1396,9 @@ D
     </item>
     <item>
       <title>CSAPP第二章-信息的表示与处理</title>
-      <link>http://localhost:1313/posts/csapp_chapter2_representing_manipulating_info/</link>
+      <link>http://localhost:13837/posts/csapp_chapter2_representing_manipulating_info/</link>
       <pubDate>Sun, 30 Apr 2023 21:08:43 +0800</pubDate>
-      <guid>http://localhost:1313/posts/csapp_chapter2_representing_manipulating_info/</guid>
+      <guid>http://localhost:13837/posts/csapp_chapter2_representing_manipulating_info/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;23年3月23日，我在公司进行了一次分享会，内容是本文的内容。在分享前，我重新对文章知识点进行了梳理，补充了很多细节。现将补充的细节重新编写到本文中。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -2151,9 +2286,9 @@ IEEE标准要求使用“向偶数舍入”，不是我们常说的四舍五入�
     </item>
     <item>
       <title>我的自我介绍</title>
-      <link>http://localhost:1313/posts/about_myself/</link>
+      <link>http://localhost:13837/posts/about_myself/</link>
       <pubDate>Sat, 29 Apr 2023 00:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/about_myself/</guid>
+      <guid>http://localhost:13837/posts/about_myself/</guid>
       <description>&lt;h1 id=&#34;欢迎&#34;&gt;欢迎&lt;/h1&gt;
 &lt;p&gt;你好啊，我是本站的站长，我的花名是凌虚。&lt;/p&gt;
 &lt;p&gt;“凌虚”是动漫《秦时明月》中，张良的佩剑名。凌虚剑身修长秀美,通体晶莹夺目,虽为利器却不见血腥之气,剑身之上有一十八颗碧血丹心,高贵儒雅之风浓重。而其持剑人为张良。取此花名，有暗含自己才智比肩张良之嫌。&lt;/p&gt;
@@ -2183,9 +2318,9 @@ Telegram: @windypath</p>]]></content:encoded>
     </item>
     <item>
       <title>Windows XP虚拟机中文版无需激活下载</title>
-      <link>http://localhost:1313/posts/nostalgic_winxp/</link>
+      <link>http://localhost:13837/posts/nostalgic_winxp/</link>
       <pubDate>Sun, 02 Oct 2022 18:51:17 +0800</pubDate>
-      <guid>http://localhost:1313/posts/nostalgic_winxp/</guid>
+      <guid>http://localhost:13837/posts/nostalgic_winxp/</guid>
       <description>&lt;h1 id=&#34;在这里直接下载我最后完成的虚拟机镜像&#34;&gt;在这里直接下载我最后完成的虚拟机镜像&lt;/h1&gt;
 &lt;p&gt;虚拟机镜像下载：&lt;/p&gt;
 &lt;p&gt;链接：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l&lt;/p&gt;
@@ -2238,9 +2373,9 @@ Windows XP英文版默认没有中文语言包。
     </item>
     <item>
       <title>Java TreeSet的一些用法和特性</title>
-      <link>http://localhost:1313/posts/about_java_treeset/</link>
+      <link>http://localhost:13837/posts/about_java_treeset/</link>
       <pubDate>Sat, 18 Jun 2022 17:10:44 +0800</pubDate>
-      <guid>http://localhost:1313/posts/about_java_treeset/</guid>
+      <guid>http://localhost:13837/posts/about_java_treeset/</guid>
       <description>&lt;p&gt;就是一些例子啦。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>就是一些例子啦。</p>
 <h2 id="先看一个例子kotlin实现">先看一个例子（kotlin实现）</h2>
@@ -2365,9 +2500,9 @@ TreeSet虽然可以边插边排序，但是它只允许一次插入，插入之�
     </item>
     <item>
       <title>Linux C&#43;&#43; Socket实战</title>
-      <link>http://localhost:1313/posts/linux_socket_programming/</link>
+      <link>http://localhost:13837/posts/linux_socket_programming/</link>
       <pubDate>Sat, 30 Apr 2022 23:23:49 +0800</pubDate>
-      <guid>http://localhost:1313/posts/linux_socket_programming/</guid>
+      <guid>http://localhost:13837/posts/linux_socket_programming/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;本文主要介绍Linux C++ 基础Socket网络编程。
 大部分知识来自于网站：&lt;a href=&#34;https://www.geeksforgeeks.org/socket-programming-cc/&#34;&gt;https://www.geeksforgeeks.org/socket-programming-cc/&lt;/a&gt;&lt;/p&gt;
@@ -2561,9 +2696,9 @@ receive: hello from server
     </item>
     <item>
       <title>传统软件服务器与游戏服务器架构区别</title>
-      <link>http://localhost:1313/posts/compare_web_with_game_server/</link>
+      <link>http://localhost:13837/posts/compare_web_with_game_server/</link>
       <pubDate>Sat, 16 Apr 2022 18:15:44 +0800</pubDate>
-      <guid>http://localhost:1313/posts/compare_web_with_game_server/</guid>
+      <guid>http://localhost:13837/posts/compare_web_with_game_server/</guid>
       <description>&lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -2773,9 +2908,9 @@ A[客户端]-->|tcp发送的protobuf|B[Gate的Netty解包]-->|actor内部消息�
     </item>
     <item>
       <title>独立个人项目开发心得 - 任务切分、挑战性、实用性和半途而废</title>
-      <link>http://localhost:1313/posts/individual_project_experience/</link>
+      <link>http://localhost:13837/posts/individual_project_experience/</link>
       <pubDate>Tue, 05 Apr 2022 18:37:07 +0800</pubDate>
-      <guid>http://localhost:1313/posts/individual_project_experience/</guid>
+      <guid>http://localhost:13837/posts/individual_project_experience/</guid>
       <description>&lt;p&gt;在写文章前容许我啰嗦一下：对于软件开发，我走了不少弯路，有时觉得自己作为API侠，无所不能，有时又觉得自己很多LeetCode题写不出来，无能为力。我有一个博客，但是写满了自己的絮絮叨叨，真正有本领的东西九牛一毛。&lt;/p&gt;
 &lt;p&gt;我甚至没有自己的“代表作”，因为我是一个急性子，想马上得到结果（事实上计算机真能马上给出结果，但开发过程不行）。我经常在“造自己的轮子”和“用别人的轮子”之间徘徊，“造自己的轮子”比较有成就感，但是难度其实很大，需要踩很多别人踩过的坑；“用别人的轮子”则没有什么成就感，做出来也不像是自己做的。而平时工作中，每天都在用别人的轮子，自己真正从比较底层开始实现的情况是非常少的，导致我在闲暇时间也不想用别人的轮子。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>在写文章前容许我啰嗦一下：对于软件开发，我走了不少弯路，有时觉得自己作为API侠，无所不能，有时又觉得自己很多LeetCode题写不出来，无能为力。我有一个博客，但是写满了自己的絮絮叨叨，真正有本领的东西九牛一毛。</p>
@@ -2948,9 +3083,9 @@ app。我对着github上的一个高仿微博的项目，拼命的抄各种代�
     </item>
     <item>
       <title>使用Python实现简单UDP Ping</title>
-      <link>http://localhost:1313/posts/simple_udp_ping_with_python/</link>
+      <link>http://localhost:13837/posts/simple_udp_ping_with_python/</link>
       <pubDate>Sat, 13 Nov 2021 15:31:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/simple_udp_ping_with_python/</guid>
+      <guid>http://localhost:13837/posts/simple_udp_ping_with_python/</guid>
       <description>&lt;h2 id=&#34;套接字编程作业2udp-ping-程序&#34;&gt;套接字编程作业2：UDP ping 程序&lt;/h2&gt;
 &lt;p&gt;在本实验中，您将学习使用Python进行UDP套接字编程的基础知识。您将学习如何使用UDP套接字发送和接收数据报，以及如何设置适当的套接字超时。在实验中，您将熟悉Ping应用程序及其在计算统计信息（如丢包率）中的作用。&lt;/p&gt;
 &lt;p&gt;您首先需要研究一个用Python编写的简单的ping服务器程序，并实现对应的客户端程序。这些程序提供的功能类似于现代操作系统中可用的标准ping程序功能。然而，我们的程序使用更简单的UDP协议，而不是标准互联网控制消息协议（ICMP）来进行通信。 ping协议允许客户端机器发送一个数据包到远程机器，并使远程机器将数据包返回到客户（称为回显）的操作。另外，ping协议允许主机计算它到其他机器的往返时间。&lt;/p&gt;
@@ -3074,9 +3209,9 @@ app。我对着github上的一个高仿微博的项目，拼命的抄各种代�
     </item>
     <item>
       <title>使用Python开发一个简单的web服务器</title>
-      <link>http://localhost:1313/posts/simple_web_server_with_python/</link>
+      <link>http://localhost:13837/posts/simple_web_server_with_python/</link>
       <pubDate>Sun, 07 Nov 2021 21:02:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/simple_web_server_with_python/</guid>
+      <guid>http://localhost:13837/posts/simple_web_server_with_python/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;来自书籍《计算机网络-自顶向下方法-第6版(课本)》第120页，第二章应用层的课后题第一题。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -3251,9 +3386,9 @@ app。我对着github上的一个高仿微博的项目，拼命的抄各种代�
     </item>
     <item>
       <title>Kotlin手动实现一个最简单的哈希表</title>
-      <link>http://localhost:1313/posts/kotlin_implement_a_simple_hashmap/</link>
+      <link>http://localhost:13837/posts/kotlin_implement_a_simple_hashmap/</link>
       <pubDate>Sat, 16 Oct 2021 17:43:32 +0800</pubDate>
-      <guid>http://localhost:1313/posts/kotlin_implement_a_simple_hashmap/</guid>
+      <guid>http://localhost:13837/posts/kotlin_implement_a_simple_hashmap/</guid>
       <description>&lt;p&gt;参考的是《数据结构(C语言版)》上256页左右的哈希表的介绍，用了最简单的直接寻址法 + 链地址法。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>参考的是《数据结构(C语言版)》上256页左右的哈希表的介绍，用了最简单的直接寻址法 + 链地址法。</p>
 <p>用的是Kotlin。</p>
@@ -3383,9 +3518,9 @@ app。我对着github上的一个高仿微博的项目，拼命的抄各种代�
     </item>
     <item>
       <title>Kotlin实现二叉堆、大顶堆、优先级队列</title>
-      <link>http://localhost:1313/posts/kotlin_implement_heap/</link>
+      <link>http://localhost:13837/posts/kotlin_implement_heap/</link>
       <pubDate>Thu, 14 Oct 2021 23:30:30 +0800</pubDate>
-      <guid>http://localhost:1313/posts/kotlin_implement_heap/</guid>
+      <guid>http://localhost:13837/posts/kotlin_implement_heap/</guid>
       <description>&lt;p&gt;参考了&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.bilibili.com/video/BV11t4y1r79L&#34;&gt;https://www.bilibili.com/video/BV11t4y1r79L&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/qq_19782019/article/details/78301832&#34;&gt;https://blog.csdn.net/qq_19782019/article/details/78301832&lt;/a&gt;&lt;/p&gt;
@@ -3655,9 +3790,9 @@ Process finished with exit code 0
     </item>
     <item>
       <title>搭建Spark实战环境（3台linux虚拟机集群）（一）样板机的搭建</title>
-      <link>http://localhost:1313/posts/build_spark_environment/</link>
+      <link>http://localhost:13837/posts/build_spark_environment/</link>
       <pubDate>Sat, 23 May 2020 17:42:09 +0800</pubDate>
-      <guid>http://localhost:1313/posts/build_spark_environment/</guid>
+      <guid>http://localhost:13837/posts/build_spark_environment/</guid>
       <description>&lt;h2 id=&#34;系统及软件配置&#34;&gt;系统及软件配置&lt;/h2&gt;
 &lt;h3 id=&#34;系统配置&#34;&gt;系统配置&lt;/h3&gt;
 &lt;p&gt;内存：16g 2400
@@ -3917,9 +4052,9 @@ SELinux设置为disable。
     </item>
     <item>
       <title>Springboot操作MongoDB，包括增改查及复杂操作</title>
-      <link>http://localhost:1313/posts/spring_operate_mongodb/</link>
+      <link>http://localhost:13837/posts/spring_operate_mongodb/</link>
       <pubDate>Tue, 19 May 2020 12:41:37 +0800</pubDate>
-      <guid>http://localhost:1313/posts/spring_operate_mongodb/</guid>
+      <guid>http://localhost:13837/posts/spring_operate_mongodb/</guid>
       <description>&lt;h2 id=&#34;单条件查询&#34;&gt;单条件查询&lt;/h2&gt;
 &lt;p&gt;使用BasicDBObject配置查询条件&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;AbstractMongoEntity&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; list &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Lists.&lt;span style=&#34;color:#a6e22e&#34;&gt;newArrayList&lt;/span&gt;();
@@ -4085,9 +4220,9 @@ SELinux设置为disable。
     </item>
     <item>
       <title>Unison在Linux下的安装与使用</title>
-      <link>http://localhost:1313/posts/unison_install_in_linux/</link>
+      <link>http://localhost:13837/posts/unison_install_in_linux/</link>
       <pubDate>Sat, 22 Feb 2020 14:19:06 +0800</pubDate>
-      <guid>http://localhost:1313/posts/unison_install_in_linux/</guid>
+      <guid>http://localhost:13837/posts/unison_install_in_linux/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;这是一篇在公司写的文档，但不涉及公司隐私。几乎所有内容参考于：&lt;a href=&#34;https://www.cnblogs.com/welcomer/p/5068287.html&#34;&gt;https://www.cnblogs.com/welcomer/p/5068287.html&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;</description>
@@ -4249,9 +4384,9 @@ log = true logfile = /home/system2/.unison/unison.log
     </item>
     <item>
       <title>Java实现类似WINSCP访问远程Linux服务器，执行命令、上传文件、下载文件</title>
-      <link>http://localhost:1313/posts/java_implement_winscp_like/</link>
+      <link>http://localhost:13837/posts/java_implement_winscp_like/</link>
       <pubDate>Thu, 20 Feb 2020 10:32:24 +0800</pubDate>
-      <guid>http://localhost:1313/posts/java_implement_winscp_like/</guid>
+      <guid>http://localhost:13837/posts/java_implement_winscp_like/</guid>
       <description>&lt;p&gt;pom.xml添加的依赖：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!-- https://mvnrepository.com/artifact/ch.ethz.ganymed/ganymed-ssh2 --&amp;gt;&lt;/span&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt; 
@@ -4459,9 +4594,9 @@ log = true logfile = /home/system2/.unison/unison.log
     </item>
     <item>
       <title>一个被废弃的项目——自动爬取信息然后发给我自己邮箱上</title>
-      <link>http://localhost:1313/posts/a_bad_project_crawler_and_email/</link>
+      <link>http://localhost:13837/posts/a_bad_project_crawler_and_email/</link>
       <pubDate>Sun, 09 Feb 2020 17:21:03 +0800</pubDate>
-      <guid>http://localhost:1313/posts/a_bad_project_crawler_and_email/</guid>
+      <guid>http://localhost:13837/posts/a_bad_project_crawler_and_email/</guid>
       <description>&lt;p&gt;这是一个python项目。&lt;/p&gt;
 &lt;p&gt;使用到的技术包括爬虫和发邮件&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>这是一个python项目。</p>
@@ -4654,9 +4789,9 @@ log = true logfile = /home/system2/.unison/unison.log
     </item>
     <item>
       <title>Python连接MongoDB和Oracle实战</title>
-      <link>http://localhost:1313/posts/python_connect_mongodb_and_oracle/</link>
+      <link>http://localhost:13837/posts/python_connect_mongodb_and_oracle/</link>
       <pubDate>Sun, 09 Feb 2020 17:06:29 +0800</pubDate>
-      <guid>http://localhost:1313/posts/python_connect_mongodb_and_oracle/</guid>
+      <guid>http://localhost:13837/posts/python_connect_mongodb_and_oracle/</guid>
       <description>&lt;h2 id=&#34;python连接mongodb&#34;&gt;Python连接MongoDB&lt;/h2&gt;
 &lt;h3 id=&#34;安装&#34;&gt;安装&lt;/h3&gt;
 &lt;p&gt;首先要安装pymongo，用pip装一下就好了。&lt;/p&gt;</description>
@@ -4866,9 +5001,9 @@ database=yyy
     </item>
     <item>
       <title>MongoDB常用查询语句</title>
-      <link>http://localhost:1313/posts/mongodb_search_script/</link>
+      <link>http://localhost:13837/posts/mongodb_search_script/</link>
       <pubDate>Sun, 09 Feb 2020 16:36:27 +0800</pubDate>
-      <guid>http://localhost:1313/posts/mongodb_search_script/</guid>
+      <guid>http://localhost:13837/posts/mongodb_search_script/</guid>
       <description>&lt;h2 id=&#34;增删改查部分&#34;&gt;增删改查部分&lt;/h2&gt;
 &lt;h3 id=&#34;mongodb单条件查询&#34;&gt;MongoDB单条件查询&lt;/h3&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;db.xxx.find({&amp;#39;city.value&amp;#39;:&amp;#39;深圳市&amp;#39;})
@@ -5010,9 +5145,9 @@ W:\xxxxxx.bson
     </item>
     <item>
       <title>vue和springboot项目部署到Linux服务器</title>
-      <link>http://localhost:1313/posts/vue_springboot_deploy_in_linux/</link>
+      <link>http://localhost:13837/posts/vue_springboot_deploy_in_linux/</link>
       <pubDate>Mon, 27 Jan 2020 16:53:23 +0800</pubDate>
-      <guid>http://localhost:1313/posts/vue_springboot_deploy_in_linux/</guid>
+      <guid>http://localhost:13837/posts/vue_springboot_deploy_in_linux/</guid>
       <description>&lt;h2 id=&#34;写在前面的话&#34;&gt;写在前面的话&lt;/h2&gt;
 &lt;p&gt;前后端分离的项目中，需要分别部署前端与后端项目。前端项目使用npm打包，将得到的dist文件夹下的内容上传到服务器后，用nginx的alias指向文件夹即可访问，而后端项目使用maven打包，需使用tomcat在后台启动，再通过nginx转发，供前端项目调用。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<h2 id="写在前面的话">写在前面的话</h2>
@@ -5279,9 +5414,9 @@ http {
     </item>
     <item>
       <title>Python的一些用法（可能不定时更新）</title>
-      <link>http://localhost:1313/posts/some_usages_of_python/</link>
+      <link>http://localhost:13837/posts/some_usages_of_python/</link>
       <pubDate>Sun, 01 Dec 2019 10:45:46 +0800</pubDate>
-      <guid>http://localhost:1313/posts/some_usages_of_python/</guid>
+      <guid>http://localhost:13837/posts/some_usages_of_python/</guid>
       <description>&lt;h2 id=&#34;striplstrip和rstrip&#34;&gt;strip()、lstrip()、和rstrip()&lt;/h2&gt;
 &lt;p&gt;Python strip() 方法用于移除字符串头尾指定的字符（默认为空格或换行符）或字符序列。&lt;/p&gt;
 &lt;p&gt;注意：该方法只能删除开头或是结尾的字符，不能删除中间部分的字符。&lt;/p&gt;
@@ -5409,9 +5544,9 @@ http {
     </item>
     <item>
       <title>java正则表达式 - 双反斜杠（\）和Pattern的matches()与find()</title>
-      <link>http://localhost:1313/posts/regular_expression/</link>
+      <link>http://localhost:13837/posts/regular_expression/</link>
       <pubDate>Sun, 24 Nov 2019 19:43:31 +0800</pubDate>
-      <guid>http://localhost:1313/posts/regular_expression/</guid>
+      <guid>http://localhost:13837/posts/regular_expression/</guid>
       <description>&lt;blockquote&gt;
 &lt;p&gt;参考文献
 &lt;a href=&#34;https://www.cnblogs.com/huhongy/p/7541875.html&#34;&gt;java正则表达式（find()和 matches()）&lt;/a&gt;
@@ -5588,9 +5723,9 @@ matcher.group()返回匹配到的子字符串
     </item>
     <item>
       <title>简述爬虫对两种网站的不同爬取方式</title>
-      <link>http://localhost:1313/posts/two_crawl_web_approach/</link>
+      <link>http://localhost:13837/posts/two_crawl_web_approach/</link>
       <pubDate>Fri, 15 Nov 2019 23:05:46 +0800</pubDate>
-      <guid>http://localhost:1313/posts/two_crawl_web_approach/</guid>
+      <guid>http://localhost:13837/posts/two_crawl_web_approach/</guid>
       <description>&lt;p&gt;爬虫的目的是采集网站的数据。而网站渲染数据有两种方式。我个人将其称为前端渲染和后端渲染。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>爬虫的目的是采集网站的数据。而网站渲染数据有两种方式。我个人将其称为前端渲染和后端渲染。</p>
 <h2 id="前端渲染">前端渲染</h2>
@@ -5748,9 +5883,9 @@ matcher.group()返回匹配到的子字符串
     </item>
     <item>
       <title>Vue的路由配置及手动改地址栏为啥又跳转回来？？</title>
-      <link>http://localhost:1313/posts/why_vue_router_back/</link>
+      <link>http://localhost:13837/posts/why_vue_router_back/</link>
       <pubDate>Tue, 05 Mar 2019 20:22:47 +0800</pubDate>
-      <guid>http://localhost:1313/posts/why_vue_router_back/</guid>
+      <guid>http://localhost:13837/posts/why_vue_router_back/</guid>
       <description>&lt;p&gt;​
 vue-cli（vue脚手架）超详细教程：&lt;a href=&#34;https://blog.csdn.net/wulala_hei/article/details/85000530&#34;&gt;vue-cli（vue脚手架）超详细教程_Yin_Xiaobo的博客-CSDN博客_vue-cli(vue脚手架)超详细教程&lt;/a&gt;&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>​
@@ -5833,9 +5968,9 @@ vue-cli（vue脚手架）超详细教程：<a href="https://blog.csdn.net/wulala
     </item>
     <item>
       <title>[JavaScript]JS基础知识</title>
-      <link>http://localhost:1313/posts/javascript_basic_knowledge/</link>
+      <link>http://localhost:13837/posts/javascript_basic_knowledge/</link>
       <pubDate>Wed, 06 Jun 2018 21:32:09 +0800</pubDate>
-      <guid>http://localhost:1313/posts/javascript_basic_knowledge/</guid>
+      <guid>http://localhost:13837/posts/javascript_basic_knowledge/</guid>
       <description>&lt;h1 id=&#34;javascriptjs基础知识上&#34;&gt;[JavaScript]JS基础知识（上）&lt;/h1&gt;
 &lt;h2 id=&#34;变量类型及计算&#34;&gt;变量类型及计算&lt;/h2&gt;
 &lt;h3 id=&#34;变量类型&#34;&gt;变量类型&lt;/h3&gt;
@@ -6527,9 +6662,9 @@ Location、History
     </item>
     <item>
       <title>[Mybatis]逆向工程中Select语句查询不出‘TEXT’字段</title>
-      <link>http://localhost:1313/posts/mybatis_text_not_queried/</link>
+      <link>http://localhost:13837/posts/mybatis_text_not_queried/</link>
       <pubDate>Thu, 24 May 2018 14:21:21 +0800</pubDate>
-      <guid>http://localhost:1313/posts/mybatis_text_not_queried/</guid>
+      <guid>http://localhost:13837/posts/mybatis_text_not_queried/</guid>
       <description>&lt;p&gt;这个标题有点奇怪。不过我要说的就是，在&lt;a href=&#34;http://how2j.cn/k/mybatis/mybatis-generator/1376.html&#34;&gt;Mybatis逆向工程&lt;/a&gt;自动生成的Mapper中，对TEXT字段的定义和其他的字段不一样。&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>这个标题有点奇怪。不过我要说的就是，在<a href="http://how2j.cn/k/mybatis/mybatis-generator/1376.html">Mybatis逆向工程</a>自动生成的Mapper中，对TEXT字段的定义和其他的字段不一样。</p>
 <p>Comments表设计：
@@ -6560,9 +6695,9 @@ Location、History
     </item>
     <item>
       <title>[编译原理]FIRST、FOLLOW和SELECT</title>
-      <link>http://localhost:1313/posts/compilation_principle_first_follow_select/</link>
+      <link>http://localhost:13837/posts/compilation_principle_first_follow_select/</link>
       <pubDate>Mon, 30 Apr 2018 16:23:34 +0800</pubDate>
-      <guid>http://localhost:1313/posts/compilation_principle_first_follow_select/</guid>
+      <guid>http://localhost:13837/posts/compilation_principle_first_follow_select/</guid>
       <description>&lt;h2 id=&#34;first集&#34;&gt;FIRST集&lt;/h2&gt;
 &lt;p&gt;FIRST(α)为α的开始符号集或者首符号集。&lt;/p&gt;
 &lt;h3 id=&#34;定义&#34;&gt;定义&lt;/h3&gt;
@@ -6695,9 +6830,9 @@ FIRST(F&rsquo;) ∩ FOLLOW(F&rsquo;) = {*,ε} ∩ {(,A,B,^,+,),#} = ∅</p>
     </item>
     <item>
       <title>[Spring]Spring学习笔记</title>
-      <link>http://localhost:1313/posts/spring_learning_notes/</link>
+      <link>http://localhost:13837/posts/spring_learning_notes/</link>
       <pubDate>Sat, 14 Apr 2018 15:17:52 +0800</pubDate>
-      <guid>http://localhost:1313/posts/spring_learning_notes/</guid>
+      <guid>http://localhost:13837/posts/spring_learning_notes/</guid>
       <description>&lt;h1 id=&#34;springspring学习笔记一&#34;&gt;[Spring]Spring学习笔记（一）&lt;/h1&gt;
 &lt;h2 id=&#34;spring-概念&#34;&gt;Spring 概念&lt;/h2&gt;
 &lt;ol&gt;
@@ -7167,9 +7302,9 @@ action调用service，service调用dao</p>
     </item>
     <item>
       <title>[算法]分布估计算法 - 一种求解多维背包问题的混合分布估计算法_王凌</title>
-      <link>http://localhost:1313/posts/distribution_estimation_algorithm/</link>
+      <link>http://localhost:13837/posts/distribution_estimation_algorithm/</link>
       <pubDate>Mon, 18 Dec 2017 22:36:13 +0800</pubDate>
-      <guid>http://localhost:1313/posts/distribution_estimation_algorithm/</guid>
+      <guid>http://localhost:13837/posts/distribution_estimation_algorithm/</guid>
       <description>&lt;p&gt;作业要求实现《一种求解多维背包问题的混合分布估计算法_王凌》&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;http://xueshu.baidu.com/s?wd=paperuri:(43e8c4d78e8a6d2f44bc6cf5f5724c68)&amp;filter=sc_long_sign&amp;sc_ks_para=q%3D%E4%B8%80%E7%A7%8D%E6%B1%82%E8%A7%A3%E5%A4%9A%E7%BB%B4%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E6%B7%B7%E5%90%88%E5%88%86%E5%B8%83%E4%BC%B0%E8%AE%A1%E7%AE%97%E6%B3%95&amp;tn=SE_baiduxueshu_c1gjeupa&amp;ie=utf-8&amp;sc_us=17828901901562222937&#34;&gt;百度学术路径&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;写这篇文章主要是因为，这论文的数据集实在是找不到，但最后我还是找到了。&lt;/p&gt;
@@ -7601,10 +7736,10 @@ action调用service，service调用dao</p>
     </item>
     <item>
       <title>[日常]我做独立博客的原因</title>
-      <link>http://localhost:1313/posts/why_i_build_blog/</link>
+      <link>http://localhost:13837/posts/why_i_build_blog/</link>
       <pubDate>Sat, 29 Aug 2015 13:32:03 +0800</pubDate>
-      <guid>http://localhost:1313/posts/why_i_build_blog/</guid>
-      <description>&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/why_i_build_blog_img.jpg&#34; alt=&#34;&#34;  /&gt;
+      <guid>http://localhost:13837/posts/why_i_build_blog/</guid>
+      <description>&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:13837/images/why_i_build_blog_img.jpg&#34; alt=&#34;&#34;  /&gt;
 &lt;/p&gt;
 &lt;h2 id=&#34;我做独立博客的原因&#34;&gt;我做独立博客的原因&lt;/h2&gt;
 &lt;p&gt;记得以前有看到一篇由独立博客站长的博文，介绍独立博客如何搭建，搭建完后的注意事项。其中就有说到独立博客上线后，可以发布一篇《我为什么要做独立博客》的博文。而我认为这个题目是一个问句，自问自答略显古怪。所以我的这篇文章的名字就是《我做独立博客的原因》。&lt;/p&gt;
@@ -7628,9 +7763,9 @@ action调用service，service调用dao</p>
     </item>
     <item>
       <title>被讨厌的勇气</title>
-      <link>http://localhost:1313/bookdigest/book_courage_to_be_hated/</link>
+      <link>http://localhost:13837/bookdigest/book_courage_to_be_hated/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/bookdigest/book_courage_to_be_hated/</guid>
+      <guid>http://localhost:13837/bookdigest/book_courage_to_be_hated/</guid>
       <description>豆瓣链接 https://book.douban.com/subject/36150914/</description>
       <content:encoded><![CDATA[<h1 id="豆瓣链接">豆瓣链接</h1>
 <p><a href="https://book.douban.com/subject/36150914/">https://book.douban.com/subject/36150914/</a></p>
@@ -7638,9 +7773,9 @@ action调用service，service调用dao</p>
     </item>
     <item>
       <title>藏书</title>
-      <link>http://localhost:1313/mybooks/</link>
+      <link>http://localhost:13837/mybooks/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/mybooks/</guid>
+      <guid>http://localhost:13837/mybooks/</guid>
       <description>最近在看 想想就开心！ 尊重自己：给予与接收的心灵艺术 最重要的事，只有一件 最喜欢的书籍 深入理解计算机系统 想想就开心！ 人间值得 被讨厌的勇气 </description>
       <content:encoded><![CDATA[<h1 id="最近在看">最近在看</h1>
 <div class="book">
@@ -7697,9 +7832,9 @@ action调用service，service调用dao</p>
     </item>
     <item>
       <title>关于</title>
-      <link>http://localhost:1313/about/</link>
+      <link>http://localhost:13837/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>http://localhost:13837/about/</guid>
       <description>95后，男，FJNU，福建厦门人，现居上海；
 小时候玩电脑游戏总是输给别人，突然对网页来了兴趣，保存网页瞎改然后打开看到文字改变，实在是兴奋不已。为了拥有无限的使用电脑的时间，我毅然决然报考计算机专业。
 未曾想做着做着成了游戏服务器开发，在《权力的游戏 凛冬将至》亚太版项目组一晃两年半过去，独立维护服务器长达半年之久，是“北境王国守夜人”。
@@ -7717,9 +7852,9 @@ Telegram: @windypath</description>
     </item>
     <item>
       <title>简历</title>
-      <link>http://localhost:1313/resume/</link>
+      <link>http://localhost:13837/resume/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/resume/</guid>
+      <guid>http://localhost:13837/resume/</guid>
       <description>工作技能 编程语言: Golang, Java, Kotlin, Python, Shell, SQL
 技术栈: Akka, MongoDB, MySQL, Redis, SpringBoot
 英语：大学英语六级（CET-6）
@@ -7771,9 +7906,9 @@ SLG手游是一款战争策略SLG网络游戏，目前已在Google Play上架3�
     </item>
     <item>
       <title>朋友</title>
-      <link>http://localhost:1313/myfriends/</link>
+      <link>http://localhost:13837/myfriends/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/myfriends/</guid>
+      <guid>http://localhost:13837/myfriends/</guid>
       <description></description>
       <content:encoded><![CDATA[<script>
   
@@ -7867,9 +8002,9 @@ function showFriends(data) {
     </item>
     <item>
       <title>人间值得</title>
-      <link>http://localhost:1313/bookdigest/book_worth_living/</link>
+      <link>http://localhost:13837/bookdigest/book_worth_living/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/bookdigest/book_worth_living/</guid>
+      <guid>http://localhost:13837/bookdigest/book_worth_living/</guid>
       <description>豆瓣链接 https://book.douban.com/subject/34797578/</description>
       <content:encoded><![CDATA[<h1 id="豆瓣链接">豆瓣链接</h1>
 <p><a href="https://book.douban.com/subject/34797578/">https://book.douban.com/subject/34797578/</a></p>
@@ -7877,9 +8012,9 @@ function showFriends(data) {
     </item>
     <item>
       <title>深入理解计算机系统</title>
-      <link>http://localhost:1313/bookdigest/book_csapp/</link>
+      <link>http://localhost:13837/bookdigest/book_csapp/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/bookdigest/book_csapp/</guid>
+      <guid>http://localhost:13837/bookdigest/book_csapp/</guid>
       <description>豆瓣链接 https://book.douban.com/subject/26912767/</description>
       <content:encoded><![CDATA[<h1 id="豆瓣链接">豆瓣链接</h1>
 <p><a href="https://book.douban.com/subject/26912767/">https://book.douban.com/subject/26912767/</a></p>
@@ -7887,9 +8022,9 @@ function showFriends(data) {
     </item>
     <item>
       <title>想想就开心！</title>
-      <link>http://localhost:1313/bookdigest/deep_thinking/</link>
+      <link>http://localhost:13837/bookdigest/deep_thinking/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/bookdigest/deep_thinking/</guid>
+      <guid>http://localhost:13837/bookdigest/deep_thinking/</guid>
       <description>豆瓣链接 https://book.douban.com/subject/35706244/</description>
       <content:encoded><![CDATA[<h1 id="豆瓣链接">豆瓣链接</h1>
 <p><a href="https://book.douban.com/subject/35706244/">https://book.douban.com/subject/35706244/</a></p>
@@ -7897,9 +8032,9 @@ function showFriends(data) {
     </item>
     <item>
       <title>最重要的事，只有一件</title>
-      <link>http://localhost:1313/bookdigest/the_one_thing/</link>
+      <link>http://localhost:13837/bookdigest/the_one_thing/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/bookdigest/the_one_thing/</guid>
+      <guid>http://localhost:13837/bookdigest/the_one_thing/</guid>
       <description>豆瓣链接 https://book.douban.com/subject/26656532/</description>
       <content:encoded><![CDATA[<h1 id="豆瓣链接">豆瓣链接</h1>
 <p><a href="https://book.douban.com/subject/26656532/">https://book.douban.com/subject/26656532/</a></p>
@@ -7907,9 +8042,9 @@ function showFriends(data) {
     </item>
     <item>
       <title>尊重自己：给予与接收的心灵艺术</title>
-      <link>http://localhost:1313/bookdigest/honor_yourself/</link>
+      <link>http://localhost:13837/bookdigest/honor_yourself/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/bookdigest/honor_yourself/</guid>
+      <guid>http://localhost:13837/bookdigest/honor_yourself/</guid>
       <description>豆瓣链接 https://read.douban.com/ebook/132946207/
 读后感 这是一本教人如何尊重自己的书。
 我们从小到大接收的教育都是尊重别人，而很少有人告诉我们，要尊重自己。

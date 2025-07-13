@@ -2,450 +2,459 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2025-02-16T17:30:14+08:00</lastmod>
+    <loc>http://localhost:13837/categories/</loc>
+    <lastmod>2025-07-13T14:24:08+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/categories/"
+                href="http://localhost:13837/en/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/categories/"
+                href="http://localhost:13837/categories/"
                 />
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2025-02-16T17:30:14+08:00</lastmod>
+    <loc>http://localhost:13837/posts/</loc>
+    <lastmod>2025-07-13T14:24:08+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/"
+                href="http://localhost:13837/en/posts/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/"
+                href="http://localhost:13837/posts/"
                 />
   </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2025-02-16T17:30:14+08:00</lastmod>
+    <loc>http://localhost:13837/</loc>
+    <lastmod>2025-07-13T14:24:08+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/"
+                href="http://localhost:13837/en/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/"
+                href="http://localhost:13837/"
                 />
   </url><url>
-    <loc>http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</loc>
-    <lastmod>2025-02-16T17:30:14+08:00</lastmod>
+    <loc>http://localhost:13837/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</loc>
+    <lastmod>2025-07-13T14:24:08+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/"
+                href="http://localhost:13837/en/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/"
+                href="http://localhost:13837/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/"
                 />
   </url><url>
-    <loc>http://localhost:1313/posts/game_server_experience_1/</loc>
+    <loc>http://localhost:13837/categories/%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C/</loc>
+    <lastmod>2025-07-13T14:24:08+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:13837/posts/game_server_experience_3/</loc>
+    <lastmod>2025-07-13T14:24:08+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:13837/posts/game_server_experience_2/</loc>
+    <lastmod>2025-06-09T21:30:14+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:13837/posts/game_server_experience_1/</loc>
     <lastmod>2025-02-16T17:30:14+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/35_not_the_end_of_software_developer/</loc>
+    <loc>http://localhost:13837/posts/35_not_the_end_of_software_developer/</loc>
     <lastmod>2024-06-23T19:30:14+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/35_not_the_end_of_software_developer/"
+                href="http://localhost:13837/en/posts/35_not_the_end_of_software_developer/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/35_not_the_end_of_software_developer/"
+                href="http://localhost:13837/posts/35_not_the_end_of_software_developer/"
                 />
   </url><url>
-    <loc>http://localhost:1313/categories/%E6%9D%82%E8%B0%88/</loc>
+    <loc>http://localhost:13837/categories/%E6%9D%82%E8%B0%88/</loc>
     <lastmod>2024-06-23T19:30:14+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/categories/%E6%9D%82%E8%B0%88/"
+                href="http://localhost:13837/en/categories/%E6%9D%82%E8%B0%88/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/categories/%E6%9D%82%E8%B0%88/"
+                href="http://localhost:13837/categories/%E6%9D%82%E8%B0%88/"
                 />
   </url><url>
-    <loc>http://localhost:1313/posts/two_month_voluntary_project_conclusion/</loc>
+    <loc>http://localhost:13837/posts/two_month_voluntary_project_conclusion/</loc>
     <lastmod>2024-04-14T18:59:08+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/two_month_voluntary_project_conclusion/"
+                href="http://localhost:13837/en/posts/two_month_voluntary_project_conclusion/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/two_month_voluntary_project_conclusion/"
+                href="http://localhost:13837/posts/two_month_voluntary_project_conclusion/"
                 />
   </url><url>
-    <loc>http://localhost:1313/posts/using_weiyan_strategy_to_analyze_software_possibly/</loc>
+    <loc>http://localhost:13837/posts/using_weiyan_strategy_to_analyze_software_possibly/</loc>
     <lastmod>2024-03-10T11:59:48+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/using_weiyan_strategy_to_analyze_software_possibly/"
+                href="http://localhost:13837/en/posts/using_weiyan_strategy_to_analyze_software_possibly/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/using_weiyan_strategy_to_analyze_software_possibly/"
+                href="http://localhost:13837/posts/using_weiyan_strategy_to_analyze_software_possibly/"
                 />
   </url><url>
-    <loc>http://localhost:1313/categories/mqtt/</loc>
+    <loc>http://localhost:13837/categories/mqtt/</loc>
     <lastmod>2023-12-26T16:06:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/mqtt_remain_length_calculate/</loc>
+    <loc>http://localhost:13837/posts/mqtt_remain_length_calculate/</loc>
     <lastmod>2023-12-26T16:06:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/config_table_project/</loc>
+    <loc>http://localhost:13837/posts/config_table_project/</loc>
     <lastmod>2023-12-24T16:15:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/java_juc_briefly/</loc>
+    <loc>http://localhost:13837/posts/java_juc_briefly/</loc>
     <lastmod>2023-12-04T17:27:44+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/java_juc_briefly/"
+                href="http://localhost:13837/en/posts/java_juc_briefly/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/java_juc_briefly/"
+                href="http://localhost:13837/posts/java_juc_briefly/"
                 />
   </url><url>
-    <loc>http://localhost:1313/categories/%E7%AC%94%E8%AE%B0/</loc>
+    <loc>http://localhost:13837/categories/%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2023-12-04T17:27:44+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/how_to_split_a_string_in_cpp/</loc>
+    <loc>http://localhost:13837/posts/how_to_split_a_string_in_cpp/</loc>
     <lastmod>2023-07-02T11:54:44+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/how_to_split_a_string_in_cpp/"
+                href="http://localhost:13837/en/posts/how_to_split_a_string_in_cpp/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/how_to_split_a_string_in_cpp/"
+                href="http://localhost:13837/posts/how_to_split_a_string_in_cpp/"
                 />
   </url><url>
-    <loc>http://localhost:1313/tags/csapp/</loc>
+    <loc>http://localhost:13837/tags/csapp/</loc>
     <lastmod>2023-04-30T21:08:43+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/csapp/</loc>
+    <loc>http://localhost:13837/categories/csapp/</loc>
     <lastmod>2023-04-30T21:08:43+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/csapp_chapter2_representing_manipulating_info/</loc>
+    <loc>http://localhost:13837/posts/csapp_chapter2_representing_manipulating_info/</loc>
     <lastmod>2023-04-30T21:08:43+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>http://localhost:13837/tags/</loc>
     <lastmod>2023-04-30T21:08:43+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/"
+                href="http://localhost:13837/en/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/tags/"
+                href="http://localhost:13837/tags/"
                 />
   </url><url>
-    <loc>http://localhost:1313/posts/about_myself/</loc>
+    <loc>http://localhost:13837/posts/about_myself/</loc>
     <lastmod>2023-04-29T00:00:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/about_myself/"
+                href="http://localhost:13837/en/posts/about_myself/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/about_myself/"
+                href="http://localhost:13837/posts/about_myself/"
                 />
   </url><url>
-    <loc>http://localhost:1313/posts/nostalgic_winxp/</loc>
+    <loc>http://localhost:13837/posts/nostalgic_winxp/</loc>
     <lastmod>2022-10-02T18:51:17+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/nostalgic_winxp/"
+                href="http://localhost:13837/en/posts/nostalgic_winxp/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/nostalgic_winxp/"
+                href="http://localhost:13837/posts/nostalgic_winxp/"
                 />
   </url><url>
-    <loc>http://localhost:1313/tags/winxp/</loc>
+    <loc>http://localhost:13837/tags/winxp/</loc>
     <lastmod>2022-10-02T18:51:17+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/winxp/"
+                href="http://localhost:13837/en/tags/winxp/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/tags/winxp/"
+                href="http://localhost:13837/tags/winxp/"
                 />
   </url><url>
-    <loc>http://localhost:1313/categories/%E6%80%80%E6%97%A7/</loc>
+    <loc>http://localhost:13837/categories/%E6%80%80%E6%97%A7/</loc>
     <lastmod>2022-10-02T18:51:17+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/about_java_treeset/</loc>
+    <loc>http://localhost:13837/posts/about_java_treeset/</loc>
     <lastmod>2022-06-18T17:10:44+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/about_java_treeset/"
+                href="http://localhost:13837/en/posts/about_java_treeset/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/about_java_treeset/"
+                href="http://localhost:13837/posts/about_java_treeset/"
                 />
   </url><url>
-    <loc>http://localhost:1313/tags/linux/</loc>
+    <loc>http://localhost:13837/tags/linux/</loc>
     <lastmod>2022-04-30T23:23:49+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/linux/"
+                href="http://localhost:13837/en/tags/linux/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/tags/linux/"
+                href="http://localhost:13837/tags/linux/"
                 />
   </url><url>
-    <loc>http://localhost:1313/posts/linux_socket_programming/</loc>
+    <loc>http://localhost:13837/posts/linux_socket_programming/</loc>
     <lastmod>2022-04-30T23:23:49+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/linux_socket_programming/"
+                href="http://localhost:13837/en/posts/linux_socket_programming/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/linux_socket_programming/"
+                href="http://localhost:13837/posts/linux_socket_programming/"
                 />
   </url><url>
-    <loc>http://localhost:1313/tags/socket/</loc>
+    <loc>http://localhost:13837/tags/socket/</loc>
     <lastmod>2022-04-30T23:23:49+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/socket/"
+                href="http://localhost:13837/en/tags/socket/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/tags/socket/"
+                href="http://localhost:13837/tags/socket/"
                 />
   </url><url>
-    <loc>http://localhost:1313/posts/compare_web_with_game_server/</loc>
+    <loc>http://localhost:13837/posts/compare_web_with_game_server/</loc>
     <lastmod>2022-04-16T18:15:44+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/posts/compare_web_with_game_server/"
+                href="http://localhost:13837/en/posts/compare_web_with_game_server/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/posts/compare_web_with_game_server/"
+                href="http://localhost:13837/posts/compare_web_with_game_server/"
                 />
   </url><url>
-    <loc>http://localhost:1313/tags/%E7%8B%AC%E7%AB%8B%E4%B8%AA%E4%BA%BA%E9%A1%B9%E7%9B%AE/</loc>
+    <loc>http://localhost:13837/tags/%E7%8B%AC%E7%AB%8B%E4%B8%AA%E4%BA%BA%E9%A1%B9%E7%9B%AE/</loc>
     <lastmod>2022-04-05T18:37:07+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/individual_project_experience/</loc>
+    <loc>http://localhost:13837/posts/individual_project_experience/</loc>
     <lastmod>2022-04-05T18:37:07+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/%E5%BC%80%E5%8F%91/</loc>
+    <loc>http://localhost:13837/tags/%E5%BC%80%E5%8F%91/</loc>
     <lastmod>2022-04-05T18:37:07+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/python/</loc>
+    <loc>http://localhost:13837/tags/python/</loc>
     <lastmod>2021-11-13T15:31:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/udp/</loc>
+    <loc>http://localhost:13837/tags/udp/</loc>
     <lastmod>2021-11-13T15:31:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/simple_udp_ping_with_python/</loc>
+    <loc>http://localhost:13837/posts/simple_udp_ping_with_python/</loc>
     <lastmod>2021-11-13T15:31:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</loc>
+    <loc>http://localhost:13837/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</loc>
     <lastmod>2021-11-13T15:31:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/simple_web_server_with_python/</loc>
+    <loc>http://localhost:13837/posts/simple_web_server_with_python/</loc>
     <lastmod>2021-11-07T21:02:00+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/hashmap/</loc>
+    <loc>http://localhost:13837/tags/hashmap/</loc>
     <lastmod>2021-10-16T17:43:32+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/kotlin/</loc>
+    <loc>http://localhost:13837/tags/kotlin/</loc>
     <lastmod>2021-10-16T17:43:32+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/kotlin_implement_a_simple_hashmap/</loc>
+    <loc>http://localhost:13837/posts/kotlin_implement_a_simple_hashmap/</loc>
     <lastmod>2021-10-16T17:43:32+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</loc>
+    <loc>http://localhost:13837/categories/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2021-10-16T17:43:32+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/kotlin_implement_heap/</loc>
+    <loc>http://localhost:13837/posts/kotlin_implement_heap/</loc>
     <lastmod>2021-10-14T23:30:30+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/build_spark_environment/</loc>
+    <loc>http://localhost:13837/posts/build_spark_environment/</loc>
     <lastmod>2020-05-23T17:42:09+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/spring_operate_mongodb/</loc>
+    <loc>http://localhost:13837/posts/spring_operate_mongodb/</loc>
     <lastmod>2020-05-19T12:41:37+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/unison_install_in_linux/</loc>
+    <loc>http://localhost:13837/posts/unison_install_in_linux/</loc>
     <lastmod>2020-02-22T14:19:06+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/java_implement_winscp_like/</loc>
+    <loc>http://localhost:13837/posts/java_implement_winscp_like/</loc>
     <lastmod>2020-02-20T10:32:24+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/a_bad_project_crawler_and_email/</loc>
+    <loc>http://localhost:13837/posts/a_bad_project_crawler_and_email/</loc>
     <lastmod>2020-02-09T17:21:03+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/python_connect_mongodb_and_oracle/</loc>
+    <loc>http://localhost:13837/posts/python_connect_mongodb_and_oracle/</loc>
     <lastmod>2020-02-09T17:06:29+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/mongodb_search_script/</loc>
+    <loc>http://localhost:13837/posts/mongodb_search_script/</loc>
     <lastmod>2020-02-09T16:36:27+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/vue_springboot_deploy_in_linux/</loc>
+    <loc>http://localhost:13837/posts/vue_springboot_deploy_in_linux/</loc>
     <lastmod>2020-01-27T16:53:23+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/some_usages_of_python/</loc>
+    <loc>http://localhost:13837/posts/some_usages_of_python/</loc>
     <lastmod>2019-12-01T10:45:46+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/regular_expression/</loc>
+    <loc>http://localhost:13837/posts/regular_expression/</loc>
     <lastmod>2019-11-24T19:43:31+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/two_crawl_web_approach/</loc>
+    <loc>http://localhost:13837/posts/two_crawl_web_approach/</loc>
     <lastmod>2019-11-15T23:05:46+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/why_vue_router_back/</loc>
+    <loc>http://localhost:13837/posts/why_vue_router_back/</loc>
     <lastmod>2019-03-05T20:22:47+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/javascript_basic_knowledge/</loc>
+    <loc>http://localhost:13837/posts/javascript_basic_knowledge/</loc>
     <lastmod>2018-06-06T21:32:09+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/mybatis_text_not_queried/</loc>
+    <loc>http://localhost:13837/posts/mybatis_text_not_queried/</loc>
     <lastmod>2018-05-24T14:21:21+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/compilation_principle_first_follow_select/</loc>
+    <loc>http://localhost:13837/posts/compilation_principle_first_follow_select/</loc>
     <lastmod>2018-04-30T16:23:34+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/spring_learning_notes/</loc>
+    <loc>http://localhost:13837/posts/spring_learning_notes/</loc>
     <lastmod>2018-04-14T15:17:52+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/distribution_estimation_algorithm/</loc>
+    <loc>http://localhost:13837/posts/distribution_estimation_algorithm/</loc>
     <lastmod>2017-12-18T22:36:13+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/why_i_build_blog/</loc>
+    <loc>http://localhost:13837/posts/why_i_build_blog/</loc>
     <lastmod>2015-08-29T13:32:03+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/%E6%97%A5%E5%B8%B8/</loc>
+    <loc>http://localhost:13837/categories/%E6%97%A5%E5%B8%B8/</loc>
     <lastmod>2015-08-29T13:32:03+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/bookdigest/</loc>
+    <loc>http://localhost:13837/bookdigest/</loc>
   </url><url>
-    <loc>http://localhost:1313/bookdigest/book_courage_to_be_hated/</loc>
+    <loc>http://localhost:13837/bookdigest/book_courage_to_be_hated/</loc>
   </url><url>
-    <loc>http://localhost:1313/mybooks/</loc>
+    <loc>http://localhost:13837/mybooks/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/mybooks/"
+                href="http://localhost:13837/en/mybooks/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/mybooks/"
+                href="http://localhost:13837/mybooks/"
                 />
   </url><url>
-    <loc>http://localhost:1313/about/</loc>
+    <loc>http://localhost:13837/about/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/about/"
+                href="http://localhost:13837/en/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/about/"
+                href="http://localhost:13837/about/"
                 />
   </url><url>
-    <loc>http://localhost:1313/archives/</loc>
+    <loc>http://localhost:13837/archives/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/archives/"
+                href="http://localhost:13837/en/archives/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/archives/"
+                href="http://localhost:13837/archives/"
                 />
   </url><url>
-    <loc>http://localhost:1313/resume/</loc>
+    <loc>http://localhost:13837/resume/</loc>
   </url><url>
-    <loc>http://localhost:1313/myfriends/</loc>
+    <loc>http://localhost:13837/myfriends/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/myfriends/"
+                href="http://localhost:13837/en/myfriends/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/myfriends/"
+                href="http://localhost:13837/myfriends/"
                 />
   </url><url>
-    <loc>http://localhost:1313/bookdigest/book_worth_living/</loc>
+    <loc>http://localhost:13837/bookdigest/book_worth_living/</loc>
   </url><url>
-    <loc>http://localhost:1313/bookdigest/book_csapp/</loc>
+    <loc>http://localhost:13837/bookdigest/book_csapp/</loc>
   </url><url>
-    <loc>http://localhost:1313/search/</loc>
+    <loc>http://localhost:13837/search/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/search/"
+                href="http://localhost:13837/en/search/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="http://localhost:1313/search/"
+                href="http://localhost:13837/search/"
                 />
   </url><url>
-    <loc>http://localhost:1313/bookdigest/deep_thinking/</loc>
+    <loc>http://localhost:13837/bookdigest/deep_thinking/</loc>
   </url><url>
-    <loc>http://localhost:1313/bookdigest/the_one_thing/</loc>
+    <loc>http://localhost:13837/bookdigest/the_one_thing/</loc>
   </url><url>
-    <loc>http://localhost:1313/bookdigest/honor_yourself/</loc>
+    <loc>http://localhost:13837/bookdigest/honor_yourself/</loc>
   </url>
 </urlset>
