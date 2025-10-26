@@ -95,7 +95,7 @@ outputs:
 outputFormats:
   RSS:
     mediaType: "application/rss+xml"
-    baseName: "index"
+    baseName: "rss"
 
 languages:
   zh:
