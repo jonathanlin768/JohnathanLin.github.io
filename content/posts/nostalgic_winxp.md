@@ -5,23 +5,40 @@ draft: false
 categories: ["技术文章", "怀旧"]
 tags: ["WinXp"]
 ---
-# 在这里直接下载我最后完成的虚拟机镜像
+# 虚拟机镜像下载地址
 虚拟机镜像下载：
 
-链接：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l 
+链接：https://pan.baidu.com/s/1yfY0SjDrtOeuTiEWf7YizA?pwd=374l
 
 提取码：374l 
 
 我本地的VirtualBox 版本：6.1
 <!--more-->
-# 我可以先聊聊怀旧吗
-也许对于老外来说，Win95是他们的青春，所以他们做了[React95](https://github.com/arturbien/React95)这样的UI库，或者大家一起努力写了个操作系统[serenity](https://github.com/SerenityOS/serenity)。但是对于咱们国内的用户而言，当家用PC走进千家万户时，映入眼帘的是——Windows XP。
+## 使用步骤
+1. 打开安装后的VirtualBox，点击``管理``->``导入虚拟电脑``
+![](/images/nostalgic_winxp_vb1.png)
+2. 选中下载好的虚拟机镜像，进行导入
+![](/images/nostalgic_winxp_import.png)
+3. 导入
+![](/images/nostalgic_winxp_import2.png)
+4. 查看当前虚拟机配置
+![](/images/nostalgic_winxp_import3.png)
 
-一位中国台湾同胞[sh1zuku](https://sh1zuku.csie.io/#/)编写开发了一个网页版的Windows XP模拟器:[项目链接](https://github.com/ShizukuIchi/winXP)，[在线演示](https://winxp.vercel.app/)，还有另一位来自越南的老哥[khang-nd](https://khang-nd.vercel.app/)写了Windows 7的网页模拟器[在线演示](https://win7simu.visnalize.com/)。
+5. 继续导入
+![](/images/nostalgic_winxp_importing.png)
+6. 对CPU和内存做一些调整
+![](/images/nostalgic_winxp_import_cpu.png)
+这里记得要关闭``启用PAE/NX``
+![](/images/nostalgic_winxp_import_mem.png)
+7. 导入后，需要设置一下共享文件夹，否则会报错
+![](/images/nostalgic_winxp_shared_dir.png)
+8. 启动
+![](/images/nostalgic_winxp_start.png)
 
-我自然没有能力和时间去编写类似系统的开发，但是有一个想法从我的脑中浮现：那么我就装一个Windows XP虚拟机到电脑上就好了。
+> (2025-12-15更新)不知道是否是因为换了AMD CPU，这次导入之后，启动这个虚拟机镜像特别卡。有幸再次见到这个手电筒。![](/images/nostalgic_winxp_2025.png)
 
-# 你可能会选择的做法
+# 其他的方式总结
+## 其他的方式：安装正版，但正版只有30天试用
 1. 安装VirtualBox；
 2. 下载镜像：从[MSDN Itellyou](https://msdn.itellyou.cn/)中找到Windows XP的镜像，下载；
 3. 在VirtualBox中安装镜像;
@@ -29,9 +46,7 @@ tags: ["WinXp"]
 
 那么你会发现，安装的Windows XP只有30天试用。在二十一世纪初期，盗版泛滥，微软采取了非常强硬的措施限制盗版。即使你安装时输入了正确的序列号，微软也会要求你使用电话等方式进行激活。
 
-但是我们是来怀旧的啊！
-
-# 正确的做法
+## 其他的方式：下载网上已处理过的镜像
 不能再使用这种正版的镜像了，需要使用别人处理好的，不需要激活的镜像。
 
 这里我找到了github上的一位老哥提供的链接[github WinXPImage](https://github.com/lucianoferrari/winxpimage)，但是他的镜像是位于谷歌云盘上的。我把它下载之后放进百度网盘里了：
@@ -50,7 +65,7 @@ vbox-img geometry --filename Windows_XP_Professional-disk1.vdi --format VDI --cy
 # 如何汉化Windows XP？
 如果只是用英文版Windows XP，那么就达不到我们“怀旧”的目的了。
 Windows XP英文版默认没有中文语言包。
-我翻遍互联网，终于在一个[犄角旮旯](https://msdn.alicesworld.tech/Windows%20XP)里找到了语言包mui_win_xp_pro_n_cd1.iso。
+我翻遍互联网，终于在一个[犄角旮旯](https://files.dog/MSDN/Windows%20XP/)里找到了语言包mui_win_xp_pro_n_cd1.iso。
 
 我把它下载之后放进百度网盘里了：
 
