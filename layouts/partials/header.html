@@ -1,0 +1,54 @@
+{{- $page := . -}}
+{{- $label := site.Params.label.text | default site.Title -}}
+{{- $search := site.GetPage "/search" -}}
+{{- $links := slice -}}
+{{- range site.Menus.main -}}
+  {{- $url := .URL | absLangURL -}}
+  {{- if not (and $search (eq (strings.TrimSuffix "/" $url) (strings.TrimSuffix "/" $search.Permalink))) -}}
+    {{- $active := eq (strings.TrimSuffix "/" $url) (strings.TrimSuffix "/" $page.Permalink) -}}
+    {{- $links = $links | append (dict "url" $url "label" .Name "active" $active) -}}
+  {{- end -}}
+{{- end -}}
+<header class="site-bar">
+  <div class="site-bar-inner">
+    <a class="site-brand" href="{{ site.Home.RelPermalink }}" accesskey="h">
+      {{- with site.Params.label.icon }}<img src="{{ . | relURL }}" width="28" height="28" alt="">{{ end }}
+      <span>{{ $label }}</span>
+    </a>
+    <nav class="site-nav" aria-label="{{ i18n "wp_main_navigation" }}">
+      {{- partial "windypath/menu.html" $links }}
+    </nav>
+    <div class="site-actions">
+      {{- with $search }}
+      <a class="icon-control" href="{{ .RelPermalink }}" aria-label="{{ .Title }}" title="{{ .Title }}" accesskey="/"
+        {{- if eq $page.RelPermalink .RelPermalink }} aria-current="page"{{ end }}>
+        {{- partial "windypath/icon.html" "search" }}
+      </a>
+      {{- end }}
+      {{- range site.Home.Translations }}
+      <a class="icon-control site-language" href="{{ .RelPermalink }}" hreflang="{{ .Lang }}" lang="{{ .Lang }}"
+        aria-label="{{ .Language.LanguageName | default (.Lang | title) }}">{{ if eq .Lang "zh" }}中{{ else }}EN{{ end }}</a>
+      {{- end }}
+      {{- if not site.Params.disableThemeToggle }}
+      <details class="site-disclosure site-theme" data-theme-control hidden>
+        <summary class="icon-control" aria-label="{{ i18n "wp_theme" }}" title="{{ i18n "wp_theme" }}" accesskey="t">
+          {{- partial "windypath/icon.html" "theme" }}
+        </summary>
+        <div class="site-panel" role="group" aria-label="{{ i18n "wp_theme" }}">
+          {{- range slice "system" "light" "dark" }}
+          <button type="button" data-theme-option="{{ . }}" aria-pressed="false">{{ i18n (printf "wp_theme_%s" .) }}</button>
+          {{- end }}
+        </div>
+      </details>
+      {{- end }}
+      <details class="site-disclosure site-mobile-nav">
+        <summary class="icon-control" aria-label="{{ i18n "wp_main_navigation" }}" title="{{ i18n "wp_main_navigation" }}">
+          {{- partial "windypath/icon.html" "menu" }}
+        </summary>
+        <nav class="site-panel" aria-label="{{ i18n "wp_main_navigation" }}">
+          {{- partial "windypath/menu.html" $links }}
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>

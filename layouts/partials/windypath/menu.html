@@ -1,0 +1,5 @@
+<ul>
+  {{- range . }}
+  <li><a href="{{ .url }}"{{ if .active }} aria-current="page"{{ end }}>{{ .label }}</a></li>
+  {{- end }}
+</ul>

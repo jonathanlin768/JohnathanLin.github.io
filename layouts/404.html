@@ -1,0 +1,11 @@
+{{ define "main" }}
+<section class="error-page">
+  <p class="error-code">404</p>
+  <h1>{{ i18n "wp_not_found" }}</h1>
+  <p>{{ i18n "wp_not_found_description" }}</p>
+  <div class="home-actions">
+    <a href="{{ site.Home.RelPermalink }}" class="wp-button wp-button-primary">{{ i18n "wp_back_home" }}</a>
+    {{- with site.GetPage "/search" }}<a href="{{ .RelPermalink }}" class="wp-button">{{ .Title }}</a>{{ end }}
+  </div>
+</section>
+{{ end }}

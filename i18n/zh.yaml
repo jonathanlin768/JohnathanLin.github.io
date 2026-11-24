@@ -1,0 +1,28 @@
+wp_skip_content:
+  other: 跳到正文
+wp_main_navigation:
+  other: 主要导航
+wp_theme:
+  other: 切换外观
+wp_theme_system:
+  other: 跟随系统
+wp_theme_light:
+  other: 浅色
+wp_theme_dark:
+  other: 深色
+wp_motto:
+  other: 勤学苦练，年复一年。
+wp_about_author:
+  other: 关于我
+wp_back_top:
+  other: 返回顶部
+wp_back_home:
+  other: 返回首页
+wp_not_found:
+  other: 页面未找到
+wp_not_found_description:
+  other: 这个网址可能已变更。你可以回到首页，或搜索文章。
+wp_search_placeholder:
+  other: 输入文章标题或关键词
+wp_search_results:
+  other: 搜索结果

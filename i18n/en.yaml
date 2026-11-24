@@ -1,0 +1,28 @@
+wp_skip_content:
+  other: Skip to content
+wp_main_navigation:
+  other: Main navigation
+wp_theme:
+  other: Appearance
+wp_theme_system:
+  other: System
+wp_theme_light:
+  other: Light
+wp_theme_dark:
+  other: Dark
+wp_motto:
+  other: Study and practice, years of it.
+wp_about_author:
+  other: About me
+wp_back_top:
+  other: Back to top
+wp_back_home:
+  other: Back to home
+wp_not_found:
+  other: Page not found
+wp_not_found_description:
+  other: This address may have changed. You can return home or search the articles.
+wp_search_placeholder:
+  other: Search by title or keyword
+wp_search_results:
+  other: Search results

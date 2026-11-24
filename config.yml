@@ -28,7 +28,7 @@ params:
   # author: ["Me", "You"] # multiple authors
   # images: ["<link or path of image for opengraph, twitter-cards>"]
   DateFormat: "January 2, 2006"
-  defaultTheme: dark # dark, light
+  defaultTheme: auto
   disableThemeToggle: false
 
   ShowReadingTime: false
@@ -48,8 +48,7 @@ params:
 
   # home-info mode
   homeInfoParams:
-    Title: "勤学苦练，年复一年。"
-    Content: "**Study And Practice, Years Of It.**"
+    Title: "WindyPath"
 
   socialIcons:
     - name: github
@@ -104,8 +103,9 @@ languages:
     description: 勤学苦练，年复一年
     params: 
       homeInfoParams:
-        Title: "\U0001F44B  欢迎光临，我是凌虚"
-        Content: "本站只分享软件技术内容和个人的见解，希望您可以在这里拓展视野，一起进步。"
+        Title: "凌虚"
+        Role: "服务器开发工程师"
+        Content: "这里分享软件开发实践和个人见解。希望你能在这里读到一些有启发的东西。"
 
       label:
         text: "风萧古道"
@@ -172,8 +172,9 @@ languages:
     description: Study And Practice, Years Of It
     params: 
       homeInfoParams:
-        Title: "\U0001F44B Hi, I'm Jonathan, Nice to meet you."
-        Content: "Only software technique articles are in this website. I hope you can get improved here."
+        Title: "Jonathan Lin"
+        Role: "Server Software Engineer"
+        Content: "I share notes on software development and my own reflections here. I hope you find something that gives you a fresh perspective."
 
       label:
         text: "WindyPath"

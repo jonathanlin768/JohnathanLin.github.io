@@ -1,0 +1,13 @@
+{{- with site.Params.homeInfoParams }}
+<section class="home-intro" aria-labelledby="home-title">
+  <h1 id="home-title">
+    <span>{{ .Title | markdownify }}</span>
+    {{ with .Role }}<span class="home-role">{{ . }}</span>{{ end }}
+  </h1>
+  {{- with .Content }}<div class="home-summary">{{ . | markdownify }}</div>{{ end }}
+  <div class="home-actions">
+    {{- with site.GetPage "/about" }}<a href="{{ .RelPermalink }}" class="wp-button">{{ i18n "wp_about_author" }}</a>{{ end }}
+    {{- partial "social_icons.html" (dict "align" .AlignSocialIconsTo) }}
+  </div>
+</section>
+{{- end }}
