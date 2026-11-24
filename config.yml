@@ -154,10 +154,10 @@ languages:
           name: 藏书
           url: /mybooks/
           weight: 18
-        - identifier: myfriends
-          name: 朋友
-          url: /myfriends/
-          weight: 19
+        # - identifier: myfriends
+        #   name: 朋友
+        #   url: /myfriends/
+        #   weight: 19
         - identifier: search
           name: 搜索
           url: /search/
@@ -221,10 +221,10 @@ languages:
           name: MY BOOKS
           url: /mybooks/
           weight: 18
-        - identifier: myfriends
-          name: MY FRIENDS
-          url: /myfriends/
-          weight: 19
+        # - identifier: myfriends
+        #   name: MY FRIENDS
+        #   url: /myfriends/
+        #   weight: 19
         - identifier: search
           name: SEARCH
           url: /search/

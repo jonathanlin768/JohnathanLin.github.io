@@ -1,0 +1,20 @@
+{{- define "main" }}
+{{- $groups := slice }}
+{{- range .Data.Terms.ByCount }}
+  {{- if .Count }}
+    {{- $term := .Page }}
+    {{- $url := $term.RelPermalink }}
+    {{- $id := printf "category-%s" (path.Base (urls.Parse $url).Path) }}
+    {{- $groups = $groups | append (dict "id" $id "title" $term.LinkTitle "url" $url "count" .Count "pages" .Pages.ByDate.Reverse) }}
+  {{- end }}
+{{- end }}
+
+<div class="post-index category-index">
+  <header class="page-header">
+    <h1>{{ i18n .Title | default .Title }}</h1>
+    {{- with .Description }}<p class="post-description">{{ . }}</p>{{ end }}
+  </header>
+
+  {{- partial "windypath/post-index.html" (dict "groups" $groups "navigationLabel" (i18n "wp_categories_navigation") "dateFormat" "2006-01-02") }}
+</div>
+{{- end }}

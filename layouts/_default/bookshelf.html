@@ -1,0 +1,25 @@
+{{- define "main" }}
+<div class="bookshelf">
+  <header class="page-header">
+    <h1>{{ .Title }}</h1>
+    {{- with .Description }}<p class="post-description">{{ . }}</p>{{ end }}
+    {{- if and .IsTranslated (not (.Param "hideMeta")) }}
+    {{- $translationLabel := i18n "translations" | default "Translations" }}
+    <nav class="post-meta bookshelf-languages" aria-label="{{ $translationLabel }}">
+      <span>{{ $translationLabel }}</span>
+      {{- range .Translations }}
+        <a href="{{ .RelPermalink }}" hreflang="{{ .Lang }}">
+          {{- if and site.Params.displayFullLangName .Language.LanguageName -}}
+            {{ .Language.LanguageName | emojify }}
+          {{- else -}}
+            {{ .Lang | title }}
+          {{- end -}}
+        </a>
+      {{- end }}
+    </nav>
+    {{- end }}
+  </header>
+
+  <div class="bookshelf-content">{{ .Content }}</div>
+</div>
+{{- end }}

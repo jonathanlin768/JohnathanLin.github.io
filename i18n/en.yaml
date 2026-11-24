@@ -26,3 +26,11 @@ wp_search_placeholder:
   other: Search by title or keyword
 wp_search_results:
   other: Search results
+wp_archive_year_navigation:
+  other: Jump to a year
+wp_archive_date_format:
+  other: Jan 2
+wp_categories_navigation:
+  other: Jump to a category
+wp_post_index_draft:
+  other: Draft

@@ -1,0 +1,37 @@
+{{- $dateFormat := .dateFormat }}
+{{- if gt (len .groups) 1 }}
+<nav class="post-index-nav" aria-labelledby="post-index-nav-label">
+  <p id="post-index-nav-label">{{ .navigationLabel }}</p>
+  <ul role="list">
+    {{- range .groups }}
+    <li>
+      <a href="#{{ .id }}" class="wp-button">
+        {{- .title -}}
+        {{- with .count }} <span class="post-index-count">{{ . }}</span>{{ end -}}
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+</nav>
+{{- end }}
+
+{{- range .groups }}
+<section class="post-index-group" aria-labelledby="{{ .id }}">
+  <h2 class="post-index-heading" id="{{ .id }}" tabindex="-1">
+    {{- if .url }}<a href="{{ .url }}">{{ .title }}</a>{{ else }}{{ .title }}{{ end -}}
+  </h2>
+  <ul class="post-index-list" role="list">
+    {{- range .pages }}
+    <li class="post-index-entry">
+      {{- if not .Date.IsZero }}
+      <time class="post-index-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format $dateFormat }}</time>
+      {{- end }}
+      <a class="post-index-title" href="{{ .RelPermalink }}">
+        {{- .Title | markdownify | plainify | htmlUnescape -}}
+        {{- if .Draft }} <span class="post-index-draft">{{ i18n "wp_post_index_draft" }}</span>{{ end -}}
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+</section>
+{{- end }}

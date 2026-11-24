@@ -26,3 +26,11 @@ wp_search_placeholder:
   other: 输入文章标题或关键词
 wp_search_results:
   other: 搜索结果
+wp_archive_year_navigation:
+  other: 按年份跳转
+wp_archive_date_format:
+  other: 1 月 2 日
+wp_categories_navigation:
+  other: 按分类跳转
+wp_post_index_draft:
+  other: 草稿

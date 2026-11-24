@@ -1,0 +1,7 @@
+{{- $destination := .Get "destUrl" -}}
+<a class="book-card" href="{{ $destination }}"{{ if (urls.Parse $destination).IsAbs }} target="_blank" rel="noopener noreferrer"{{ end }}>
+  <span class="book-card-cover">
+    <img src="{{ .Get "imgUrl" }}" alt="" loading="lazy" decoding="async">
+  </span>
+  <span class="book-card-title">{{ .Get "name" }}</span>
+</a>

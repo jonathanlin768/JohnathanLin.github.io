@@ -1,0 +1,38 @@
+{{- define "main" }}
+{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- if site.Params.ShowAllPagesInArchive }}
+  {{- $pages = site.RegularPages }}
+{{- end }}
+{{- $groups := slice }}
+{{- range $pages.GroupByDate "2006" "desc" }}
+  {{- if ne .Key "0001" }}
+    {{- $groups = $groups | append (dict "id" (printf "archive-%s" .Key) "title" .Key "pages" .Pages.ByDate.Reverse) }}
+  {{- end }}
+{{- end }}
+{{- $dateFormat := i18n "wp_archive_date_format" | default "Jan 2" }}
+
+<div class="post-index archive-page">
+  <header class="page-header">
+    <h1>
+      {{ .Title }}
+      {{- if .Param "ShowRssButtonInSectionTermList" }}
+        {{- $rss := .OutputFormats.Get "rss" }}
+        {{- if eq .Kind "page" }}
+          {{- $rss = .Parent.OutputFormats.Get "rss" }}
+        {{- end }}
+        {{- with $rss }}
+        <a href="{{ .RelPermalink }}" title="RSS" aria-label="RSS">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" height="23">
+            <path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16" />
+            <circle cx="5" cy="19" r="1" />
+          </svg>
+        </a>
+        {{- end }}
+      {{- end }}
+    </h1>
+    {{- with .Description }}<p class="post-description">{{ . }}</p>{{ end }}
+  </header>
+
+  {{- partial "windypath/post-index.html" (dict "groups" $groups "navigationLabel" (i18n "wp_archive_year_navigation") "dateFormat" $dateFormat) }}
+</div>
+{{- end }}

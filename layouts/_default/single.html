@@ -4,9 +4,10 @@
 {{- if (.Param "ShowToc") }}
   {{- $toc = partial "toc.html" . }}
 {{- end }}
-<article class="post-single{{ if $toc }} post-single-with-toc{{ end }}">
+{{- $standalone := not .Section }}
+<article class="post-single{{ if $standalone }} post-single-standalone{{ end }}{{ if $toc }} post-single-with-toc{{ end }}">
   <div class="post-heading">
-    <header class="post-header">
+    <header class="{{ if $standalone }}page-header{{ else }}post-header{{ end }}">
       {{ partial "breadcrumbs.html" . }}
       <h1 class="post-title entry-hint-parent">
         {{ .Title }}
